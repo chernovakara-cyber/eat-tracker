@@ -164,7 +164,7 @@ textarea:focus {
   overflow: hidden;
   isolation: isolate;
   padding: 20px;
-  padding-right: 132px;
+  padding-right: 150px;
   min-height: 220px;
 }
 
@@ -213,7 +213,7 @@ textarea:focus {
 }
 
 /* =========================================================
-   МИЛЫЕ НАРИСОВАННЫЕ ФИГУРКИ В КАРТОЧКАХ БЖУ
+   KAWAII ФИГУРКИ В КАРТОЧКАХ БЖУ
 ========================================================= */
 
 .stats-grid .stat-card:nth-child(1),
@@ -221,7 +221,7 @@ textarea:focus {
 .stats-grid .stat-card:nth-child(3) {
   background:
     radial-gradient(circle at top right, rgba(255,255,255,.55), transparent 32%),
-    radial-gradient(circle at 88% 24%, rgba(255,255,255,.48), transparent 22%),
+    radial-gradient(circle at 88% 24%, rgba(255,255,255,.45), transparent 22%),
     var(--surface);
 }
 
@@ -231,13 +231,13 @@ textarea:focus {
   content: "";
   position: absolute;
   right: 12px;
-  top: 12px;
-  width: 106px;
-  height: 106px;
-  border-radius: 30px;
+  top: 14px;
+  width: 122px;
+  height: 122px;
+  border-radius: 32px;
   background:
-    radial-gradient(circle at 30% 28%, rgba(255,255,255,.95), rgba(255,255,255,.55) 42%, rgba(255,255,255,.10) 74%, transparent 75%),
-    linear-gradient(145deg, rgba(255,227,241,.95), rgba(232,222,255,.95));
+    radial-gradient(circle at 30% 28%, rgba(255,255,255,.96), rgba(255,255,255,.55) 42%, rgba(255,255,255,.08) 74%, transparent 75%),
+    linear-gradient(145deg, rgba(255,227,241,.96), rgba(232,222,255,.96));
   box-shadow:
     inset 0 2px 0 rgba(255,255,255,.95),
     0 12px 30px rgba(123, 78, 135, .14);
@@ -249,30 +249,30 @@ textarea:focus {
 .stats-grid .stat-card:nth-child(3)::after {
   content: "";
   position: absolute;
-  right: 12px;
-  top: 12px;
-  width: 106px;
-  height: 106px;
+  right: 8px;
+  top: 8px;
+  width: 132px;
+  height: 132px;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 94px 94px;
+  background-size: 120px 120px;
   z-index: 2;
-  filter: drop-shadow(0 10px 10px rgba(101, 63, 113, .10));
+  filter: drop-shadow(0 10px 14px rgba(101, 63, 113, .10));
 }
 
 /* Белки — милая куриная ножка */
 .stats-grid .stat-card:nth-child(1)::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M74 74c10 0 18 8 18 18s-8 18-18 18c-8 0-14-5-17-12l-7-2-5-7 4-6-2-8c3-6 11-11 20-11z' fill='%23f3c36a' stroke='%23c58f49' stroke-width='3'/%3E%3Cpath d='M56 78c0-16 13-29 29-29 13 0 24 8 28 20 2 7 2 14-1 21-2-9-10-15-19-15-6 0-11 2-15 6-7 0-14-1-22-3z' fill='%23ffd98f'/%3E%3Cpath d='M36 76c-5 0-9 4-9 9 0 3 1 5 3 7-3 2-5 5-5 9 0 6 5 11 11 11 4 0 7-2 9-5 2 3 5 5 9 5 6 0 11-5 11-11 0-4-2-7-5-9 2-2 3-4 3-7 0-5-4-9-9-9-3 0-6 1-8 4-2-3-5-4-10-4z' fill='white' stroke='%23d8d8d8' stroke-width='3'/%3E%3Ccircle cx='76' cy='82' r='3.5' fill='%23341936'/%3E%3Ccircle cx='91' cy='82' r='3.5' fill='%23341936'/%3E%3Cpath d='M77 94c4 4 9 4 13 0' fill='none' stroke='%23341936' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='72' cy='89' r='2.5' fill='%23ffb3cf'/%3E%3Ccircle cx='95' cy='89' r='2.5' fill='%23ffb3cf'/%3E%3Cpath d='M67 86c-5-4-10-4-15 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M97 85c5-4 10-4 15 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M72 103c-4 6-4 10 0 14' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M93 103c4 6 4 10 0 14' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23ffd98d'/%3E%3Cstop offset='100%25' stop-color='%23e9a646'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23fffefc'/%3E%3Cstop offset='100%25' stop-color='%23f3f1ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M87 30c10 2 21 10 27 21 8 15 6 34-6 48-8 10-19 16-31 17-6 1-14-1-20-5l-7 4c-3 2-6 1-8-2l-4-6-5-1c-4-1-6-6-3-10l7-10c-2-8-2-15 0-23 5-17 18-30 33-33 6-1 12-1 17 0z' fill='url(%23g1)' stroke='%23a65b22' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M77 35c10-2 22 2 30 10 10 10 13 23 9 35-5 14-18 24-32 26-5 1-12 0-16-2 12-2 24-9 30-22 8-16 4-31-10-47-4-4-7-7-11-10z' fill='%23f6c56c' opacity='.75'/%3E%3Ccircle cx='95' cy='60' r='2.7' fill='%23eab865'/%3E%3Ccircle cx='104' cy='47' r='3.2' fill='%23eab865'/%3E%3Ccircle cx='86' cy='45' r='3' fill='%23eab865'/%3E%3Ccircle cx='74' cy='70' r='3.2' fill='%23eab865'/%3E%3Ccircle cx='100' cy='76' r='2.8' fill='%23eab865'/%3E%3Ccircle cx='70' cy='93' r='3.1' fill='%23eab865'/%3E%3Cpath d='M35 92c-6 0-11 5-11 11 0 4 2 7 5 9-4 2-6 6-6 11 0 7 6 13 13 13 4 0 8-2 11-5 2 4 6 6 11 6 7 0 13-6 13-13 0-5-3-9-7-11 3-2 5-5 5-9 0-6-5-11-11-11-4 0-8 2-10 5-2-3-7-5-13-5z' fill='url(%23g2)' stroke='%23a65b22' stroke-width='4' stroke-linejoin='round'/%3E%3Cellipse cx='80' cy='72' rx='7.5' ry='9' fill='%232c130f'/%3E%3Cellipse cx='103' cy='72' rx='7.5' ry='9' fill='%232c130f'/%3E%3Ccircle cx='77.5' cy='69' r='2.5' fill='white'/%3E%3Ccircle cx='100.5' cy='69' r='2.5' fill='white'/%3E%3Cpath d='M84 88c4 5 10 5 14 0' fill='none' stroke='%232c130f' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='73' cy='83' r='4' fill='%23ffbfd4'/%3E%3Ccircle cx='110' cy='83' r='4' fill='%23ffbfd4'/%3E%3Cpath d='M62 79c-7-4-13-4-18 2' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M112 78c6-4 12-4 17 2' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M82 112c-4 7-4 11 1 16' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M104 112c4 7 4 11-1 16' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 /* Жиры — милый авокадик */
 .stats-grid .stat-card:nth-child(2)::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M60 18c20 0 35 18 35 41 0 23-16 43-35 43S25 82 25 59c0-23 15-41 35-41z' fill='%236fb866' stroke='%234f8e48' stroke-width='3'/%3E%3Cpath d='M60 28c14 0 25 13 25 30 0 17-11 31-25 31S35 75 35 58c0-17 11-30 25-30z' fill='%23d9f3b6' stroke='%2392c978' stroke-width='2.5'/%3E%3Ccircle cx='60' cy='68' r='12' fill='%23b5794f'/%3E%3Ccircle cx='60' cy='68' r='6' fill='%23c99263'/%3E%3Ccircle cx='51' cy='50' r='3.5' fill='%23341936'/%3E%3Ccircle cx='68' cy='50' r='3.5' fill='%23341936'/%3E%3Cpath d='M52 61c5 5 11 5 16 0' fill='none' stroke='%23341936' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='46' cy='57' r='2.5' fill='%23ffb3cf'/%3E%3Ccircle cx='73' cy='57' r='2.5' fill='%23ffb3cf'/%3E%3Cpath d='M36 55c-5-4-10-4-14 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M84 55c5-4 10-4 14 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M50 91c-4 7-4 11 0 15' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M70 91c4 7 4 11 0 15' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Cdefs%3E%3ClinearGradient id='a1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2376c95f'/%3E%3Cstop offset='100%25' stop-color='%233a7f2f'/%3E%3C/linearGradient%3E%3ClinearGradient id='a2' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23f4f8b9'/%3E%3Cstop offset='100%25' stop-color='%23dce98e'/%3E%3C/linearGradient%3E%3CradialGradient id='a3' cx='.35' cy='.25' r='.8'%3E%3Cstop offset='0%25' stop-color='%23b4784f'/%3E%3Cstop offset='100%25' stop-color='%237f472a'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M70 16c10 0 21 4 30 13 10 10 16 24 16 38 0 31-21 56-46 56S24 98 24 67c0-14 6-28 16-38 9-9 20-13 30-13z' fill='url(%23a1)' stroke='%233d6f34' stroke-width='4'/%3E%3Cpath d='M70 27c9 0 18 4 25 11 8 8 12 18 12 30 0 26-17 47-37 47S33 94 33 68c0-12 4-22 12-30 7-7 16-11 25-11z' fill='url(%23a2)' stroke='%23a4c76e' stroke-width='3'/%3E%3Cellipse cx='70' cy='79' rx='20' ry='22' fill='url(%23a3)'/%3E%3Cellipse cx='64' cy='72' rx='6' ry='10' fill='rgba(255,255,255,.33)' transform='rotate(25 64 72)'/%3E%3Cellipse cx='54' cy='54' rx='8' ry='9' fill='%23130d12'/%3E%3Cellipse cx='83' cy='54' rx='8' ry='9' fill='%23130d12'/%3E%3Ccircle cx='51' cy='51' r='2.8' fill='white'/%3E%3Ccircle cx='80' cy='51' r='2.8' fill='white'/%3E%3Cpath d='M60 67c5 6 12 6 17 0' fill='none' stroke='%23130d12' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='46' cy='63' r='4' fill='%23ffbfd4'/%3E%3Ccircle cx='91' cy='63' r='4' fill='%23ffbfd4'/%3E%3Cpath d='M35 61c-7-5-12-5-17 1' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M100 61c7-5 12-5 17 1' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M58 113c-4 7-4 12 1 17' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M80 113c4 7 4 12-1 17' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
-/* Углеводы — милые макарошки в тарелочке */
+/* Углеводы — мисочка с макарошками */
 .stats-grid .stat-card:nth-child(3)::after {
-  background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M28 76c2 13 15 23 32 23s30-10 32-23H28z' fill='%23ffd9ee' stroke='%23d39ab9' stroke-width='3'/%3E%3Cpath d='M24 72c0-6 4-10 10-10h52c6 0 10 4 10 10 0 4-3 8-7 8H31c-4 0-7-4-7-8z' fill='%23fff2fb' stroke='%23d39ab9' stroke-width='3'/%3E%3Cpath d='M41 49c4-8 12-12 20-12 9 0 17 4 20 12' fill='none' stroke='%23f0b545' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M33 57c6-10 14-16 24-16s18 6 24 16' fill='none' stroke='%23f0b545' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M36 63c7-7 15-10 24-10 10 0 18 3 24 10' fill='none' stroke='%23f0b545' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='52' cy='64' r='3.5' fill='%23341936'/%3E%3Ccircle cx='67' cy='64' r='3.5' fill='%23341936'/%3E%3Cpath d='M53 74c4 4 9 4 13 0' fill='none' stroke='%23341936' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='48' cy='70' r='2.5' fill='%23ffb3cf'/%3E%3Ccircle cx='71' cy='70' r='2.5' fill='%23ffb3cf'/%3E%3Cpath d='M31 70c-5-4-10-4-14 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M88 70c5-4 10-4 14 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M48 94c-4 6-4 10 0 14' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M71 94c4 6 4 10 0 14' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E\");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Cdefs%3E%3ClinearGradient id='m1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23fff9f7'/%3E%3Cstop offset='100%25' stop-color='%23f7e4df'/%3E%3C/linearGradient%3E%3ClinearGradient id='m2' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23ffe77d'/%3E%3Cstop offset='100%25' stop-color='%23f6b739'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M30 88c3 21 18 34 40 34s37-13 40-34H30z' fill='url(%23m1)' stroke='%23d9a99d' stroke-width='4'/%3E%3Cpath d='M24 80c0-8 5-13 13-13h66c8 0 13 5 13 13 0 5-4 10-10 10H34c-6 0-10-5-10-10z' fill='%23fffdfd' stroke='%23d9a99d' stroke-width='4'/%3E%3Cg fill='none' stroke='url(%23m2)' stroke-width='7' stroke-linecap='round'%3E%3Cpath d='M40 61c7-10 15-14 25-14s18 4 25 14'/%3E%3Cpath d='M32 69c10-10 20-16 33-16 13 0 23 6 33 16'/%3E%3Cpath d='M35 76c10-7 20-10 32-10 13 0 23 3 35 10'/%3E%3Cpath d='M44 54c4-7 9-11 16-11 7 0 13 4 18 11'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffe89a' stroke-width='4' stroke-linecap='round' opacity='.9'%3E%3Cpath d='M41 58c6-7 11-10 18-10'/%3E%3Cpath d='M72 49c6 1 12 5 18 11'/%3E%3Cpath d='M47 71c7-4 14-6 22-6'/%3E%3C/g%3E%3Cellipse cx='58' cy='82' rx='7' ry='5.5' fill='%23130d12'/%3E%3Cellipse cx='81' cy='82' rx='7' ry='5.5' fill='%23130d12'/%3E%3Cpath d='M61 93c5 4 11 4 16 0' fill='none' stroke='%23130d12' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='90' r='4.2' fill='%23ffc7d7'/%3E%3Ccircle cx='89' cy='90' r='4.2' fill='%23ffc7d7'/%3E%3Cpath d='M32 88c-6-4-11-4-15 1' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M98 88c6-4 11-4 15 1' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M56 119c-4 7-4 11 1 16' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M81 119c4 7 4 11-1 16' fill='none' stroke='%236a506b' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 .section-heading {
@@ -448,10 +448,6 @@ textarea:focus {
   font-weight: 850;
 }
 
-/* =========================================================
-   ОБЫЧНЫЕ МОДАЛЬНЫЕ ОКНА
-========================================================= */
-
 .modal {
   border: 0;
   border-radius: 24px;
@@ -538,10 +534,6 @@ textarea:focus {
   display: flex;
   justify-content: flex-end;
 }
-
-/* =========================================================
-   КРАСИВОЕ "ОБЛАЧКО" РЕДАКТИРОВАНИЯ
-========================================================= */
 
 #entryEditDialog {
   border: none;
@@ -725,10 +717,6 @@ textarea:focus {
   transform: translateY(0);
 }
 
-/* =========================================================
-   АДАПТАЦИЯ ПОД ПЛАНШЕТ
-========================================================= */
-
 @media (max-width: 820px) {
   .stats-grid {
     grid-template-columns: repeat(2,1fr);
@@ -742,10 +730,6 @@ textarea:focus {
     grid-column: span 2;
   }
 }
-
-/* =========================================================
-   АДАПТАЦИЯ ПОД ТЕЛЕФОН
-========================================================= */
 
 @media (max-width: 620px) {
   .app-shell {
@@ -783,26 +767,27 @@ textarea:focus {
   }
 
   .stat-card {
-    padding-right: 118px;
+    padding-right: 128px;
     min-height: 205px;
   }
 
   .stats-grid .stat-card:nth-child(1)::before,
   .stats-grid .stat-card:nth-child(2)::before,
-  .stats-grid .stat-card:nth-child(3)::before,
-  .stats-grid .stat-card:nth-child(1)::after,
-  .stats-grid .stat-card:nth-child(2)::after,
-  .stats-grid .stat-card:nth-child(3)::after {
-    width: 92px;
-    height: 92px;
+  .stats-grid .stat-card:nth-child(3)::before {
+    width: 104px;
+    height: 104px;
     right: 10px;
-    top: 12px;
+    top: 14px;
   }
 
   .stats-grid .stat-card:nth-child(1)::after,
   .stats-grid .stat-card:nth-child(2)::after,
   .stats-grid .stat-card:nth-child(3)::after {
-    background-size: 82px 82px;
+    width: 112px;
+    height: 112px;
+    right: 6px;
+    top: 10px;
+    background-size: 102px 102px;
   }
 
   #entryEditDialog {

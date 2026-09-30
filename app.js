@@ -1,31 +1,52 @@
 const STORAGE_KEY = 'bju-diary-v1';
-const PRODUCTS_KEY = 'bju-products-v2';
+const PRODUCTS_KEY = 'bju-products-v4';
 
-/*
-  МОИ ПРОДУКТЫ
-  Все значения Б/Ж/У указаны на 100 г.
-*/
+/* =========================================================
+   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+========================================================= */
 
 function calculateKcal(p, f, c) {
-  return p * 4 + f * 9 + c * 4;
+  return Number(p || 0) * 4 +
+         Number(f || 0) * 9 +
+         Number(c || 0) * 4;
 }
 
-function makeProduct(name, aliases, p, f, c, options = {}) {
+function makeProduct(
+  id,
+  name,
+  aliases,
+  p,
+  f,
+  c,
+  options = {}
+) {
   return {
-    id: crypto.randomUUID(),
+    id,
     name,
     aliases,
     unit: options.unit || 'g',
     gramsPerPiece: options.gramsPerPiece || 0,
+
     p,
     f,
     c,
+
+    countProtein: options.countProtein === true,
+
     kcal: calculateKcal(p, f, c)
   };
 }
 
+
+/* =========================================================
+   МОИ ПРОДУКТЫ
+   Все БЖУ указаны на 100 г
+========================================================= */
+
 const defaultProducts = [
+
   makeProduct(
+    'rice',
     'Рис',
     [
       'рис',
@@ -37,6 +58,7 @@ const defaultProducts = [
   ),
 
   makeProduct(
+    'pasta',
     'Макароны',
     [
       'макароны',
@@ -48,6 +70,7 @@ const defaultProducts = [
   ),
 
   makeProduct(
+    'buckwheat',
     'Гречка',
     [
       'гречка',
@@ -60,6 +83,7 @@ const defaultProducts = [
   ),
 
   makeProduct(
+    'chicken',
     'Куриная грудка',
     [
       'куриная грудка',
@@ -74,23 +98,32 @@ const defaultProducts = [
     ],
     22,
     4,
-    0
+    0,
+    {
+      countProtein: true
+    }
   ),
 
   makeProduct(
+    'tuna',
     'Тунец консервированный',
     [
       'тунец',
       'тунца',
       'консервированный тунец',
+      'консервированного тунца',
       'тунца консервированного'
     ],
     23,
     1,
-    0
+    0,
+    {
+      countProtein: true
+    }
   ),
 
   makeProduct(
+    'eggs',
     'Яйца',
     [
       'яйцо',
@@ -100,10 +133,14 @@ const defaultProducts = [
     ],
     12.6,
     11.5,
-    0.7
+    0.7,
+    {
+      countProtein: true
+    }
   ),
 
   makeProduct(
+    'ham',
     'Ветчина',
     [
       'ветчина',
@@ -112,23 +149,32 @@ const defaultProducts = [
     ],
     14,
     4,
-    4
+    4,
+    {
+      countProtein: true
+    }
   ),
 
   makeProduct(
+    'greek-yogurt',
     'Греческий йогурт',
     [
       'греческий йогурт',
       'греческого йогурта',
+      'греческий йогурта',
       'йогурт',
       'йогурта'
     ],
     8,
     2,
-    4.2
+    4.2,
+    {
+      countProtein: true
+    }
   ),
 
   makeProduct(
+    'cheese',
     'Сыр',
     [
       'сыр',
@@ -136,21 +182,30 @@ const defaultProducts = [
     ],
     26,
     26,
-    0
+    0,
+    {
+      countProtein: true
+    }
   ),
 
   makeProduct(
+    'cream-cheese',
     'Творожный сыр',
     [
       'творожный сыр',
-      'творожного сыра'
+      'творожного сыра',
+      'творожный сырок'
     ],
     6.2,
     21.7,
-    4.2
+    4.2,
+    {
+      countProtein: true
+    }
   ),
 
   makeProduct(
+    'beans',
     'Фасоль',
     [
       'фасоль',
@@ -162,6 +217,7 @@ const defaultProducts = [
   ),
 
   makeProduct(
+    'bread',
     'Хлеб',
     [
       'хлеб',
@@ -173,6 +229,7 @@ const defaultProducts = [
   ),
 
   makeProduct(
+    'cucumbers',
     'Огурцы',
     [
       'огурец',
@@ -186,6 +243,7 @@ const defaultProducts = [
   ),
 
   makeProduct(
+    'olives',
     'Оливки',
     [
       'оливки',
@@ -198,6 +256,7 @@ const defaultProducts = [
   ),
 
   makeProduct(
+    'asparagus',
     'Спаржа',
     [
       'спаржа',
@@ -210,6 +269,7 @@ const defaultProducts = [
   ),
 
   makeProduct(
+    'honey-mustard',
     'Медово-горчичный соус',
     [
       'медово-горчичный соус',
@@ -224,6 +284,11 @@ const defaultProducts = [
     22.5
   )
 ];
+
+
+/* =========================================================
+   ЭЛЕМЕНТЫ СТРАНИЦЫ
+========================================================= */
 
 const $ = id => document.getElementById(id);
 
@@ -273,31 +338,32 @@ const els = {
   saveProductsBtn: $('saveProductsBtn')
 };
 
-let data = loadJSON(STORAGE_KEY, {});
+
+/* =========================================================
+   ДАННЫЕ
+========================================================= */
+
+let data = loadJSON(
+  STORAGE_KEY,
+  {}
+);
+
 let products = loadProducts();
 
-function localDateString(date = new Date()) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
 
-  return `${y}-${m}-${d}`;
-}
-
-function formatDate(dateString) {
-  const d = new Date(dateString + 'T12:00:00');
-
-  return d.toLocaleDateString('ru-RU', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-}
+/* =========================================================
+   ЗАГРУЗКА И СОХРАНЕНИЕ
+========================================================= */
 
 function loadJSON(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+    const value =
+      JSON.parse(
+        localStorage.getItem(key)
+      );
+
+    return value ?? fallback;
+
   } catch {
     return fallback;
   }
@@ -318,26 +384,147 @@ function saveProducts() {
 }
 
 function loadProducts() {
-  const saved = loadJSON(
-    PRODUCTS_KEY,
-    null
-  );
 
-  if (Array.isArray(saved) && saved.length) {
-    return saved;
+  const saved =
+    loadJSON(
+      PRODUCTS_KEY,
+      null
+    );
+
+  if (
+    Array.isArray(saved) &&
+    saved.length
+  ) {
+
+    return saved.map(product => {
+
+      if (
+        typeof product.countProtein !==
+        'boolean'
+      ) {
+        product.countProtein =
+          shouldProteinCountByName(
+            product.name
+          );
+      }
+
+      product.kcal =
+        calculateKcal(
+          product.p,
+          product.f,
+          product.c
+        );
+
+      return product;
+    });
   }
 
-  return structuredClone(defaultProducts);
+  return structuredClone(
+    defaultProducts
+  );
 }
 
+
+/* =========================================================
+   КАКОЙ БЕЛОК УЧИТЫВАЕМ
+========================================================= */
+
+function shouldProteinCountByName(name = '') {
+
+  const n =
+    name.toLowerCase();
+
+  const allowedWords = [
+    'курин',
+    'грудк',
+    'мяс',
+    'говядин',
+    'индейк',
+    'свинин',
+    'рыб',
+    'тунец',
+    'тунц',
+    'лосос',
+    'семг',
+    'форел',
+    'кревет',
+    'яйц',
+    'ветчин',
+    'йогурт',
+    'сыр',
+    'творог',
+    'молок',
+    'кефир',
+    'протеин'
+  ];
+
+  return allowedWords.some(
+    word => n.includes(word)
+  );
+}
+
+
+/* =========================================================
+   ДАТЫ
+========================================================= */
+
+function localDateString(
+  date = new Date()
+) {
+
+  const y =
+    date.getFullYear();
+
+  const m =
+    String(
+      date.getMonth() + 1
+    ).padStart(2, '0');
+
+  const d =
+    String(
+      date.getDate()
+    ).padStart(2, '0');
+
+  return `${y}-${m}-${d}`;
+}
+
+function formatDate(
+  dateString
+) {
+
+  const d =
+    new Date(
+      dateString +
+      'T12:00:00'
+    );
+
+  return d.toLocaleDateString(
+    'ru-RU',
+    {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    }
+  );
+}
+
+
+/* =========================================================
+   ОБЩИЕ ФУНКЦИИ
+========================================================= */
+
 function ensureDay(date) {
+
   if (!data[date]) {
+
     data[date] = {
       targets: {
         p: 0,
         f: 0,
         c: 0
       },
+
       entries: []
     };
   }
@@ -346,34 +533,54 @@ function ensureDay(date) {
 }
 
 function round1(n) {
+
   return Math.round(
     (Number(n) || 0) * 10
   ) / 10;
 }
 
-function escapeHtml(value = '') {
-  return String(value).replace(
-    /[&<>'"]/g,
-    c => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      "'": '&#39;',
-      '"': '&quot;'
-    }[c])
-  );
+function escapeHtml(
+  value = ''
+) {
+
+  return String(value)
+    .replace(
+      /[&<>'"]/g,
+      c => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[c])
+    );
 }
 
+
+/* =========================================================
+   ПОДСЧЁТ ИТОГОВ
+========================================================= */
+
 function totalsFor(day) {
+
   return day.entries.reduce(
     (acc, entry) => {
-      acc.p += Number(entry.p) || 0;
-      acc.f += Number(entry.f) || 0;
-      acc.c += Number(entry.c) || 0;
-      acc.kcal += Number(entry.kcal) || 0;
+
+      acc.p +=
+        Number(entry.p) || 0;
+
+      acc.f +=
+        Number(entry.f) || 0;
+
+      acc.c +=
+        Number(entry.c) || 0;
+
+      acc.kcal +=
+        Number(entry.kcal) || 0;
 
       return acc;
     },
+
     {
       p: 0,
       f: 0,
@@ -383,46 +590,108 @@ function totalsFor(day) {
   );
 }
 
-function calcFromProduct(
-  product,
-  amount,
-  unit
-) {
-  let grams = Number(amount);
 
-  if (unit === 'piece') {
+/* =========================================================
+   РАСЧЁТ ПРОДУКТА
+========================================================= */
+
+function calcFromValues(
+  amount,
+  unit,
+  gramsPerPiece,
+  p100,
+  f100,
+  c100,
+  countProtein
+) {
+
+  let grams =
+    Number(amount);
+
+  if (
+    unit === 'piece'
+  ) {
+
     grams =
       Number(amount) *
-      Number(product.gramsPerPiece || 0);
+      Number(
+        gramsPerPiece || 0
+      );
   }
 
-  const factor = grams / 100;
+  const factor =
+    grams / 100;
+
+  const realProtein =
+    Number(p100 || 0) *
+    factor;
+
+  const fat =
+    Number(f100 || 0) *
+    factor;
+
+  const carbs =
+    Number(c100 || 0) *
+    factor;
+
+  const kcal100 =
+    calculateKcal(
+      p100,
+      f100,
+      c100
+    );
 
   return {
     grams,
 
     p:
-      Number(product.p || 0) *
-      factor,
+      countProtein
+        ? realProtein
+        : 0,
 
-    f:
-      Number(product.f || 0) *
-      factor,
+    realProtein,
 
-    c:
-      Number(product.c || 0) *
-      factor,
+    f: fat,
+    c: carbs,
 
     kcal:
-      Number(product.kcal || 0) *
+      kcal100 *
       factor
   };
 }
 
+function calcFromProduct(
+  product,
+  amount,
+  unit
+) {
+
+  return calcFromValues(
+    amount,
+    unit,
+    product.gramsPerPiece,
+    product.p,
+    product.f,
+    product.c,
+    product.countProtein
+  );
+}
+
+
+/* =========================================================
+   ОТРИСОВКА
+========================================================= */
+
 function render() {
-  const date = els.dayPicker.value;
-  const day = ensureDay(date);
-  const totals = totalsFor(day);
+
+  const date =
+    els.dayPicker.value;
+
+  const day =
+    ensureDay(date);
+
+  const totals =
+    totalsFor(day);
 
   els.diaryTitle.textContent =
     `Еда за ${formatDate(date)}`;
@@ -455,7 +724,9 @@ function render() {
   );
 
   els.kcalEaten.textContent =
-    `${Math.round(totals.kcal)} ккал`;
+    `${Math.round(
+      totals.kcal
+    )} ккал`;
 
   renderEntries(day);
   renderHistory();
@@ -467,6 +738,7 @@ function updateStat(
   eaten,
   target
 ) {
+
   const targetNum =
     Number(target) || 0;
 
@@ -479,28 +751,40 @@ function updateStat(
     `${round1(eaten)} г`;
 
   if (!targetNum) {
+
     els[
       type + 'Left'
     ].textContent =
       'цель не задана';
-  } else if (left >= 0) {
+
+  } else if (
+    left >= 0
+  ) {
+
     els[
       type + 'Left'
     ].textContent =
       `${round1(left)} г`;
+
   } else {
+
     els[
       type + 'Left'
     ].textContent =
-      `+${round1(Math.abs(left))} г`;
+      `+${round1(
+        Math.abs(left)
+      )} г`;
   }
 
-  const pct = targetNum
-    ? Math.min(
-        100,
-        eaten / targetNum * 100
-      )
-    : 0;
+  const pct =
+    targetNum
+      ? Math.min(
+          100,
+          eaten /
+          targetNum *
+          100
+        )
+      : 0;
 
   els[
     type + 'Progress'
@@ -508,8 +792,17 @@ function updateStat(
     `${pct}%`;
 }
 
+
+/* =========================================================
+   СПИСОК СЪЕДЕННОГО
+========================================================= */
+
 function renderEntries(day) {
-  if (!day.entries.length) {
+
+  if (
+    !day.entries.length
+  ) {
+
     els.entriesList.innerHTML =
       '<div class="empty">Пока ничего не записано.</div>';
 
@@ -517,45 +810,88 @@ function renderEntries(day) {
   }
 
   els.entriesList.innerHTML =
-    day.entries.map(entry => `
-      <div class="entry">
-        <div>
-          <div class="entry-title">
-            ${escapeHtml(entry.name)}
-            —
-            ${round1(entry.amount)}
-            ${entry.unit === 'piece'
-              ? 'шт.'
-              : 'г'}
-          </div>
+    day.entries
+      .map(entry => {
 
-          <div class="entry-macros">
-            Б ${round1(entry.p)} ·
-            Ж ${round1(entry.f)} ·
-            У ${round1(entry.c)} ·
-            ${Math.round(entry.kcal)} ккал
-          </div>
-        </div>
+        const proteinNote =
+          entry.countProtein === false
+            ? ' · белок не учитывается'
+            : '';
 
-        <div class="entry-actions">
-          <button
-            class="mini-btn delete-entry"
-            data-id="${entry.id}"
-          >
-            Удалить
-          </button>
-        </div>
-      </div>
-    `).join('');
+        return `
+          <div class="entry">
+
+            <div>
+
+              <div class="entry-title">
+
+                ${escapeHtml(
+                  entry.name
+                )}
+
+                —
+
+                ${round1(
+                  entry.amount
+                )}
+
+                ${
+                  entry.unit ===
+                  'piece'
+                    ? 'шт.'
+                    : 'г'
+                }
+
+              </div>
+
+              <div class="entry-macros">
+
+                Б ${round1(entry.p)} ·
+                Ж ${round1(entry.f)} ·
+                У ${round1(entry.c)} ·
+                ${Math.round(
+                  entry.kcal
+                )} ккал
+
+                ${proteinNote}
+
+              </div>
+
+            </div>
+
+            <div class="entry-actions">
+
+              <button
+                class="mini-btn edit-entry"
+                data-id="${entry.id}"
+              >
+                Редактировать
+              </button>
+
+              <button
+                class="mini-btn delete-entry"
+                data-id="${entry.id}"
+              >
+                Удалить
+              </button>
+
+            </div>
+
+          </div>
+        `;
+      })
+      .join('');
 
   els.entriesList
     .querySelectorAll(
       '.delete-entry'
     )
     .forEach(btn => {
+
       btn.addEventListener(
         'click',
         () => {
+
           day.entries =
             day.entries.filter(
               entry =>
@@ -568,9 +904,660 @@ function renderEntries(day) {
         }
       );
     });
+
+  els.entriesList
+    .querySelectorAll(
+      '.edit-entry'
+    )
+    .forEach(btn => {
+
+      btn.addEventListener(
+        'click',
+        () => {
+
+          const entry =
+            day.entries.find(
+              item =>
+                item.id ===
+                btn.dataset.id
+            );
+
+          if (entry) {
+            openEntryEditor(
+              entry
+            );
+          }
+        }
+      );
+    });
 }
 
+
+/* =========================================================
+   РЕДАКТИРОВАНИЕ СЪЕДЕННОГО ПРОДУКТА
+========================================================= */
+
+function ensureEntryEditor() {
+
+  if (
+    document.getElementById(
+      'entryEditDialog'
+    )
+  ) {
+    return;
+  }
+
+  const dialog =
+    document.createElement(
+      'dialog'
+    );
+
+  dialog.id =
+    'entryEditDialog';
+
+  dialog.innerHTML = `
+    <form
+      method="dialog"
+      style="
+        min-width:min(90vw,420px);
+        max-width:420px;
+      "
+    >
+
+      <h2>
+        Редактировать продукт
+      </h2>
+
+      <div
+        style="
+          display:grid;
+          gap:12px;
+        "
+      >
+
+        <label>
+          Название
+
+          <input
+            id="editEntryName"
+            type="text"
+            style="width:100%"
+          >
+        </label>
+
+        <label>
+          Количество
+
+          <input
+            id="editEntryAmount"
+            type="number"
+            min="0"
+            step="0.1"
+            style="width:100%"
+          >
+        </label>
+
+        <label>
+          Единица
+
+          <select
+            id="editEntryUnit"
+            style="width:100%"
+          >
+            <option value="g">
+              граммы
+            </option>
+
+            <option value="piece">
+              штуки
+            </option>
+          </select>
+        </label>
+
+        <label>
+          Белки на 100 г
+
+          <input
+            id="editEntryProtein"
+            type="number"
+            min="0"
+            step="0.1"
+            style="width:100%"
+          >
+        </label>
+
+        <label>
+          Жиры на 100 г
+
+          <input
+            id="editEntryFat"
+            type="number"
+            min="0"
+            step="0.1"
+            style="width:100%"
+          >
+        </label>
+
+        <label>
+          Углеводы на 100 г
+
+          <input
+            id="editEntryCarbs"
+            type="number"
+            min="0"
+            step="0.1"
+            style="width:100%"
+          >
+        </label>
+
+        <label
+          id="editEntryPieceWeightWrap"
+        >
+          Вес одной штуки, г
+
+          <input
+            id="editEntryPieceWeight"
+            type="number"
+            min="0"
+            step="0.1"
+            style="width:100%"
+          >
+        </label>
+
+        <label
+          style="
+            display:flex;
+            gap:8px;
+            align-items:center;
+          "
+        >
+
+          <input
+            id="editEntryCountProtein"
+            type="checkbox"
+          >
+
+          Учитывать белок
+          в дневной норме
+
+        </label>
+
+        <label
+          style="
+            display:flex;
+            gap:8px;
+            align-items:flex-start;
+          "
+        >
+
+          <input
+            id="editEntrySaveProduct"
+            type="checkbox"
+          >
+
+          Сохранить эти БЖУ
+          для этого продукта
+          на будущее
+
+        </label>
+
+      </div>
+
+      <div
+        style="
+          display:flex;
+          gap:10px;
+          margin-top:18px;
+          justify-content:flex-end;
+          flex-wrap:wrap;
+        "
+      >
+
+        <button
+          type="button"
+          id="cancelEntryEdit"
+        >
+          Отмена
+        </button>
+
+        <button
+          type="button"
+          id="saveEntryEdit"
+        >
+          Сохранить
+        </button>
+
+      </div>
+
+    </form>
+  `;
+
+  document.body.appendChild(
+    dialog
+  );
+
+  document
+    .getElementById(
+      'cancelEntryEdit'
+    )
+    .addEventListener(
+      'click',
+      () => {
+
+        dialog.close();
+      }
+    );
+
+  document
+    .getElementById(
+      'editEntryUnit'
+    )
+    .addEventListener(
+      'change',
+      updateEntryPieceField
+    );
+
+  document
+    .getElementById(
+      'saveEntryEdit'
+    )
+    .addEventListener(
+      'click',
+      saveEntryEdit
+    );
+}
+
+let editingEntryId = null;
+
+function openEntryEditor(entry) {
+
+  ensureEntryEditor();
+
+  editingEntryId =
+    entry.id;
+
+  const product =
+    findProductForEntry(
+      entry
+    );
+
+  const p100 =
+    entry.p100 ??
+    product?.p ??
+    0;
+
+  const f100 =
+    entry.f100 ??
+    product?.f ??
+    0;
+
+  const c100 =
+    entry.c100 ??
+    product?.c ??
+    0;
+
+  const countProtein =
+    typeof entry.countProtein ===
+    'boolean'
+      ? entry.countProtein
+      : (
+          product
+            ? product.countProtein
+            : shouldProteinCountByName(
+                entry.name
+              )
+        );
+
+  document.getElementById(
+    'editEntryName'
+  ).value =
+    entry.name || '';
+
+  document.getElementById(
+    'editEntryAmount'
+  ).value =
+    entry.amount || '';
+
+  document.getElementById(
+    'editEntryUnit'
+  ).value =
+    entry.unit || 'g';
+
+  document.getElementById(
+    'editEntryProtein'
+  ).value =
+    p100;
+
+  document.getElementById(
+    'editEntryFat'
+  ).value =
+    f100;
+
+  document.getElementById(
+    'editEntryCarbs'
+  ).value =
+    c100;
+
+  document.getElementById(
+    'editEntryPieceWeight'
+  ).value =
+    entry.gramsPerPiece ??
+    product?.gramsPerPiece ??
+    0;
+
+  document.getElementById(
+    'editEntryCountProtein'
+  ).checked =
+    countProtein;
+
+  document.getElementById(
+    'editEntrySaveProduct'
+  ).checked =
+    false;
+
+  updateEntryPieceField();
+
+  document
+    .getElementById(
+      'entryEditDialog'
+    )
+    .showModal();
+}
+
+function updateEntryPieceField() {
+
+  const unit =
+    document.getElementById(
+      'editEntryUnit'
+    ).value;
+
+  const wrap =
+    document.getElementById(
+      'editEntryPieceWeightWrap'
+    );
+
+  wrap.style.display =
+    unit === 'piece'
+      ? 'block'
+      : 'none';
+}
+
+function findProductForEntry(
+  entry
+) {
+
+  return (
+    products.find(
+      product =>
+        product.id ===
+        entry.productId
+    )
+    ||
+    products.find(
+      product =>
+        product.name
+          .toLowerCase() ===
+        String(
+          entry.name || ''
+        ).toLowerCase()
+    )
+  );
+}
+
+function saveEntryEdit() {
+
+  const date =
+    els.dayPicker.value;
+
+  const day =
+    ensureDay(date);
+
+  const entry =
+    day.entries.find(
+      item =>
+        item.id ===
+        editingEntryId
+    );
+
+  if (!entry) {
+    return;
+  }
+
+  const name =
+    document.getElementById(
+      'editEntryName'
+    ).value.trim();
+
+  const amount =
+    Number(
+      document.getElementById(
+        'editEntryAmount'
+      ).value
+    );
+
+  const unit =
+    document.getElementById(
+      'editEntryUnit'
+    ).value;
+
+  const p100 =
+    Number(
+      document.getElementById(
+        'editEntryProtein'
+      ).value
+    ) || 0;
+
+  const f100 =
+    Number(
+      document.getElementById(
+        'editEntryFat'
+      ).value
+    ) || 0;
+
+  const c100 =
+    Number(
+      document.getElementById(
+        'editEntryCarbs'
+      ).value
+    ) || 0;
+
+  const gramsPerPiece =
+    Number(
+      document.getElementById(
+        'editEntryPieceWeight'
+      ).value
+    ) || 0;
+
+  const countProtein =
+    document.getElementById(
+      'editEntryCountProtein'
+    ).checked;
+
+  const saveForFuture =
+    document.getElementById(
+      'editEntrySaveProduct'
+    ).checked;
+
+  if (
+    !name ||
+    !amount ||
+    amount <= 0
+  ) {
+
+    alert(
+      'Укажи название продукта и количество.'
+    );
+
+    return;
+  }
+
+  if (
+    unit === 'piece' &&
+    gramsPerPiece <= 0
+  ) {
+
+    alert(
+      'Укажи вес одной штуки в граммах.'
+    );
+
+    return;
+  }
+
+  const calc =
+    calcFromValues(
+      amount,
+      unit,
+      gramsPerPiece,
+      p100,
+      f100,
+      c100,
+      countProtein
+    );
+
+  entry.name =
+    name;
+
+  entry.amount =
+    amount;
+
+  entry.unit =
+    unit;
+
+  entry.gramsPerPiece =
+    gramsPerPiece;
+
+  entry.p100 =
+    p100;
+
+  entry.f100 =
+    f100;
+
+  entry.c100 =
+    c100;
+
+  entry.countProtein =
+    countProtein;
+
+  entry.p =
+    calc.p;
+
+  entry.realProtein =
+    calc.realProtein;
+
+  entry.f =
+    calc.f;
+
+  entry.c =
+    calc.c;
+
+  entry.kcal =
+    calc.kcal;
+
+  entry.grams =
+    calc.grams;
+
+  if (saveForFuture) {
+
+    let product =
+      findProductForEntry(
+        entry
+      );
+
+    if (!product) {
+
+      product = {
+        id:
+          crypto.randomUUID(),
+
+        name,
+
+        aliases: [
+          name.toLowerCase()
+        ],
+
+        unit,
+
+        gramsPerPiece,
+
+        p: p100,
+        f: f100,
+        c: c100,
+
+        countProtein,
+
+        kcal:
+          calculateKcal(
+            p100,
+            f100,
+            c100
+          )
+      };
+
+      products.push(
+        product
+      );
+
+      entry.productId =
+        product.id;
+
+    } else {
+
+      product.name =
+        name;
+
+      product.p =
+        p100;
+
+      product.f =
+        f100;
+
+      product.c =
+        c100;
+
+      product.unit =
+        unit;
+
+      product.gramsPerPiece =
+        gramsPerPiece;
+
+      product.countProtein =
+        countProtein;
+
+      product.kcal =
+        calculateKcal(
+          p100,
+          f100,
+          c100
+        );
+
+      entry.productId =
+        product.id;
+    }
+
+    saveProducts();
+  }
+
+  saveData();
+
+  document
+    .getElementById(
+      'entryEditDialog'
+    )
+    .close();
+
+  editingEntryId =
+    null;
+
+  render();
+}
+
+
+/* =========================================================
+   ИСТОРИЯ
+========================================================= */
+
 function renderHistory() {
+
   const dates =
     Object.keys(data)
       .filter(date =>
@@ -585,6 +1572,7 @@ function renderHistory() {
       );
 
   if (!dates.length) {
+
     els.historyList.innerHTML =
       '<div class="empty">История появится после первой записи.</div>';
 
@@ -593,15 +1581,20 @@ function renderHistory() {
 
   els.historyList.innerHTML =
     dates.map(date => {
+
       const totals =
-        totalsFor(data[date]);
+        totalsFor(
+          data[date]
+        );
 
       return `
         <div
           class="history-item"
           data-date="${date}"
         >
+
           <div>
+
             <div class="history-date">
               ${formatDate(date)}
             </div>
@@ -610,11 +1603,17 @@ function renderHistory() {
               Б ${round1(totals.p)} ·
               Ж ${round1(totals.f)} ·
               У ${round1(totals.c)} ·
-              ${Math.round(totals.kcal)} ккал
+              ${Math.round(
+                totals.kcal
+              )} ккал
             </div>
+
           </div>
 
-          <span>→</span>
+          <span>
+            →
+          </span>
+
         </div>
       `;
     }).join('');
@@ -624,9 +1623,11 @@ function renderHistory() {
       '.history-item'
     )
     .forEach(item => {
+
       item.addEventListener(
         'click',
         () => {
+
           els.dayPicker.value =
             item.dataset.date;
 
@@ -641,13 +1642,20 @@ function renderHistory() {
     });
 }
 
+
+/* =========================================================
+   ЦЕЛИ БЖУ
+========================================================= */
+
 function saveTargets() {
+
   const day =
     ensureDay(
       els.dayPicker.value
     );
 
   day.targets = {
+
     p:
       Number(
         els.targetProtein.value
@@ -665,14 +1673,19 @@ function saveTargets() {
   };
 
   saveData();
-  render();
 }
+
+
+/* =========================================================
+   ДОБАВЛЕНИЕ ПРОДУКТА
+========================================================= */
 
 function addEntry(
   product,
   amount,
   unit
 ) {
+
   if (
     !product ||
     !amount ||
@@ -685,8 +1698,9 @@ function addEntry(
     unit === 'piece' &&
     !product.gramsPerPiece
   ) {
+
     alert(
-      'Для этого продукта не указан вес одной штуки. Введи количество в граммах или укажи вес одной штуки в разделе «Продукты».'
+      'Для этого продукта не указан вес одной штуки. Введи количество в граммах.'
     );
 
     return;
@@ -705,6 +1719,7 @@ function addEntry(
     );
 
   day.entries.push({
+
     id:
       crypto.randomUUID(),
 
@@ -719,6 +1734,21 @@ function addEntry(
 
     unit,
 
+    gramsPerPiece:
+      product.gramsPerPiece || 0,
+
+    p100:
+      product.p,
+
+    f100:
+      product.f,
+
+    c100:
+      product.c,
+
+    countProtein:
+      product.countProtein,
+
     ...calc
   });
 
@@ -726,26 +1756,20 @@ function addEntry(
   render();
 }
 
-/*
-  НОРМАЛИЗАЦИЯ ФРАЗЫ
 
-  Понимает:
-
-  30 грамм риса
-  30 г риса
-  рис 30 грамм
-  рис 30 г
-  риса 30 грамм
-  100 граммов гречки
-  куриная грудка 200 г
-  200 г куриной грудки
-*/
+/* =========================================================
+   РАСПОЗНАВАНИЕ ТЕКСТА
+========================================================= */
 
 function normalizeText(text) {
+
   return String(text)
     .toLowerCase()
 
-    .replace(/,/g, '.')
+    .replace(
+      /,/g,
+      '.'
+    )
 
     .replace(
       /\bкилограммов\b/g,
@@ -778,12 +1802,7 @@ function normalizeText(text) {
     )
 
     .replace(
-      /\bгр\b/g,
-      'г'
-    )
-
-    .replace(
-      /\bгр\.\b/g,
+      /\bгр\.?/g,
       'г'
     )
 
@@ -811,150 +1830,55 @@ function normalizeText(text) {
 }
 
 function escapeRegExp(text) {
-  return String(text).replace(
-    /[.*+?^${}()|[\]\\]/g,
-    '\\$&'
-  );
-}
 
-function getProductAliases(product) {
-  return [
-    product.name.toLowerCase(),
-    ...(product.aliases || [])
-      .map(alias =>
-        alias.toLowerCase()
-      )
-  ]
-    .filter(
-      (value, index, array) =>
-        array.indexOf(value) === index
-    )
-    .sort(
-      (a, b) =>
-        b.length - a.length
+  return String(text)
+    .replace(
+      /[.*+?^${}()|[\]\\]/g,
+      '\\$&'
     );
 }
 
-function parseProductAmount(
-  text,
+function getProductAliases(
   product
 ) {
-  const aliases =
-    getProductAliases(product);
 
-  for (const alias of aliases) {
-    const a =
-      escapeRegExp(alias);
+  return [
+    product.name
+      .toLowerCase(),
 
-    /*
-      30 г риса
-      30 г куриной грудки
-    */
+    ...(product.aliases || [])
+      .map(
+        alias =>
+          alias.toLowerCase()
+      )
+  ]
 
-    let match =
-      text.match(
-        new RegExp(
-          `(\\d+(?:\\.\\d+)?)\\s*(кг|г|шт)\\s*(?:${a})(?=\\s|$|,|\\.|и\\b)`,
-          'i'
-        )
-      );
+    .filter(
+      (
+        value,
+        index,
+        array
+      ) =>
+        array.indexOf(value) ===
+        index
+    )
 
-    if (match) {
-      return convertAmount(
-        Number(match[1]),
-        match[2],
-        product
-      );
-    }
-
-    /*
-      рис 30 г
-      куриная грудка 200 г
-    */
-
-    match =
-      text.match(
-        new RegExp(
-          `(?:${a})\\s*(\\d+(?:\\.\\d+)?)\\s*(кг|г|шт)(?=\\s|$|,|\\.|и\\b)`,
-          'i'
-        )
-      );
-
-    if (match) {
-      return convertAmount(
-        Number(match[1]),
-        match[2],
-        product
-      );
-    }
-
-    /*
-      30 риса
-      Обычно считаем граммами,
-      кроме продуктов с заданным
-      весом одной штуки.
-    */
-
-    match =
-      text.match(
-        new RegExp(
-          `(\\d+(?:\\.\\d+)?)\\s*(?:${a})(?=\\s|$|,|\\.|и\\b)`,
-          'i'
-        )
-      );
-
-    if (match) {
-      const defaultUnit =
-        product.gramsPerPiece > 0
-          ? 'piece'
-          : 'g';
-
-      return {
-        amount:
-          Number(match[1]),
-
-        unit:
-          defaultUnit
-      };
-    }
-
-    /*
-      рис 30
-    */
-
-    match =
-      text.match(
-        new RegExp(
-          `(?:${a})\\s*(\\d+(?:\\.\\d+)?)(?=\\s|$|,|\\.|и\\b)`,
-          'i'
-        )
-      );
-
-    if (match) {
-      const defaultUnit =
-        product.gramsPerPiece > 0
-          ? 'piece'
-          : 'g';
-
-      return {
-        amount:
-          Number(match[1]),
-
-        unit:
-          defaultUnit
-      };
-    }
-  }
-
-  return null;
+    .sort(
+      (a, b) =>
+        b.length -
+        a.length
+    );
 }
 
 function convertAmount(
   amount,
-  unit,
-  product
+  unit
 ) {
-  if (unit === 'кг') {
+
+  if (
+    unit === 'кг'
+  ) {
+
     return {
       amount:
         amount * 1000,
@@ -964,7 +1888,10 @@ function convertAmount(
     };
   }
 
-  if (unit === 'шт') {
+  if (
+    unit === 'шт'
+  ) {
+
     return {
       amount,
       unit:
@@ -979,46 +1906,155 @@ function convertAmount(
   };
 }
 
+function parseProductAmount(
+  text,
+  product
+) {
+
+  const aliases =
+    getProductAliases(
+      product
+    );
+
+  for (
+    const alias
+    of aliases
+  ) {
+
+    const a =
+      escapeRegExp(
+        alias
+      );
+
+    let match;
+
+    /* 30 г кетчупа */
+
+    match =
+      text.match(
+        new RegExp(
+          `(\\d+(?:\\.\\d+)?)\\s*(кг|г|шт)\\s*(?:${a})(?=\\s|$|,|\\.|и\\b)`,
+          'i'
+        )
+      );
+
+    if (match) {
+
+      return convertAmount(
+        Number(match[1]),
+        match[2]
+      );
+    }
+
+    /* кетчуп 30 г */
+
+    match =
+      text.match(
+        new RegExp(
+          `(?:${a})\\s*(\\d+(?:\\.\\d+)?)\\s*(кг|г|шт)(?=\\s|$|,|\\.|и\\b)`,
+          'i'
+        )
+      );
+
+    if (match) {
+
+      return convertAmount(
+        Number(match[1]),
+        match[2]
+      );
+    }
+
+    /* 30 риса */
+
+    match =
+      text.match(
+        new RegExp(
+          `(\\d+(?:\\.\\d+)?)\\s*(?:${a})(?=\\s|$|,|\\.|и\\b)`,
+          'i'
+        )
+      );
+
+    if (match) {
+
+      return {
+        amount:
+          Number(
+            match[1]
+          ),
+
+        unit:
+          product.unit ||
+          'g'
+      };
+    }
+
+    /* рис 30 */
+
+    match =
+      text.match(
+        new RegExp(
+          `(?:${a})\\s*(\\d+(?:\\.\\d+)?)(?=\\s|$|,|\\.|и\\b)`,
+          'i'
+        )
+      );
+
+    if (match) {
+
+      return {
+        amount:
+          Number(
+            match[1]
+          ),
+
+        unit:
+          product.unit ||
+          'g'
+      };
+    }
+  }
+
+  return null;
+}
+
 function parseQuickText(raw) {
+
   const text =
     normalizeText(raw);
 
   const found = [];
 
-  /*
-    Сначала ищем продукты
-    с самыми длинными названиями.
-
-    Это нужно, например, чтобы
-    "творожный сыр" не был
-    ошибочно распознан как "сыр".
-  */
-
   const sortedProducts =
-    [...products].sort(
-      (a, b) => {
-        const maxA =
-          Math.max(
-            ...getProductAliases(a)
-              .map(x => x.length)
-          );
+    [...products]
+      .sort(
+        (a, b) => {
 
-        const maxB =
-          Math.max(
-            ...getProductAliases(b)
-              .map(x => x.length)
-          );
+          const maxA =
+            Math.max(
+              ...getProductAliases(a)
+                .map(
+                  x =>
+                    x.length
+                )
+            );
 
-        return maxB - maxA;
-      }
-    );
+          const maxB =
+            Math.max(
+              ...getProductAliases(b)
+                .map(
+                  x =>
+                    x.length
+                )
+            );
 
-  const occupied = [];
+          return maxB - maxA;
+        }
+      );
 
   for (
     const product
     of sortedProducts
   ) {
+
     const result =
       parseProductAmount(
         text,
@@ -1031,8 +2067,10 @@ function parseQuickText(raw) {
 
     found.push({
       product,
+
       amount:
         result.amount,
+
       unit:
         result.unit
     });
@@ -1041,18 +2079,26 @@ function parseQuickText(raw) {
   return found;
 }
 
+
+/* =========================================================
+   РУЧНОЕ ДОБАВЛЕНИЕ
+========================================================= */
+
 function renderManualProducts() {
+
   els.manualProduct.innerHTML =
     products
-      .map(product => `
-        <option
-          value="${product.id}"
-        >
-          ${escapeHtml(
-            product.name
-          )}
-        </option>
-      `)
+      .map(
+        product => `
+          <option
+            value="${product.id}"
+          >
+            ${escapeHtml(
+              product.name
+            )}
+          </option>
+        `
+      )
       .join('');
 
   const selected =
@@ -1060,26 +2106,40 @@ function renderManualProducts() {
       product =>
         product.id ===
         els.manualProduct.value
-    ) || products[0];
+    )
+    ||
+    products[0];
 
   if (selected) {
+
     els.manualUnit.value =
-      selected.gramsPerPiece > 0
-        ? selected.unit
-        : 'g';
+      selected.unit ||
+      'g';
   }
 }
 
+
+/* =========================================================
+   НАСТРОЙКИ ПРОДУКТОВ
+========================================================= */
+
 function openProductEditor() {
+
   els.productEditor.innerHTML =
     products
-      .map(productRowHtml)
+      .map(
+        productRowHtml
+      )
       .join('');
 
-  els.settingsDialog.showModal();
+  bindProductEditorRemovers();
+
+  els.settingsDialog
+    .showModal();
 }
 
 function productRowHtml(product) {
+
   return `
     <div
       class="product-row"
@@ -1131,29 +2191,39 @@ function productRowHtml(product) {
       </label>
 
       <label>
-        ккал / 100 г
-
-        <input
-          data-field="kcal"
-          type="number"
-          step="0.1"
-          value="${round1(
-            product.kcal
-          )}"
-        >
-      </label>
-
-      <label>
-        грамм в 1 штуке
+        Вес 1 штуки, г
 
         <input
           data-field="gramsPerPiece"
           type="number"
           step="0.1"
           value="${
-            product.gramsPerPiece || 0
+            product.gramsPerPiece ||
+            0
           }"
         >
+      </label>
+
+      <label
+        style="
+          display:flex;
+          align-items:center;
+          gap:7px;
+        "
+      >
+
+        <input
+          data-field="countProtein"
+          type="checkbox"
+          ${
+            product.countProtein
+              ? 'checked'
+              : ''
+          }
+        >
+
+        Учитывать белок
+
       </label>
 
       <button
@@ -1168,14 +2238,17 @@ function productRowHtml(product) {
 }
 
 function bindProductEditorRemovers() {
+
   els.productEditor
     .querySelectorAll(
       '.remove-product'
     )
     .forEach(btn => {
+
       btn.addEventListener(
         'click',
         () => {
+
           btn
             .closest(
               '.product-row'
@@ -1187,23 +2260,25 @@ function bindProductEditorRemovers() {
 }
 
 function saveProductEditor() {
-  const rows = [
-    ...els.productEditor
-      .querySelectorAll(
-        '.product-row'
-      )
-  ];
+
+  const rows =
+    [
+      ...els.productEditor
+        .querySelectorAll(
+          '.product-row'
+        )
+    ];
 
   products =
     rows
       .map(row => {
+
         const get =
           field =>
             row
               .querySelector(
                 `[data-field="${field}"]`
-              )
-              .value;
+              );
 
         const old =
           products.find(
@@ -1213,23 +2288,39 @@ function saveProductEditor() {
           );
 
         const name =
-          get('name').trim();
+          get('name')
+            .value
+            .trim();
 
         const p =
-          Number(get('p')) || 0;
+          Number(
+            get('p').value
+          ) || 0;
 
         const f =
-          Number(get('f')) || 0;
+          Number(
+            get('f').value
+          ) || 0;
 
         const c =
-          Number(get('c')) || 0;
+          Number(
+            get('c').value
+          ) || 0;
 
         const gramsPerPiece =
           Number(
-            get('gramsPerPiece')
+            get(
+              'gramsPerPiece'
+            ).value
           ) || 0;
 
+        const countProtein =
+          get(
+            'countProtein'
+          ).checked;
+
         return {
+
           id:
             row.dataset.id ||
             crypto.randomUUID(),
@@ -1245,7 +2336,10 @@ function saveProductEditor() {
 
           unit:
             gramsPerPiece > 0
-              ? 'piece'
+              ? (
+                  old?.unit ||
+                  'g'
+                )
               : 'g',
 
           gramsPerPiece,
@@ -1254,10 +2348,7 @@ function saveProductEditor() {
           f,
           c,
 
-          /*
-            Калории пересчитываем
-            автоматически из БЖУ.
-          */
+          countProtein,
 
           kcal:
             calculateKcal(
@@ -1267,6 +2358,7 @@ function saveProductEditor() {
             )
         };
       })
+
       .filter(
         product =>
           product.name
@@ -1280,9 +2372,9 @@ function saveProductEditor() {
 }
 
 
-/* =====================
+/* =========================================================
    ДАТА
-===================== */
+========================================================= */
 
 els.dayPicker.value =
   localDateString();
@@ -1297,6 +2389,7 @@ els.prevDay
   .addEventListener(
     'click',
     () => {
+
       const d =
         new Date(
           els.dayPicker.value +
@@ -1318,6 +2411,7 @@ els.nextDay
   .addEventListener(
     'click',
     () => {
+
       const d =
         new Date(
           els.dayPicker.value +
@@ -1336,18 +2430,22 @@ els.nextDay
   );
 
 
-/* =====================
-   ЦЕЛИ БЖУ
-===================== */
+/* =========================================================
+   ЦЕЛИ
+========================================================= */
 
 [
   els.targetProtein,
   els.targetFat,
   els.targetCarbs
 ].forEach(input => {
+
   input.addEventListener(
     'change',
-    saveTargets
+    () => {
+      saveTargets();
+      render();
+    }
   );
 
   input.addEventListener(
@@ -1357,14 +2455,15 @@ els.nextDay
 });
 
 
-/* =====================
+/* =========================================================
    БЫСТРЫЙ ВВОД
-===================== */
+========================================================= */
 
 els.parseBtn
   .addEventListener(
     'click',
     () => {
+
       const text =
         els.quickInput
           .value
@@ -1375,11 +2474,16 @@ els.parseBtn
       }
 
       const parsed =
-        parseQuickText(text);
+        parseQuickText(
+          text
+        );
 
-      if (!parsed.length) {
+      if (
+        !parsed.length
+      ) {
+
         alert(
-          'Не получилось распознать продукт. Например, напиши: «рис 100 г» или «200 грамм куриной грудки».'
+          'Не получилось распознать продукт. Например: «рис 100 г» или «200 грамм куриной грудки».'
         );
 
         return;
@@ -1387,6 +2491,7 @@ els.parseBtn
 
       parsed.forEach(
         item => {
+
           addEntry(
             item.product,
             item.amount,
@@ -1400,34 +2505,33 @@ els.parseBtn
     }
   );
 
-
-/*
-  Enter тоже добавляет еду
-*/
-
 els.quickInput
   .addEventListener(
     'keydown',
     event => {
+
       if (
         event.key ===
         'Enter'
       ) {
+
         event.preventDefault();
+
         els.parseBtn.click();
       }
     }
   );
 
 
-/* =====================
+/* =========================================================
    РУЧНОЕ ДОБАВЛЕНИЕ
-===================== */
+========================================================= */
 
 els.manualBtn
   .addEventListener(
     'click',
     () => {
+
       renderManualProducts();
 
       els.manualAmount.value =
@@ -1442,6 +2546,7 @@ els.manualProduct
   .addEventListener(
     'change',
     () => {
+
       const product =
         products.find(
           p =>
@@ -1449,14 +2554,12 @@ els.manualProduct
             els.manualProduct.value
         );
 
-      if (!product) {
-        return;
-      }
+      if (product) {
 
-      els.manualUnit.value =
-        product.gramsPerPiece > 0
-          ? product.unit
-          : 'g';
+        els.manualUnit.value =
+          product.unit ||
+          'g';
+      }
     }
   );
 
@@ -1464,6 +2567,7 @@ els.manualSubmit
   .addEventListener(
     'click',
     () => {
+
       const product =
         products.find(
           p =>
@@ -1484,20 +2588,21 @@ els.manualSubmit
   );
 
 
-/* =====================
+/* =========================================================
    ОЧИСТИТЬ ДЕНЬ
-===================== */
+========================================================= */
 
 els.clearDayBtn
   .addEventListener(
     'click',
     () => {
-      const shouldClear =
+
+      const yes =
         confirm(
           'Удалить все записи еды за этот день? Цели БЖУ останутся.'
         );
 
-      if (!shouldClear) {
+      if (!yes) {
         return;
       }
 
@@ -1511,24 +2616,23 @@ els.clearDayBtn
   );
 
 
-/* =====================
-   ПРОДУКТЫ
-===================== */
+/* =========================================================
+   НАСТРОЙКИ ПРОДУКТОВ
+========================================================= */
 
 els.settingsBtn
   .addEventListener(
     'click',
-    () => {
-      openProductEditor();
-      bindProductEditorRemovers();
-    }
+    openProductEditor
   );
 
 els.addProductBtn
   .addEventListener(
     'click',
     () => {
+
       const product = {
+
         id:
           crypto.randomUUID(),
 
@@ -1536,7 +2640,9 @@ els.addProductBtn
           'Новый продукт',
 
         aliases:
-          ['новый продукт'],
+          [
+            'новый продукт'
+          ],
 
         unit:
           'g',
@@ -1547,15 +2653,23 @@ els.addProductBtn
         p: 0,
         f: 0,
         c: 0,
+
+        countProtein:
+          false,
+
         kcal: 0
       };
 
-      products.push(product);
+      products.push(
+        product
+      );
 
       els.productEditor
         .insertAdjacentHTML(
           'beforeend',
-          productRowHtml(product)
+          productRowHtml(
+            product
+          )
         );
 
       bindProductEditorRemovers();
@@ -1569,15 +2683,16 @@ els.saveProductsBtn
   );
 
 
-/* =====================
+/* =========================================================
    ГОЛОСОВОЙ ВВОД
-===================== */
+========================================================= */
 
 const SpeechRecognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
+
   const recognition =
     new SpeechRecognition();
 
@@ -1592,6 +2707,7 @@ if (SpeechRecognition) {
 
   recognition.onstart =
     () => {
+
       els.voiceBtn
         .classList
         .add(
@@ -1610,6 +2726,7 @@ if (SpeechRecognition) {
 
   recognition.onresult =
     event => {
+
       const transcript =
         event.results[0][0]
           .transcript;
@@ -1626,6 +2743,7 @@ if (SpeechRecognition) {
 
   recognition.onerror =
     event => {
+
       els.voiceStatus.hidden =
         false;
 
@@ -1633,9 +2751,12 @@ if (SpeechRecognition) {
         event.error ===
         'not-allowed'
       ) {
+
         els.voiceStatus.textContent =
           'Нет доступа к микрофону. Разреши сайту использовать микрофон в настройках браузера.';
+
       } else {
+
         els.voiceStatus.textContent =
           'Не удалось распознать речь: ' +
           event.error;
@@ -1644,6 +2765,7 @@ if (SpeechRecognition) {
 
   recognition.onend =
     () => {
+
       els.voiceBtn
         .classList
         .remove(
@@ -1658,15 +2780,17 @@ if (SpeechRecognition) {
     .addEventListener(
       'click',
       () => {
+
         try {
           recognition.start();
         } catch {
-          // уже запущено
+          // распознавание уже запущено
         }
       }
     );
 
 } else {
+
   els.voiceBtn.disabled =
     true;
 
@@ -1681,8 +2805,10 @@ if (SpeechRecognition) {
 }
 
 
-/* =====================
+/* =========================================================
    ЗАПУСК
-===================== */
+========================================================= */
+
+ensureEntryEditor();
 
 render();

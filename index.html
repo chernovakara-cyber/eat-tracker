@@ -6,7 +6,6 @@
 
   <title>Мой БЖУ дневник</title>
 
-  <!-- Иконки сайта -->
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
@@ -29,14 +28,20 @@
         </h1>
 
         <p class="subtitle">
-          Записывай еду голосом или вручную и следи, сколько белков, жиров и углеводов осталось на сегодня.
+          Записывай еду голосом или вручную и следи, сколько белков,
+          жиров и углеводов осталось на сегодня.
         </p>
       </div>
 
-      <button id="settingsBtn" class="ghost-btn" type="button">
+      <button
+        id="settingsBtn"
+        class="ghost-btn"
+        type="button"
+      >
         ⚙️ Продукты
       </button>
     </header>
+
 
     <main>
 
@@ -53,10 +58,20 @@
             ←
           </button>
 
+
           <div class="date-wrap">
-            <label for="dayPicker">День</label>
-            <input id="dayPicker" type="date" />
+
+            <label for="dayPicker">
+              День
+            </label>
+
+            <input
+              id="dayPicker"
+              type="date"
+            />
+
           </div>
+
 
           <button
             id="nextDay"
@@ -69,10 +84,12 @@
 
         </div>
 
+
         <div class="targets-grid">
 
           <label>
             Белки, г
+
             <input
               id="targetProtein"
               type="number"
@@ -82,8 +99,10 @@
             />
           </label>
 
+
           <label>
             Жиры, г
+
             <input
               id="targetFat"
               type="number"
@@ -93,8 +112,10 @@
             />
           </label>
 
+
           <label>
             Углеводы, г
+
             <input
               id="targetCarbs"
               type="number"
@@ -106,6 +127,7 @@
 
         </div>
 
+
         <p class="hint">
           Цели сохраняются отдельно для каждого дня.
         </p>
@@ -113,19 +135,27 @@
       </section>
 
 
+
       <section class="stats-grid">
 
         <article class="stat-card protein">
 
-          <span>Белки</span>
+          <span>
+            Белки
+          </span>
 
           <strong id="proteinEaten">
             0 г
           </strong>
 
           <small>
-            <em id="proteinStatusText">осталось</em>
-            <b id="proteinLeft">0 г</b>
+            <em id="proteinStatusText">
+              осталось
+            </em>
+
+            <b id="proteinLeft">
+              0 г
+            </b>
           </small>
 
           <div class="progress">
@@ -137,15 +167,22 @@
 
         <article class="stat-card fat">
 
-          <span>Жиры</span>
+          <span>
+            Жиры
+          </span>
 
           <strong id="fatEaten">
             0 г
           </strong>
 
           <small>
-            <em id="fatStatusText">осталось</em>
-            <b id="fatLeft">0 г</b>
+            <em id="fatStatusText">
+              осталось
+            </em>
+
+            <b id="fatLeft">
+              0 г
+            </b>
           </small>
 
           <div class="progress">
@@ -157,15 +194,22 @@
 
         <article class="stat-card carbs">
 
-          <span>Углеводы</span>
+          <span>
+            Углеводы
+          </span>
 
           <strong id="carbsEaten">
             0 г
           </strong>
 
           <small>
-            <em id="carbsStatusText">осталось</em>
-            <b id="carbsLeft">0 г</b>
+            <em id="carbsStatusText">
+              осталось
+            </em>
+
+            <b id="carbsLeft">
+              0 г
+            </b>
           </small>
 
           <div class="progress">
@@ -177,7 +221,9 @@
 
         <article class="stat-card kcal">
 
-          <span>Калории</span>
+          <span>
+            Калории
+          </span>
 
           <strong id="kcalEaten">
             0 ккал
@@ -192,14 +238,23 @@
       </section>
 
 
+
       <section class="card input-card">
 
         <div class="section-heading">
 
           <div>
-            <p class="eyebrow">Добавить еду</p>
-            <h2>Что ты съела?</h2>
+
+            <p class="eyebrow">
+              Добавить еду
+            </p>
+
+            <h2>
+              Что ты съела?
+            </h2>
+
           </div>
+
 
           <button
             id="voiceBtn"
@@ -211,17 +266,20 @@
 
         </div>
 
+
         <div
           id="voiceStatus"
           class="voice-status"
           hidden
         ></div>
 
+
         <textarea
           id="quickInput"
           rows="3"
-          placeholder="Например: 2 яйца и 30 грамм кетчупа"
+          placeholder="Например: 100 грамм риса и 120 грамм тунца"
         ></textarea>
+
 
         <div class="actions-row">
 
@@ -233,6 +291,7 @@
             Добавить из текста
           </button>
 
+
           <button
             id="manualBtn"
             class="secondary-btn"
@@ -243,6 +302,7 @@
 
         </div>
 
+
         <p class="hint">
           Голосовой ввод работает в браузерах с поддержкой Web Speech API.
           Если он недоступен, можно использовать обычный текст.
@@ -251,14 +311,23 @@
       </section>
 
 
+
       <section class="card diary-card">
 
         <div class="section-heading">
 
           <div>
-            <p class="eyebrow">Записи</p>
-            <h2 id="diaryTitle">Еда за день</h2>
+
+            <p class="eyebrow">
+              Записи
+            </p>
+
+            <h2 id="diaryTitle">
+              Еда за день
+            </h2>
+
           </div>
+
 
           <button
             id="clearDayBtn"
@@ -270,6 +339,7 @@
 
         </div>
 
+
         <div
           id="entriesList"
           class="entries-list"
@@ -278,16 +348,25 @@
       </section>
 
 
+
       <section class="card history-card">
 
         <div class="section-heading">
 
           <div>
-            <p class="eyebrow">История</p>
-            <h2>Все записанные дни</h2>
+
+            <p class="eyebrow">
+              История
+            </p>
+
+            <h2>
+              Все записанные дни
+            </h2>
+
           </div>
 
         </div>
+
 
         <div
           id="historyList"
@@ -300,6 +379,9 @@
 
   </div>
 
+
+
+  <!-- ДОБАВИТЬ ВРУЧНУЮ -->
 
   <dialog
     id="manualDialog"
@@ -327,13 +409,17 @@
 
       </div>
 
+
       <label>
         Продукт
+
         <select id="manualProduct"></select>
       </label>
 
+
       <label>
-        Количество
+        Количество, г
+
         <input
           id="manualAmount"
           type="number"
@@ -343,15 +429,13 @@
         />
       </label>
 
-      <label>
-        Единица
 
-        <select id="manualUnit">
-          <option value="g">грамм</option>
-          <option value="piece">штук</option>
-        </select>
+      <input
+        id="manualUnit"
+        type="hidden"
+        value="g"
+      />
 
-      </label>
 
       <button
         id="manualSubmit"
@@ -367,6 +451,9 @@
   </dialog>
 
 
+
+  <!-- НАСТРОЙКИ ПРОДУКТОВ -->
+
   <dialog
     id="settingsDialog"
     class="modal wide"
@@ -377,9 +464,18 @@
       <div class="modal-head">
 
         <div>
-          <h3>Мои продукты</h3>
-          <p>Можно менять значения и добавлять свои продукты.</p>
+
+          <h3>
+            Мои продукты
+          </h3>
+
+          <p>
+            Можно менять БЖУ и выбирать,
+            учитывать ли белок продукта в дневной сумме.
+          </p>
+
         </div>
+
 
         <button
           class="close-btn"
@@ -391,10 +487,12 @@
 
       </div>
 
+
       <div
         id="productEditor"
         class="product-editor"
       ></div>
+
 
       <button
         id="addProductBtn"
@@ -404,6 +502,7 @@
         + Добавить продукт
       </button>
 
+
       <div class="modal-footer">
 
         <button
@@ -412,6 +511,122 @@
           type="button"
         >
           Сохранить продукты
+        </button>
+
+      </div>
+
+    </form>
+
+  </dialog>
+
+
+
+  <!-- РЕДАКТИРОВАТЬ КОНКРЕТНУЮ ЗАПИСЬ -->
+
+  <dialog
+    id="entryEditDialog"
+    class="entry-edit-dialog"
+  >
+
+    <form
+      method="dialog"
+      id="entryEditForm"
+      class="entry-edit-cloud"
+    >
+
+      <div class="entry-edit-head">
+
+        <div>
+
+          <p class="eyebrow">
+            Редактировать запись
+          </p>
+
+          <h3 id="editEntryName">
+            Продукт
+          </h3>
+
+          <p
+            id="editEntryAmountLabel"
+            class="edit-entry-subtitle"
+          ></p>
+
+        </div>
+
+
+        <button
+          class="close-btn"
+          value="cancel"
+          type="submit"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="entry-edit-grid">
+
+        <label>
+          Белки, г
+
+          <input
+            id="editEntryProtein"
+            type="number"
+            min="0"
+            step="0.1"
+          />
+        </label>
+
+
+        <label>
+          Жиры, г
+
+          <input
+            id="editEntryFat"
+            type="number"
+            min="0"
+            step="0.1"
+          />
+        </label>
+
+
+        <label>
+          Углеводы, г
+
+          <input
+            id="editEntryCarbs"
+            type="number"
+            min="0"
+            step="0.1"
+          />
+        </label>
+
+      </div>
+
+
+      <label class="protein-checkbox edit-protein-checkbox">
+
+        <input
+          id="editEntryCountProtein"
+          type="checkbox"
+        />
+
+        <span>
+          Учитывать белок этой записи в дневной сумме
+        </span>
+
+      </label>
+
+
+      <div class="entry-edit-footer">
+
+        <button
+          id="saveEntryEditBtn"
+          class="primary-btn"
+          type="button"
+        >
+          Сохранить изменения
         </button>
 
       </div>

@@ -2,29 +2,164 @@ const STORAGE_KEY = 'bju-diary-v1';
 const PRODUCTS_KEY = 'bju-products-v1';
 
 const defaultProducts = [
-  { id: crypto.randomUUID(), name: 'Яйцо', aliases: ['яйцо','яйца','яиц'], unit: 'piece', gramsPerPiece: 55, p: 12.7, f: 10.9, c: 0.7, kcal: 157 },
-  { id: crypto.randomUUID(), name: 'Кетчуп', aliases: ['кетчуп','кетчупа'], unit: 'g', gramsPerPiece: 0, p: 1.3, f: 0.2, c: 22.2, kcal: 101 },
-  { id: crypto.randomUUID(), name: 'Куриная грудка', aliases: ['куриная грудка','грудка','курицы','курица'], unit: 'g', gramsPerPiece: 0, p: 31, f: 3.6, c: 0, kcal: 165 },
-  { id: crypto.randomUUID(), name: 'Рис варёный', aliases: ['рис','риса'], unit: 'g', gramsPerPiece: 0, p: 2.7, f: 0.3, c: 28.2, kcal: 130 },
-  { id: crypto.randomUUID(), name: 'Овсянка', aliases: ['овсянка','овсянки','овсяные хлопья'], unit: 'g', gramsPerPiece: 0, p: 12.3, f: 6.1, c: 59.5, kcal: 352 },
-  { id: crypto.randomUUID(), name: 'Молоко 2.5%', aliases: ['молоко','молока'], unit: 'g', gramsPerPiece: 0, p: 2.8, f: 2.5, c: 4.7, kcal: 52 },
-  { id: crypto.randomUUID(), name: 'Творог 5%', aliases: ['творог','творога'], unit: 'g', gramsPerPiece: 0, p: 17, f: 5, c: 1.8, kcal: 121 },
-  { id: crypto.randomUUID(), name: 'Банан', aliases: ['банан','банана','бананы'], unit: 'g', gramsPerPiece: 0, p: 1.1, f: 0.3, c: 22.8, kcal: 96 },
-  { id: crypto.randomUUID(), name: 'Сыр', aliases: ['сыр','сыра'], unit: 'g', gramsPerPiece: 0, p: 24, f: 29, c: 0.5, kcal: 363 },
-  { id: crypto.randomUUID(), name: 'Хлеб', aliases: ['хлеб','хлеба'], unit: 'g', gramsPerPiece: 0, p: 8.1, f: 1, c: 48.8, kcal: 242 }
+  {
+    id: crypto.randomUUID(),
+    name: 'Яйцо',
+    aliases: ['яйцо', 'яйца', 'яиц'],
+    unit: 'piece',
+    gramsPerPiece: 55,
+    p: 12.7,
+    f: 10.9,
+    c: 0.7,
+    kcal: 157
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Кетчуп',
+    aliases: ['кетчуп', 'кетчупа'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 1.3,
+    f: 0.2,
+    c: 22.2,
+    kcal: 101
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Куриная грудка',
+    aliases: ['куриная грудка', 'грудка', 'грудки', 'курица', 'курицы'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 31,
+    f: 3.6,
+    c: 0,
+    kcal: 165
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Рис варёный',
+    aliases: ['рис', 'риса', 'рис варёный', 'варёный рис'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 2.7,
+    f: 0.3,
+    c: 28.2,
+    kcal: 130
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Овсянка',
+    aliases: ['овсянка', 'овсянки', 'овсяные хлопья'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 12.3,
+    f: 6.1,
+    c: 59.5,
+    kcal: 352
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Молоко 2.5%',
+    aliases: ['молоко', 'молока'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 2.8,
+    f: 2.5,
+    c: 4.7,
+    kcal: 52
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Творог 5%',
+    aliases: ['творог', 'творога'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 17,
+    f: 5,
+    c: 1.8,
+    kcal: 121
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Банан',
+    aliases: ['банан', 'банана', 'бананы'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 1.1,
+    f: 0.3,
+    c: 22.8,
+    kcal: 96
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Сыр',
+    aliases: ['сыр', 'сыра'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 24,
+    f: 29,
+    c: 0.5,
+    kcal: 363
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Хлеб',
+    aliases: ['хлеб', 'хлеба'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 8.1,
+    f: 1,
+    c: 48.8,
+    kcal: 242
+  }
 ];
 
-const $ = (id) => document.getElementById(id);
+const $ = id => document.getElementById(id);
+
 const els = {
-  dayPicker: $('dayPicker'), prevDay: $('prevDay'), nextDay: $('nextDay'),
-  targetProtein: $('targetProtein'), targetFat: $('targetFat'), targetCarbs: $('targetCarbs'),
-  proteinEaten: $('proteinEaten'), fatEaten: $('fatEaten'), carbsEaten: $('carbsEaten'), kcalEaten: $('kcalEaten'),
-  proteinLeft: $('proteinLeft'), fatLeft: $('fatLeft'), carbsLeft: $('carbsLeft'),
-  proteinProgress: $('proteinProgress'), fatProgress: $('fatProgress'), carbsProgress: $('carbsProgress'),
-  quickInput: $('quickInput'), parseBtn: $('parseBtn'), manualBtn: $('manualBtn'), voiceBtn: $('voiceBtn'), voiceStatus: $('voiceStatus'),
-  entriesList: $('entriesList'), historyList: $('historyList'), diaryTitle: $('diaryTitle'), clearDayBtn: $('clearDayBtn'),
-  manualDialog: $('manualDialog'), manualProduct: $('manualProduct'), manualAmount: $('manualAmount'), manualUnit: $('manualUnit'), manualSubmit: $('manualSubmit'),
-  settingsBtn: $('settingsBtn'), settingsDialog: $('settingsDialog'), productEditor: $('productEditor'), addProductBtn: $('addProductBtn'), saveProductsBtn: $('saveProductsBtn')
+  dayPicker: $('dayPicker'),
+  prevDay: $('prevDay'),
+  nextDay: $('nextDay'),
+
+  targetProtein: $('targetProtein'),
+  targetFat: $('targetFat'),
+  targetCarbs: $('targetCarbs'),
+
+  proteinEaten: $('proteinEaten'),
+  fatEaten: $('fatEaten'),
+  carbsEaten: $('carbsEaten'),
+  kcalEaten: $('kcalEaten'),
+
+  proteinLeft: $('proteinLeft'),
+  fatLeft: $('fatLeft'),
+  carbsLeft: $('carbsLeft'),
+
+  proteinProgress: $('proteinProgress'),
+  fatProgress: $('fatProgress'),
+  carbsProgress: $('carbsProgress'),
+
+  quickInput: $('quickInput'),
+  parseBtn: $('parseBtn'),
+  manualBtn: $('manualBtn'),
+  voiceBtn: $('voiceBtn'),
+  voiceStatus: $('voiceStatus'),
+
+  entriesList: $('entriesList'),
+  historyList: $('historyList'),
+  diaryTitle: $('diaryTitle'),
+  clearDayBtn: $('clearDayBtn'),
+
+  manualDialog: $('manualDialog'),
+  manualProduct: $('manualProduct'),
+  manualAmount: $('manualAmount'),
+  manualUnit: $('manualUnit'),
+  manualSubmit: $('manualSubmit'),
+
+  settingsBtn: $('settingsBtn'),
+  settingsDialog: $('settingsDialog'),
+  productEditor: $('productEditor'),
+  addProductBtn: $('addProductBtn'),
+  saveProductsBtn: $('saveProductsBtn')
 };
 
 let data = loadJSON(STORAGE_KEY, {});
@@ -32,18 +167,29 @@ let products = loadProducts();
 
 function localDateString(date = new Date()) {
   const y = date.getFullYear();
-  const m = String(date.getMonth()+1).padStart(2,'0');
-  const d = String(date.getDate()).padStart(2,'0');
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+
   return `${y}-${m}-${d}`;
 }
 
 function formatDate(dateString) {
   const d = new Date(dateString + 'T12:00:00');
-  return d.toLocaleDateString('ru-RU', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  return d.toLocaleDateString('ru-RU', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
 }
 
 function loadJSON(key, fallback) {
-  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+  try {
+    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+  } catch {
+    return fallback;
+  }
 }
 
 function saveData() {
@@ -56,11 +202,24 @@ function saveProducts() {
 
 function loadProducts() {
   const saved = loadJSON(PRODUCTS_KEY, null);
-  return Array.isArray(saved) && saved.length ? saved : structuredClone(defaultProducts);
+
+  return Array.isArray(saved) && saved.length
+    ? saved
+    : structuredClone(defaultProducts);
 }
 
 function ensureDay(date) {
-  if (!data[date]) data[date] = { targets: { p: 0, f: 0, c: 0 }, entries: [] };
+  if (!data[date]) {
+    data[date] = {
+      targets: {
+        p: 0,
+        f: 0,
+        c: 0
+      },
+      entries: []
+    };
+  }
+
   return data[date];
 }
 
@@ -68,13 +227,13 @@ function round1(n) {
   return Math.round((Number(n) || 0) * 10) / 10;
 }
 
-function escapeHtml(value='') {
+function escapeHtml(value = '') {
   return value.replace(/[&<>'"]/g, c => ({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    "'":'&#39;',
-    '"':'&quot;'
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
   }[c]));
 }
 
@@ -84,8 +243,14 @@ function totalsFor(day) {
     acc.f += e.f;
     acc.c += e.c;
     acc.kcal += e.kcal;
+
     return acc;
-  }, {p:0,f:0,c:0,kcal:0});
+  }, {
+    p: 0,
+    f: 0,
+    c: 0,
+    kcal: 0
+  });
 }
 
 function calcFromProduct(product, amount, unit) {
@@ -133,6 +298,7 @@ function updateStat(type, eaten, target) {
   const left = Math.max(0, targetNum - eaten);
 
   els[type + 'Eaten'].textContent = `${round1(eaten)} г`;
+
   els[type + 'Left'].textContent = targetNum
     ? `${round1(left)} г`
     : 'цель не задана';
@@ -179,25 +345,27 @@ function renderEntries(day) {
 
   els.entriesList
     .querySelectorAll('.delete-entry')
-    .forEach(btn => btn.addEventListener('click', () => {
-      day.entries = day.entries.filter(
-        e => e.id !== btn.dataset.id
-      );
+    .forEach(btn => {
+      btn.addEventListener('click', () => {
+        day.entries = day.entries.filter(
+          e => e.id !== btn.dataset.id
+        );
 
-      saveData();
-      render();
-    }));
+        saveData();
+        render();
+      });
+    });
 }
 
 function renderHistory() {
   const dates = Object.keys(data)
-    .filter(d =>
-      data[d].entries.length ||
-      data[d].targets.p ||
-      data[d].targets.f ||
-      data[d].targets.c
+    .filter(date =>
+      data[date].entries.length ||
+      data[date].targets.p ||
+      data[date].targets.f ||
+      data[date].targets.c
     )
-    .sort((a,b) => b.localeCompare(a));
+    .sort((a, b) => b.localeCompare(a));
 
   if (!dates.length) {
     els.historyList.innerHTML =
@@ -230,11 +398,18 @@ function renderHistory() {
 
   els.historyList
     .querySelectorAll('.history-item')
-    .forEach(item => item.addEventListener('click', () => {
-      els.dayPicker.value = item.dataset.date;
-      render();
-      window.scrollTo({top:0, behavior:'smooth'});
-    }));
+    .forEach(item => {
+      item.addEventListener('click', () => {
+        els.dayPicker.value = item.dataset.date;
+
+        render();
+
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    });
 }
 
 function saveTargets() {
@@ -251,15 +426,21 @@ function saveTargets() {
 }
 
 function addEntry(product, amount, unit) {
-  if (!product || !amount || amount <= 0) return;
+  if (!product || !amount || amount <= 0) {
+    return;
+  }
 
-  const calc = calcFromProduct(product, amount, unit);
+  const calc = calcFromProduct(
+    product,
+    amount,
+    unit
+  );
 
   if (unit === 'piece' && !product.gramsPerPiece) {
     alert(
-      'Для этого продукта не указан вес одной штуки. ' +
-      'Измени его в разделе «Продукты».'
+      'Для этого продукта не указан вес одной штуки. Измени его в разделе «Продукты».'
     );
+
     return;
   }
 
@@ -281,61 +462,141 @@ function addEntry(product, amount, unit) {
 function normalizeText(text) {
   return text
     .toLowerCase()
-    .replace(/,/g,'.')
-    .replace(/(граммов|грамма|грамм|гр\.?)/g,'г')
-    .replace(/(штуки|штук|штука)/g,'шт');
+    .replace(/,/g, '.')
+    .replace(/\bкилограммов\b/g, 'кг')
+    .replace(/\bкилограмма\b/g, 'кг')
+    .replace(/\bкилограмм\b/g, 'кг')
+    .replace(/\bкг\.?\b/g, 'кг')
+    .replace(/\bграммов\b/g, 'г')
+    .replace(/\bграмма\b/g, 'г')
+    .replace(/\bграмм\b/g, 'г')
+    .replace(/\bгр\.?\b/g, 'г')
+    .replace(/\bштуки\b/g, 'шт')
+    .replace(/\bштук\b/g, 'шт')
+    .replace(/\bштука\b/g, 'шт')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function escapeRegExp(text) {
+  return text.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    '\\$&'
+  );
 }
 
 function parseQuickText(raw) {
   const text = normalizeText(raw);
   const found = [];
 
-  const sorted = [...products].sort(
-    (a,b) =>
-      Math.max(...b.aliases.map(x=>x.length)) -
-      Math.max(...a.aliases.map(x=>x.length))
-  );
+  const sortedProducts = [...products].sort((a, b) => {
+    const aLongest = Math.max(
+      a.name.length,
+      ...(a.aliases || []).map(x => x.length)
+    );
 
-  for (const product of sorted) {
+    const bLongest = Math.max(
+      b.name.length,
+      ...(b.aliases || []).map(x => x.length)
+    );
+
+    return bLongest - aLongest;
+  });
+
+  for (const product of sortedProducts) {
     const aliases = [
       product.name.toLowerCase(),
-      ...(product.aliases || [])
+      ...(product.aliases || []).map(x => x.toLowerCase())
     ];
 
-    for (const alias of aliases.sort((a,b)=>b.length-a.length)) {
-      const esc = alias.replace(
-        /[.*+?^${}()|[\]\\]/g,
-        '\\$&'
-      );
+    const uniqueAliases = [...new Set(aliases)]
+      .sort((a, b) => b.length - a.length);
+
+    let matched = false;
+
+    for (const alias of uniqueAliases) {
+      const escapedAlias = escapeRegExp(alias);
 
       const patterns = [
-        new RegExp(
-          `(\\d+(?:\\.\\d+)?)\\s*(г|шт)?\\s*(?:${esc})`,
-          'i'
-        ),
-        new RegExp(
-          `(?:${esc})\\s*(\\d+(?:\\.\\d+)?)\\s*(г|шт)?`,
-          'i'
-        )
+        {
+          regex: new RegExp(
+            `(\\d+(?:\\.\\d+)?)\\s*(кг)\\s*(?:${escapedAlias})`,
+            'i'
+          ),
+          unit: 'kg'
+        },
+
+        {
+          regex: new RegExp(
+            `(?:${escapedAlias})\\s*(\\d+(?:\\.\\d+)?)\\s*(кг)`,
+            'i'
+          ),
+          unit: 'kg'
+        },
+
+        {
+          regex: new RegExp(
+            `(\\d+(?:\\.\\d+)?)\\s*(г)\\s*(?:${escapedAlias})`,
+            'i'
+          ),
+          unit: 'g'
+        },
+
+        {
+          regex: new RegExp(
+            `(?:${escapedAlias})\\s*(\\d+(?:\\.\\d+)?)\\s*(г)`,
+            'i'
+          ),
+          unit: 'g'
+        },
+
+        {
+          regex: new RegExp(
+            `(\\d+(?:\\.\\d+)?)\\s*(шт)\\s*(?:${escapedAlias})`,
+            'i'
+          ),
+          unit: 'piece'
+        },
+
+        {
+          regex: new RegExp(
+            `(?:${escapedAlias})\\s*(\\d+(?:\\.\\d+)?)\\s*(шт)`,
+            'i'
+          ),
+          unit: 'piece'
+        },
+
+        {
+          regex: new RegExp(
+            `(\\d+(?:\\.\\d+)?)\\s*(?:${escapedAlias})`,
+            'i'
+          ),
+          unit: product.unit || 'g'
+        },
+
+        {
+          regex: new RegExp(
+            `(?:${escapedAlias})\\s*(\\d+(?:\\.\\d+)?)`,
+            'i'
+          ),
+          unit: product.unit || 'g'
+        }
       ];
 
-      let match = null;
+      for (const item of patterns) {
+        const match = text.match(item.regex);
 
-      for (const p of patterns) {
-        match = text.match(p);
-        if (match) break;
-      }
+        if (!match) {
+          continue;
+        }
 
-      if (match) {
-        const amount = Number(match[1]);
-        const token = match[2];
+        let amount = Number(match[1]);
+        let unit = item.unit;
 
-        let unit =
-          token === 'шт'
-            ? 'piece'
-            : token === 'г'
-              ? 'g'
-              : product.unit;
+        if (unit === 'kg') {
+          amount = amount * 1000;
+          unit = 'g';
+        }
 
         found.push({
           product,
@@ -343,6 +604,11 @@ function parseQuickText(raw) {
           unit
         });
 
+        matched = true;
+        break;
+      }
+
+      if (matched) {
         break;
       }
     }
@@ -361,11 +627,13 @@ function renderManualProducts() {
     .join('');
 
   const selected =
-    products.find(p => p.id === els.manualProduct.value)
-    || products[0];
+    products.find(
+      p => p.id === els.manualProduct.value
+    ) || products[0];
 
   if (selected) {
-    els.manualUnit.value = selected.unit || 'g';
+    els.manualUnit.value =
+      selected.unit || 'g';
   }
 }
 
@@ -443,11 +711,11 @@ function productRowHtml(p) {
 function bindProductEditorRemovers() {
   els.productEditor
     .querySelectorAll('.remove-product')
-    .forEach(btn =>
-      btn.addEventListener('click', () =>
-        btn.closest('.product-row').remove()
-      )
-    );
+    .forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.closest('.product-row').remove();
+      });
+    });
 }
 
 function saveProductEditor() {
@@ -456,8 +724,10 @@ function saveProductEditor() {
   ];
 
   products = rows.map(row => {
-    const get = f =>
-      row.querySelector(`[data-field="${f}"]`).value;
+    const get = field =>
+      row.querySelector(
+        `[data-field="${field}"]`
+      ).value;
 
     const old = products.find(
       p => p.id === row.dataset.id
@@ -491,12 +761,14 @@ function saveProductEditor() {
   }).filter(p => p.name);
 
   saveProducts();
+
   els.settingsDialog.close();
+
   render();
 }
 
 
-// Дата
+// ДАТА
 
 els.dayPicker.value = localDateString();
 
@@ -532,49 +804,49 @@ els.nextDay.addEventListener('click', () => {
 });
 
 
-// Цели БЖУ
+// ЦЕЛИ БЖУ
 
 [
   els.targetProtein,
   els.targetFat,
   els.targetCarbs
-].forEach(i =>
-  i.addEventListener(
+].forEach(input => {
+  input.addEventListener(
     'change',
     saveTargets
-  )
-);
+  );
+});
 
 
-// Быстрый ввод
+// БЫСТРЫЙ ВВОД
 
 els.parseBtn.addEventListener('click', () => {
+  const text = els.quickInput.value.trim();
+
   const parsed =
-    parseQuickText(
-      els.quickInput.value.trim()
-    );
+    parseQuickText(text);
 
   if (!parsed.length) {
     alert(
-      'Не получилось распознать продукты. ' +
-      'Проверь названия или добавь запись вручную.'
+      'Не получилось распознать продукты. Проверь название продукта или добавь запись вручную.'
     );
+
     return;
   }
 
-  parsed.forEach(x =>
+  parsed.forEach(item => {
     addEntry(
-      x.product,
-      x.amount,
-      x.unit
-    )
-  );
+      item.product,
+      item.amount,
+      item.unit
+    );
+  });
 
   els.quickInput.value = '';
 });
 
 
-// Ручное добавление
+// РУЧНОЕ ДОБАВЛЕНИЕ
 
 els.manualBtn.addEventListener('click', () => {
   renderManualProducts();
@@ -585,23 +857,23 @@ els.manualBtn.addEventListener('click', () => {
 });
 
 els.manualProduct.addEventListener('change', () => {
-  const p = products.find(
-    x => x.id === els.manualProduct.value
+  const product = products.find(
+    p => p.id === els.manualProduct.value
   );
 
-  if (p) {
+  if (product) {
     els.manualUnit.value =
-      p.unit || 'g';
+      product.unit || 'g';
   }
 });
 
 els.manualSubmit.addEventListener('click', () => {
-  const p = products.find(
-    x => x.id === els.manualProduct.value
+  const product = products.find(
+    p => p.id === els.manualProduct.value
   );
 
   addEntry(
-    p,
+    product,
     Number(els.manualAmount.value),
     els.manualUnit.value
   );
@@ -610,7 +882,7 @@ els.manualSubmit.addEventListener('click', () => {
 });
 
 
-// Очистить день
+// ОЧИСТИТЬ ДЕНЬ
 
 els.clearDayBtn.addEventListener('click', () => {
   if (
@@ -628,7 +900,7 @@ els.clearDayBtn.addEventListener('click', () => {
 });
 
 
-// Настройки продуктов
+// НАСТРОЙКИ ПРОДУКТОВ
 
 els.settingsBtn.addEventListener('click', () => {
   openProductEditor();
@@ -636,7 +908,7 @@ els.settingsBtn.addEventListener('click', () => {
 });
 
 els.addProductBtn.addEventListener('click', () => {
-  const p = {
+  const product = {
     id: crypto.randomUUID(),
     name: 'Новый продукт',
     aliases: ['новый продукт'],
@@ -650,7 +922,7 @@ els.addProductBtn.addEventListener('click', () => {
 
   els.productEditor.insertAdjacentHTML(
     'beforeend',
-    productRowHtml(p)
+    productRowHtml(product)
   );
 
   bindProductEditorRemovers();
@@ -662,21 +934,21 @@ els.saveProductsBtn.addEventListener(
 );
 
 
-// Голосовой ввод
+// ГОЛОСОВОЙ ВВОД
 
 const SpeechRecognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
-  const rec =
+  const recognition =
     new SpeechRecognition();
 
-  rec.lang = 'ru-RU';
-  rec.interimResults = false;
-  rec.maxAlternatives = 1;
+  recognition.lang = 'ru-RU';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
 
-  rec.onstart = () => {
+  recognition.onstart = () => {
     els.voiceBtn.classList.add(
       'listening'
     );
@@ -687,23 +959,30 @@ if (SpeechRecognition) {
     els.voiceStatus.hidden = false;
 
     els.voiceStatus.textContent =
-      'Говори, например: «2 яйца и 30 грамм кетчупа»';
+      'Говори, например: «30 грамм кетчупа» или «кетчуп 30 грамм»';
   };
 
-  rec.onresult = (e) => {
-    els.quickInput.value =
-      e.results[0][0].transcript;
+  recognition.onresult = event => {
+    const transcript =
+      event.results[0][0].transcript;
+
+    els.quickInput.value = transcript;
+
+    els.voiceStatus.hidden = false;
+
+    els.voiceStatus.textContent =
+      `Распознано: ${transcript}`;
   };
 
-  rec.onerror = (e) => {
+  recognition.onerror = event => {
     els.voiceStatus.hidden = false;
 
     els.voiceStatus.textContent =
       'Не удалось распознать речь: ' +
-      e.error;
+      event.error;
   };
 
-  rec.onend = () => {
+  recognition.onend = () => {
     els.voiceBtn.classList.remove(
       'listening'
     );
@@ -714,7 +993,7 @@ if (SpeechRecognition) {
 
   els.voiceBtn.addEventListener(
     'click',
-    () => rec.start()
+    () => recognition.start()
   );
 
 } else {

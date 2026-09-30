@@ -1,14 +1,16 @@
 const STORAGE_KEY = 'bju-diary-v1';
-const PRODUCTS_KEY = 'bju-products-v4';
+const PRODUCTS_KEY = 'bju-products-v5';
 
 /* =========================================================
-   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+   БАЗОВЫЕ ФУНКЦИИ
 ========================================================= */
 
 function calculateKcal(p, f, c) {
-  return Number(p || 0) * 4 +
-         Number(f || 0) * 9 +
-         Number(c || 0) * 4;
+  return (
+    Number(p || 0) * 4 +
+    Number(f || 0) * 9 +
+    Number(c || 0) * 4
+  );
 }
 
 function makeProduct(
@@ -26,13 +28,10 @@ function makeProduct(
     aliases,
     unit: options.unit || 'g',
     gramsPerPiece: options.gramsPerPiece || 0,
-
     p,
     f,
     c,
-
     countProtein: options.countProtein === true,
-
     kcal: calculateKcal(p, f, c)
   };
 }
@@ -40,18 +39,13 @@ function makeProduct(
 
 /* =========================================================
    МОИ ПРОДУКТЫ
-   Все БЖУ указаны на 100 г
 ========================================================= */
 
 const defaultProducts = [
-
   makeProduct(
     'rice',
     'Рис',
-    [
-      'рис',
-      'риса'
-    ],
+    ['рис', 'риса'],
     7.2,
     0.5,
     76.9
@@ -60,10 +54,7 @@ const defaultProducts = [
   makeProduct(
     'pasta',
     'Макароны',
-    [
-      'макароны',
-      'макарон'
-    ],
+    ['макароны', 'макарон'],
     12,
     1.3,
     70.5
@@ -72,11 +63,7 @@ const defaultProducts = [
   makeProduct(
     'buckwheat',
     'Гречка',
-    [
-      'гречка',
-      'гречки',
-      'гречку'
-    ],
+    ['гречка', 'гречки', 'гречку'],
     13,
     2.5,
     61
@@ -161,7 +148,6 @@ const defaultProducts = [
     [
       'греческий йогурт',
       'греческого йогурта',
-      'греческий йогурта',
       'йогурт',
       'йогурта'
     ],
@@ -193,8 +179,7 @@ const defaultProducts = [
     'Творожный сыр',
     [
       'творожный сыр',
-      'творожного сыра',
-      'творожный сырок'
+      'творожного сыра'
     ],
     6.2,
     21.7,
@@ -287,7 +272,7 @@ const defaultProducts = [
 
 
 /* =========================================================
-   ЭЛЕМЕНТЫ СТРАНИЦЫ
+   ЭЛЕМЕНТЫ
 ========================================================= */
 
 const $ = id => document.getElementById(id);
@@ -350,20 +335,18 @@ let data = loadJSON(
 
 let products = loadProducts();
 
+let editingEntryId = null;
+
 
 /* =========================================================
-   ЗАГРУЗКА И СОХРАНЕНИЕ
+   СОХРАНЕНИЕ
 ========================================================= */
 
 function loadJSON(key, fallback) {
   try {
-    const value =
-      JSON.parse(
-        localStorage.getItem(key)
-      );
-
-    return value ?? fallback;
-
+    return JSON.parse(
+      localStorage.getItem(key)
+    ) ?? fallback;
   } catch {
     return fallback;
   }
@@ -384,7 +367,6 @@ function saveProducts() {
 }
 
 function loadProducts() {
-
   const saved =
     loadJSON(
       PRODUCTS_KEY,
@@ -395,28 +377,7 @@ function loadProducts() {
     Array.isArray(saved) &&
     saved.length
   ) {
-
-    return saved.map(product => {
-
-      if (
-        typeof product.countProtein !==
-        'boolean'
-      ) {
-        product.countProtein =
-          shouldProteinCountByName(
-            product.name
-          );
-      }
-
-      product.kcal =
-        calculateKcal(
-          product.p,
-          product.f,
-          product.c
-        );
-
-      return product;
-    });
+    return saved;
   }
 
   return structuredClone(
@@ -426,11 +387,10 @@ function loadProducts() {
 
 
 /* =========================================================
-   КАКОЙ БЕЛОК УЧИТЫВАЕМ
+   БЕЛОК
 ========================================================= */
 
 function shouldProteinCountByName(name = '') {
-
   const n =
     name.toLowerCase();
 
@@ -471,7 +431,6 @@ function shouldProteinCountByName(name = '') {
 function localDateString(
   date = new Date()
 ) {
-
   const y =
     date.getFullYear();
 
@@ -488,10 +447,7 @@ function localDateString(
   return `${y}-${m}-${d}`;
 }
 
-function formatDate(
-  dateString
-) {
-
+function formatDate(dateString) {
   const d =
     new Date(
       dateString +
@@ -511,20 +467,17 @@ function formatDate(
 
 
 /* =========================================================
-   ОБЩИЕ ФУНКЦИИ
+   ОБЩИЕ
 ========================================================= */
 
 function ensureDay(date) {
-
   if (!data[date]) {
-
     data[date] = {
       targets: {
         p: 0,
         f: 0,
         c: 0
       },
-
       entries: []
     };
   }
@@ -533,39 +486,32 @@ function ensureDay(date) {
 }
 
 function round1(n) {
-
   return Math.round(
     (Number(n) || 0) * 10
   ) / 10;
 }
 
-function escapeHtml(
-  value = ''
-) {
-
-  return String(value)
-    .replace(
-      /[&<>'"]/g,
-      c => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        "'": '&#39;',
-        '"': '&quot;'
-      }[c])
-    );
+function escapeHtml(value = '') {
+  return String(value).replace(
+    /[&<>'"]/g,
+    c => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[c])
+  );
 }
 
 
 /* =========================================================
-   ПОДСЧЁТ ИТОГОВ
+   ПОДСЧЁТ
 ========================================================= */
 
 function totalsFor(day) {
-
   return day.entries.reduce(
     (acc, entry) => {
-
       acc.p +=
         Number(entry.p) || 0;
 
@@ -580,7 +526,6 @@ function totalsFor(day) {
 
       return acc;
     },
-
     {
       p: 0,
       f: 0,
@@ -589,11 +534,6 @@ function totalsFor(day) {
     }
   );
 }
-
-
-/* =========================================================
-   РАСЧЁТ ПРОДУКТА
-========================================================= */
 
 function calcFromValues(
   amount,
@@ -604,14 +544,12 @@ function calcFromValues(
   c100,
   countProtein
 ) {
-
   let grams =
     Number(amount);
 
   if (
     unit === 'piece'
   ) {
-
     grams =
       Number(amount) *
       Number(
@@ -634,13 +572,6 @@ function calcFromValues(
     Number(c100 || 0) *
     factor;
 
-  const kcal100 =
-    calculateKcal(
-      p100,
-      f100,
-      c100
-    );
-
   return {
     grams,
 
@@ -655,8 +586,11 @@ function calcFromValues(
     c: carbs,
 
     kcal:
-      kcal100 *
-      factor
+      calculateKcal(
+        p100,
+        f100,
+        c100
+      ) * factor
   };
 }
 
@@ -665,7 +599,6 @@ function calcFromProduct(
   amount,
   unit
 ) {
-
   return calcFromValues(
     amount,
     unit,
@@ -683,7 +616,6 @@ function calcFromProduct(
 ========================================================= */
 
 function render() {
-
   const date =
     els.dayPicker.value;
 
@@ -738,7 +670,6 @@ function updateStat(
   eaten,
   target
 ) {
-
   const targetNum =
     Number(target) || 0;
 
@@ -751,23 +682,18 @@ function updateStat(
     `${round1(eaten)} г`;
 
   if (!targetNum) {
-
     els[
       type + 'Left'
     ].textContent =
       'цель не задана';
-
   } else if (
     left >= 0
   ) {
-
     els[
       type + 'Left'
     ].textContent =
       `${round1(left)} г`;
-
   } else {
-
     els[
       type + 'Left'
     ].textContent =
@@ -794,15 +720,13 @@ function updateStat(
 
 
 /* =========================================================
-   СПИСОК СЪЕДЕННОГО
+   СПИСОК ЕДЫ
 ========================================================= */
 
 function renderEntries(day) {
-
   if (
     !day.entries.length
   ) {
-
     els.entriesList.innerHTML =
       '<div class="empty">Пока ничего не записано.</div>';
 
@@ -810,88 +734,58 @@ function renderEntries(day) {
   }
 
   els.entriesList.innerHTML =
-    day.entries
-      .map(entry => {
+    day.entries.map(entry => `
+      <div class="entry">
 
-        const proteinNote =
-          entry.countProtein === false
-            ? ' · белок не учитывается'
-            : '';
-
-        return `
-          <div class="entry">
-
-            <div>
-
-              <div class="entry-title">
-
-                ${escapeHtml(
-                  entry.name
-                )}
-
-                —
-
-                ${round1(
-                  entry.amount
-                )}
-
-                ${
-                  entry.unit ===
-                  'piece'
-                    ? 'шт.'
-                    : 'г'
-                }
-
-              </div>
-
-              <div class="entry-macros">
-
-                Б ${round1(entry.p)} ·
-                Ж ${round1(entry.f)} ·
-                У ${round1(entry.c)} ·
-                ${Math.round(
-                  entry.kcal
-                )} ккал
-
-                ${proteinNote}
-
-              </div>
-
-            </div>
-
-            <div class="entry-actions">
-
-              <button
-                class="mini-btn edit-entry"
-                data-id="${entry.id}"
-              >
-                Редактировать
-              </button>
-
-              <button
-                class="mini-btn delete-entry"
-                data-id="${entry.id}"
-              >
-                Удалить
-              </button>
-
-            </div>
-
+        <div>
+          <div class="entry-title">
+            ${escapeHtml(entry.name)}
+            —
+            ${round1(entry.amount)}
+            ${
+              entry.unit === 'piece'
+                ? 'шт.'
+                : 'г'
+            }
           </div>
-        `;
-      })
-      .join('');
+
+          <div class="entry-macros">
+            Б ${round1(entry.p)} ·
+            Ж ${round1(entry.f)} ·
+            У ${round1(entry.c)} ·
+            ${Math.round(entry.kcal)} ккал
+          </div>
+        </div>
+
+        <div class="entry-actions">
+
+          <button
+            class="mini-btn edit-entry"
+            data-id="${entry.id}"
+          >
+            ✏️ Редактировать
+          </button>
+
+          <button
+            class="mini-btn delete-entry"
+            data-id="${entry.id}"
+          >
+            Удалить
+          </button>
+
+        </div>
+
+      </div>
+    `).join('');
 
   els.entriesList
     .querySelectorAll(
       '.delete-entry'
     )
     .forEach(btn => {
-
       btn.addEventListener(
         'click',
         () => {
-
           day.entries =
             day.entries.filter(
               entry =>
@@ -910,11 +804,9 @@ function renderEntries(day) {
       '.edit-entry'
     )
     .forEach(btn => {
-
       btn.addEventListener(
         'click',
         () => {
-
           const entry =
             day.entries.find(
               item =>
@@ -934,10 +826,357 @@ function renderEntries(day) {
 
 
 /* =========================================================
-   РЕДАКТИРОВАНИЕ СЪЕДЕННОГО ПРОДУКТА
+   СТИЛИ ОБЛАЧКА
+   Добавляются прямо через JS
+========================================================= */
+
+function ensureCloudStyles() {
+  if (
+    document.getElementById(
+      'cloud-editor-styles'
+    )
+  ) {
+    return;
+  }
+
+  const style =
+    document.createElement(
+      'style'
+    );
+
+  style.id =
+    'cloud-editor-styles';
+
+  style.textContent = `
+
+    #entryEditDialog {
+      border: none !important;
+      padding: 0 !important;
+      margin: auto !important;
+      background: transparent !important;
+      width: min(94vw, 480px) !important;
+      max-width: 480px !important;
+      overflow: visible !important;
+    }
+
+    #entryEditDialog::backdrop {
+      background: rgba(55, 25, 67, .34) !important;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .cloud-editor {
+      position: relative;
+      border-radius: 40px;
+      padding: 30px 26px 24px;
+      background:
+        linear-gradient(
+          145deg,
+          #fff2fa 0%,
+          #f9e8ff 50%,
+          #eee5ff 100%
+        );
+      border: 2px solid rgba(255,255,255,.95);
+      box-shadow:
+        0 30px 80px rgba(101, 54, 120, .30),
+        inset 0 2px 0 rgba(255,255,255,.95);
+      animation: cloudEditorPop .25s ease;
+      overflow: visible;
+    }
+
+    .cloud-editor::before,
+    .cloud-editor::after {
+      content: "";
+      position: absolute;
+      background:
+        linear-gradient(
+          145deg,
+          #fff2fa,
+          #f1e7ff
+        );
+      border: 2px solid rgba(255,255,255,.9);
+      z-index: -1;
+    }
+
+    .cloud-editor::before {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      top: -35px;
+      left: 35px;
+      box-shadow:
+        185px 15px 0 -12px #f0e6ff;
+    }
+
+    .cloud-editor::after {
+      width: 95px;
+      height: 95px;
+      border-radius: 50%;
+      bottom: -28px;
+      right: 42px;
+      box-shadow:
+        -260px -8px 0 -10px #fff0f8;
+    }
+
+    @keyframes cloudEditorPop {
+      from {
+        opacity: 0;
+        transform:
+          translateY(15px)
+          scale(.95);
+      }
+
+      to {
+        opacity: 1;
+        transform:
+          translateY(0)
+          scale(1);
+      }
+    }
+
+    .cloud-editor-header {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .cloud-editor-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin:
+        -55px auto 10px;
+      font-size: 25px;
+      background:
+        linear-gradient(
+          135deg,
+          #ff83bf,
+          #9c70ff
+        );
+      color: white;
+      box-shadow:
+        0 12px 28px
+        rgba(143,92,255,.28);
+    }
+
+    .cloud-editor-title {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.15;
+      background:
+        linear-gradient(
+          90deg,
+          #ee5ba5,
+          #8250e8
+        );
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .cloud-editor-subtitle {
+      margin: 6px 0 0;
+      color: #806287;
+      font-size: 13px;
+    }
+
+    .cloud-editor-body {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 12px;
+    }
+
+    .cloud-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .cloud-field > span {
+      font-size: 13px;
+      font-weight: 800;
+      color: #745079;
+      padding-left: 4px;
+    }
+
+    .cloud-field input,
+    .cloud-field select {
+      width: 100%;
+      border:
+        1px solid
+        rgba(211,181,222,.9);
+      border-radius: 18px;
+      padding: 13px 15px;
+      color: #341936;
+      background:
+        rgba(255,255,255,.90);
+      outline: none;
+      box-shadow:
+        0 7px 18px
+        rgba(101,63,115,.06);
+    }
+
+    .cloud-field input:focus,
+    .cloud-field select:focus {
+      border-color: #9568ee;
+      box-shadow:
+        0 0 0 4px
+        rgba(143,92,255,.11),
+        0 8px 22px
+        rgba(101,63,115,.10);
+    }
+
+    .cloud-macro-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(3, 1fr);
+      gap: 9px;
+    }
+
+    .cloud-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 13px;
+      border-radius: 18px;
+      background:
+        rgba(255,255,255,.58);
+      border:
+        1px solid
+        rgba(255,255,255,.9);
+      color: #68496f;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .cloud-check input {
+      width: 19px;
+      height: 19px;
+      flex:
+        0 0 auto;
+      margin-top: 1px;
+      accent-color: #945eff;
+    }
+
+    .cloud-editor-footer {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .cloud-cancel,
+    .cloud-save {
+      flex: 1;
+      border: 0;
+      border-radius: 18px;
+      padding: 13px 16px;
+      font-weight: 900;
+      cursor: pointer;
+      transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+    }
+
+    .cloud-cancel {
+      background:
+        rgba(255,255,255,.84);
+      color: #785e7d;
+      box-shadow:
+        0 6px 16px
+        rgba(97,64,110,.09);
+    }
+
+    .cloud-save {
+      background:
+        linear-gradient(
+          90deg,
+          #ff70b7,
+          #8f5cff
+        );
+      color: white;
+      box-shadow:
+        0 12px 26px
+        rgba(143,92,255,.26);
+    }
+
+    .cloud-cancel:hover,
+    .cloud-save:hover {
+      transform:
+        translateY(-2px);
+    }
+
+    @media (
+      max-width: 600px
+    ) {
+
+      #entryEditDialog {
+        width:
+          calc(100% - 18px)
+          !important;
+      }
+
+      .cloud-editor {
+        padding:
+          27px 17px 20px;
+        border-radius: 34px;
+        max-height: 88vh;
+        overflow-y: auto;
+      }
+
+      .cloud-editor::before {
+        width: 95px;
+        height: 95px;
+        top: -25px;
+        left: 28px;
+      }
+
+      .cloud-editor::after {
+        width: 75px;
+        height: 75px;
+      }
+
+      .cloud-editor-icon {
+        margin-top: -45px;
+      }
+
+      .cloud-editor-title {
+        font-size: 23px;
+      }
+
+      .cloud-macro-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cloud-editor-footer {
+        flex-direction:
+          column-reverse;
+      }
+
+      .cloud-cancel,
+      .cloud-save {
+        width: 100%;
+      }
+    }
+  `;
+
+  document.head.appendChild(
+    style
+  );
+}
+
+
+/* =========================================================
+   СОЗДАНИЕ ОБЛАЧКА
 ========================================================= */
 
 function ensureEntryEditor() {
+  ensureCloudStyles();
 
   if (
     document.getElementById(
@@ -956,53 +1195,64 @@ function ensureEntryEditor() {
     'entryEditDialog';
 
   dialog.innerHTML = `
-    <form
-      method="dialog"
-      style="
-        min-width:min(90vw,420px);
-        max-width:420px;
-      "
-    >
+    <div class="cloud-editor">
 
-      <h2>
-        Редактировать продукт
-      </h2>
+      <div class="cloud-editor-header">
 
-      <div
-        style="
-          display:grid;
-          gap:12px;
-        "
-      >
+        <div class="cloud-editor-icon">
+          ✏️
+        </div>
 
-        <label>
-          Название
+        <h2 class="cloud-editor-title">
+          Редактировать продукт
+        </h2>
+
+        <p class="cloud-editor-subtitle">
+          Измени количество или БЖУ с упаковки
+        </p>
+
+      </div>
+
+      <div class="cloud-editor-body">
+
+        <label class="cloud-field">
+
+          <span>
+            Название
+          </span>
 
           <input
             id="editEntryName"
             type="text"
-            style="width:100%"
           >
+
         </label>
 
-        <label>
-          Количество
+
+        <label class="cloud-field">
+
+          <span>
+            Количество
+          </span>
 
           <input
             id="editEntryAmount"
             type="number"
             min="0"
             step="0.1"
-            style="width:100%"
           >
+
         </label>
 
-        <label>
-          Единица
+
+        <label class="cloud-field">
+
+          <span>
+            Единица
+          </span>
 
           <select
             id="editEntryUnit"
-            style="width:100%"
           >
             <option value="g">
               граммы
@@ -1012,110 +1262,119 @@ function ensureEntryEditor() {
               штуки
             </option>
           </select>
+
         </label>
 
-        <label>
-          Белки на 100 г
 
-          <input
-            id="editEntryProtein"
-            type="number"
-            min="0"
-            step="0.1"
-            style="width:100%"
-          >
-        </label>
+        <div class="cloud-macro-grid">
 
-        <label>
-          Жиры на 100 г
+          <label class="cloud-field">
 
-          <input
-            id="editEntryFat"
-            type="number"
-            min="0"
-            step="0.1"
-            style="width:100%"
-          >
-        </label>
+            <span>
+              Белки / 100 г
+            </span>
 
-        <label>
-          Углеводы на 100 г
+            <input
+              id="editEntryProtein"
+              type="number"
+              min="0"
+              step="0.1"
+            >
 
-          <input
-            id="editEntryCarbs"
-            type="number"
-            min="0"
-            step="0.1"
-            style="width:100%"
-          >
-        </label>
+          </label>
+
+
+          <label class="cloud-field">
+
+            <span>
+              Жиры / 100 г
+            </span>
+
+            <input
+              id="editEntryFat"
+              type="number"
+              min="0"
+              step="0.1"
+            >
+
+          </label>
+
+
+          <label class="cloud-field">
+
+            <span>
+              Углеводы / 100 г
+            </span>
+
+            <input
+              id="editEntryCarbs"
+              type="number"
+              min="0"
+              step="0.1"
+            >
+
+          </label>
+
+        </div>
+
 
         <label
+          class="cloud-field"
           id="editEntryPieceWeightWrap"
         >
-          Вес одной штуки, г
+
+          <span>
+            Вес одной штуки, г
+          </span>
 
           <input
             id="editEntryPieceWeight"
             type="number"
             min="0"
             step="0.1"
-            style="width:100%"
           >
+
         </label>
 
-        <label
-          style="
-            display:flex;
-            gap:8px;
-            align-items:center;
-          "
-        >
+
+        <label class="cloud-check">
 
           <input
             id="editEntryCountProtein"
             type="checkbox"
           >
 
-          Учитывать белок
-          в дневной норме
+          <span>
+            Учитывать белок этого продукта
+            в моей дневной норме
+          </span>
 
         </label>
 
-        <label
-          style="
-            display:flex;
-            gap:8px;
-            align-items:flex-start;
-          "
-        >
+
+        <label class="cloud-check">
 
           <input
             id="editEntrySaveProduct"
             type="checkbox"
           >
 
-          Сохранить эти БЖУ
-          для этого продукта
-          на будущее
+          <span>
+            Сохранить эти БЖУ для этого продукта
+            на будущее
+          </span>
 
         </label>
 
       </div>
 
-      <div
-        style="
-          display:flex;
-          gap:10px;
-          margin-top:18px;
-          justify-content:flex-end;
-          flex-wrap:wrap;
-        "
-      >
+
+      <div class="cloud-editor-footer">
 
         <button
           type="button"
           id="cancelEntryEdit"
+          class="cloud-cancel"
         >
           Отмена
         </button>
@@ -1123,13 +1382,14 @@ function ensureEntryEditor() {
         <button
           type="button"
           id="saveEntryEdit"
+          class="cloud-save"
         >
           Сохранить
         </button>
 
       </div>
 
-    </form>
+    </div>
   `;
 
   document.body.appendChild(
@@ -1143,7 +1403,6 @@ function ensureEntryEditor() {
     .addEventListener(
       'click',
       () => {
-
         dialog.close();
       }
     );
@@ -1165,12 +1424,47 @@ function ensureEntryEditor() {
       'click',
       saveEntryEdit
     );
+
+  dialog.addEventListener(
+    'click',
+    event => {
+      if (
+        event.target ===
+        dialog
+      ) {
+        dialog.close();
+      }
+    }
+  );
 }
 
-let editingEntryId = null;
+
+/* =========================================================
+   ОТКРЫТИЕ РЕДАКТИРОВАНИЯ
+========================================================= */
+
+function findProductForEntry(
+  entry
+) {
+  return (
+    products.find(
+      product =>
+        product.id ===
+        entry.productId
+    )
+    ||
+    products.find(
+      product =>
+        product.name
+          .toLowerCase() ===
+        String(
+          entry.name || ''
+        ).toLowerCase()
+    )
+  );
+}
 
 function openEntryEditor(entry) {
-
   ensureEntryEditor();
 
   editingEntryId =
@@ -1180,33 +1474,6 @@ function openEntryEditor(entry) {
     findProductForEntry(
       entry
     );
-
-  const p100 =
-    entry.p100 ??
-    product?.p ??
-    0;
-
-  const f100 =
-    entry.f100 ??
-    product?.f ??
-    0;
-
-  const c100 =
-    entry.c100 ??
-    product?.c ??
-    0;
-
-  const countProtein =
-    typeof entry.countProtein ===
-    'boolean'
-      ? entry.countProtein
-      : (
-          product
-            ? product.countProtein
-            : shouldProteinCountByName(
-                entry.name
-              )
-        );
 
   document.getElementById(
     'editEntryName'
@@ -1226,17 +1493,23 @@ function openEntryEditor(entry) {
   document.getElementById(
     'editEntryProtein'
   ).value =
-    p100;
+    entry.p100 ??
+    product?.p ??
+    0;
 
   document.getElementById(
     'editEntryFat'
   ).value =
-    f100;
+    entry.f100 ??
+    product?.f ??
+    0;
 
   document.getElementById(
     'editEntryCarbs'
   ).value =
-    c100;
+    entry.c100 ??
+    product?.c ??
+    0;
 
   document.getElementById(
     'editEntryPieceWeight'
@@ -1244,6 +1517,18 @@ function openEntryEditor(entry) {
     entry.gramsPerPiece ??
     product?.gramsPerPiece ??
     0;
+
+  const countProtein =
+    typeof entry.countProtein ===
+    'boolean'
+      ? entry.countProtein
+      : (
+          product
+            ? product.countProtein
+            : shouldProteinCountByName(
+                entry.name
+              )
+        );
 
   document.getElementById(
     'editEntryCountProtein'
@@ -1265,7 +1550,6 @@ function openEntryEditor(entry) {
 }
 
 function updateEntryPieceField() {
-
   const unit =
     document.getElementById(
       'editEntryUnit'
@@ -1278,39 +1562,20 @@ function updateEntryPieceField() {
 
   wrap.style.display =
     unit === 'piece'
-      ? 'block'
+      ? 'grid'
       : 'none';
 }
 
-function findProductForEntry(
-  entry
-) {
 
-  return (
-    products.find(
-      product =>
-        product.id ===
-        entry.productId
-    )
-    ||
-    products.find(
-      product =>
-        product.name
-          .toLowerCase() ===
-        String(
-          entry.name || ''
-        ).toLowerCase()
-    )
-  );
-}
+/* =========================================================
+   СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ
+========================================================= */
 
 function saveEntryEdit() {
-
-  const date =
-    els.dayPicker.value;
-
   const day =
-    ensureDay(date);
+    ensureDay(
+      els.dayPicker.value
+    );
 
   const entry =
     day.entries.find(
@@ -1380,14 +1645,11 @@ function saveEntryEdit() {
 
   if (
     !name ||
-    !amount ||
     amount <= 0
   ) {
-
     alert(
-      'Укажи название продукта и количество.'
+      'Укажи название и количество продукта.'
     );
-
     return;
   }
 
@@ -1395,11 +1657,9 @@ function saveEntryEdit() {
     unit === 'piece' &&
     gramsPerPiece <= 0
   ) {
-
     alert(
-      'Укажи вес одной штуки в граммах.'
+      'Укажи вес одной штуки.'
     );
-
     return;
   }
 
@@ -1457,14 +1717,12 @@ function saveEntryEdit() {
     calc.grams;
 
   if (saveForFuture) {
-
     let product =
       findProductForEntry(
         entry
       );
 
     if (!product) {
-
       product = {
         id:
           crypto.randomUUID(),
@@ -1501,7 +1759,6 @@ function saveEntryEdit() {
         product.id;
 
     } else {
-
       product.name =
         name;
 
@@ -1557,7 +1814,6 @@ function saveEntryEdit() {
 ========================================================= */
 
 function renderHistory() {
-
   const dates =
     Object.keys(data)
       .filter(date =>
@@ -1572,7 +1828,6 @@ function renderHistory() {
       );
 
   if (!dates.length) {
-
     els.historyList.innerHTML =
       '<div class="empty">История появится после первой записи.</div>';
 
@@ -1581,7 +1836,6 @@ function renderHistory() {
 
   els.historyList.innerHTML =
     dates.map(date => {
-
       const totals =
         totalsFor(
           data[date]
@@ -1594,7 +1848,6 @@ function renderHistory() {
         >
 
           <div>
-
             <div class="history-date">
               ${formatDate(date)}
             </div>
@@ -1603,16 +1856,11 @@ function renderHistory() {
               Б ${round1(totals.p)} ·
               Ж ${round1(totals.f)} ·
               У ${round1(totals.c)} ·
-              ${Math.round(
-                totals.kcal
-              )} ккал
+              ${Math.round(totals.kcal)} ккал
             </div>
-
           </div>
 
-          <span>
-            →
-          </span>
+          <span>→</span>
 
         </div>
       `;
@@ -1623,11 +1871,9 @@ function renderHistory() {
       '.history-item'
     )
     .forEach(item => {
-
       item.addEventListener(
         'click',
         () => {
-
           els.dayPicker.value =
             item.dataset.date;
 
@@ -1644,18 +1890,16 @@ function renderHistory() {
 
 
 /* =========================================================
-   ЦЕЛИ БЖУ
+   ЦЕЛИ
 ========================================================= */
 
 function saveTargets() {
-
   const day =
     ensureDay(
       els.dayPicker.value
     );
 
   day.targets = {
-
     p:
       Number(
         els.targetProtein.value
@@ -1677,7 +1921,7 @@ function saveTargets() {
 
 
 /* =========================================================
-   ДОБАВЛЕНИЕ ПРОДУКТА
+   ДОБАВЛЕНИЕ
 ========================================================= */
 
 function addEntry(
@@ -1685,24 +1929,11 @@ function addEntry(
   amount,
   unit
 ) {
-
   if (
     !product ||
     !amount ||
     amount <= 0
   ) {
-    return;
-  }
-
-  if (
-    unit === 'piece' &&
-    !product.gramsPerPiece
-  ) {
-
-    alert(
-      'Для этого продукта не указан вес одной штуки. Введи количество в граммах.'
-    );
-
     return;
   }
 
@@ -1719,7 +1950,6 @@ function addEntry(
     );
 
   day.entries.push({
-
     id:
       crypto.randomUUID(),
 
@@ -1758,115 +1988,54 @@ function addEntry(
 
 
 /* =========================================================
-   РАСПОЗНАВАНИЕ ТЕКСТА
+   РАСПОЗНАВАНИЕ ФРАЗ
 ========================================================= */
 
 function normalizeText(text) {
-
   return String(text)
     .toLowerCase()
-
-    .replace(
-      /,/g,
-      '.'
-    )
-
-    .replace(
-      /\bкилограммов\b/g,
-      'кг'
-    )
-
-    .replace(
-      /\bкилограмма\b/g,
-      'кг'
-    )
-
-    .replace(
-      /\bкилограмм\b/g,
-      'кг'
-    )
-
-    .replace(
-      /\bграммов\b/g,
-      'г'
-    )
-
-    .replace(
-      /\bграмма\b/g,
-      'г'
-    )
-
-    .replace(
-      /\bграмм\b/g,
-      'г'
-    )
-
-    .replace(
-      /\bгр\.?/g,
-      'г'
-    )
-
-    .replace(
-      /\bштуки\b/g,
-      'шт'
-    )
-
-    .replace(
-      /\bштук\b/g,
-      'шт'
-    )
-
-    .replace(
-      /\bштука\b/g,
-      'шт'
-    )
-
-    .replace(
-      /\s+/g,
-      ' '
-    )
-
+    .replace(/,/g, '.')
+    .replace(/\bкилограммов\b/g, 'кг')
+    .replace(/\bкилограмма\b/g, 'кг')
+    .replace(/\bкилограмм\b/g, 'кг')
+    .replace(/\bграммов\b/g, 'г')
+    .replace(/\bграмма\b/g, 'г')
+    .replace(/\bграмм\b/g, 'г')
+    .replace(/\bгр\.?/g, 'г')
+    .replace(/\bштуки\b/g, 'шт')
+    .replace(/\bштук\b/g, 'шт')
+    .replace(/\bштука\b/g, 'шт')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
 function escapeRegExp(text) {
-
-  return String(text)
-    .replace(
-      /[.*+?^${}()|[\]\\]/g,
-      '\\$&'
-    );
+  return String(text).replace(
+    /[.*+?^${}()|[\]\\]/g,
+    '\\$&'
+  );
 }
 
-function getProductAliases(
-  product
-) {
-
+function getProductAliases(product) {
   return [
-    product.name
-      .toLowerCase(),
-
+    product.name.toLowerCase(),
     ...(product.aliases || [])
       .map(
         alias =>
           alias.toLowerCase()
       )
   ]
-
     .filter(
       (
         value,
         index,
         array
       ) =>
-        array.indexOf(value) ===
-        index
+        array.indexOf(value) === index
     )
-
     .sort(
       (a, b) =>
-        b.length -
-        a.length
+        b.length - a.length
     );
 }
 
@@ -1874,35 +2043,28 @@ function convertAmount(
   amount,
   unit
 ) {
-
   if (
     unit === 'кг'
   ) {
-
     return {
       amount:
         amount * 1000,
-
-      unit:
-        'g'
+      unit: 'g'
     };
   }
 
   if (
     unit === 'шт'
   ) {
-
     return {
       amount,
-      unit:
-        'piece'
+      unit: 'piece'
     };
   }
 
   return {
     amount,
-    unit:
-      'g'
+    unit: 'g'
   };
 }
 
@@ -1910,7 +2072,6 @@ function parseProductAmount(
   text,
   product
 ) {
-
   const aliases =
     getProductAliases(
       product
@@ -1920,15 +2081,12 @@ function parseProductAmount(
     const alias
     of aliases
   ) {
-
     const a =
       escapeRegExp(
         alias
       );
 
     let match;
-
-    /* 30 г кетчупа */
 
     match =
       text.match(
@@ -1939,14 +2097,11 @@ function parseProductAmount(
       );
 
     if (match) {
-
       return convertAmount(
         Number(match[1]),
         match[2]
       );
     }
-
-    /* кетчуп 30 г */
 
     match =
       text.match(
@@ -1957,59 +2112,10 @@ function parseProductAmount(
       );
 
     if (match) {
-
       return convertAmount(
         Number(match[1]),
         match[2]
       );
-    }
-
-    /* 30 риса */
-
-    match =
-      text.match(
-        new RegExp(
-          `(\\d+(?:\\.\\d+)?)\\s*(?:${a})(?=\\s|$|,|\\.|и\\b)`,
-          'i'
-        )
-      );
-
-    if (match) {
-
-      return {
-        amount:
-          Number(
-            match[1]
-          ),
-
-        unit:
-          product.unit ||
-          'g'
-      };
-    }
-
-    /* рис 30 */
-
-    match =
-      text.match(
-        new RegExp(
-          `(?:${a})\\s*(\\d+(?:\\.\\d+)?)(?=\\s|$|,|\\.|и\\b)`,
-          'i'
-        )
-      );
-
-    if (match) {
-
-      return {
-        amount:
-          Number(
-            match[1]
-          ),
-
-        unit:
-          product.unit ||
-          'g'
-      };
     }
   }
 
@@ -2017,44 +2123,34 @@ function parseProductAmount(
 }
 
 function parseQuickText(raw) {
-
   const text =
     normalizeText(raw);
 
   const found = [];
 
   const sortedProducts =
-    [...products]
-      .sort(
-        (a, b) => {
+    [...products].sort(
+      (a, b) => {
+        const maxA =
+          Math.max(
+            ...getProductAliases(a)
+              .map(x => x.length)
+          );
 
-          const maxA =
-            Math.max(
-              ...getProductAliases(a)
-                .map(
-                  x =>
-                    x.length
-                )
-            );
+        const maxB =
+          Math.max(
+            ...getProductAliases(b)
+              .map(x => x.length)
+          );
 
-          const maxB =
-            Math.max(
-              ...getProductAliases(b)
-                .map(
-                  x =>
-                    x.length
-                )
-            );
-
-          return maxB - maxA;
-        }
-      );
+        return maxB - maxA;
+      }
+    );
 
   for (
     const product
     of sortedProducts
   ) {
-
     const result =
       parseProductAmount(
         text,
@@ -2067,10 +2163,8 @@ function parseQuickText(raw) {
 
     found.push({
       product,
-
       amount:
         result.amount,
-
       unit:
         result.unit
     });
@@ -2085,7 +2179,6 @@ function parseQuickText(raw) {
 ========================================================= */
 
 function renderManualProducts() {
-
   els.manualProduct.innerHTML =
     products
       .map(
@@ -2100,22 +2193,6 @@ function renderManualProducts() {
         `
       )
       .join('');
-
-  const selected =
-    products.find(
-      product =>
-        product.id ===
-        els.manualProduct.value
-    )
-    ||
-    products[0];
-
-  if (selected) {
-
-    els.manualUnit.value =
-      selected.unit ||
-      'g';
-  }
 }
 
 
@@ -2124,7 +2201,6 @@ function renderManualProducts() {
 ========================================================= */
 
 function openProductEditor() {
-
   els.productEditor.innerHTML =
     products
       .map(
@@ -2139,7 +2215,6 @@ function openProductEditor() {
 }
 
 function productRowHtml(product) {
-
   return `
     <div
       class="product-row"
@@ -2191,26 +2266,20 @@ function productRowHtml(product) {
       </label>
 
       <label>
-        Вес 1 штуки, г
+        Вес 1 штуки
 
         <input
           data-field="gramsPerPiece"
           type="number"
           step="0.1"
           value="${
-            product.gramsPerPiece ||
-            0
+            product.gramsPerPiece || 0
           }"
         >
       </label>
 
-      <label
-        style="
-          display:flex;
-          align-items:center;
-          gap:7px;
-        "
-      >
+      <label>
+        Учитывать белок
 
         <input
           data-field="countProtein"
@@ -2221,9 +2290,6 @@ function productRowHtml(product) {
               : ''
           }
         >
-
-        Учитывать белок
-
       </label>
 
       <button
@@ -2238,131 +2304,119 @@ function productRowHtml(product) {
 }
 
 function bindProductEditorRemovers() {
-
   els.productEditor
     .querySelectorAll(
       '.remove-product'
     )
     .forEach(btn => {
-
       btn.addEventListener(
         'click',
         () => {
-
-          btn
-            .closest(
-              '.product-row'
-            )
-            .remove();
+          btn.closest(
+            '.product-row'
+          ).remove();
         }
       );
     });
 }
 
 function saveProductEditor() {
-
-  const rows =
-    [
-      ...els.productEditor
-        .querySelectorAll(
-          '.product-row'
-        )
-    ];
+  const rows = [
+    ...els.productEditor
+      .querySelectorAll(
+        '.product-row'
+      )
+  ];
 
   products =
-    rows
-      .map(row => {
-
-        const get =
-          field =>
-            row
-              .querySelector(
-                `[data-field="${field}"]`
-              );
-
-        const old =
-          products.find(
-            product =>
-              product.id ===
-              row.dataset.id
+    rows.map(row => {
+      const get =
+        field =>
+          row.querySelector(
+            `[data-field="${field}"]`
           );
 
-        const name =
-          get('name')
-            .value
-            .trim();
+      const old =
+        products.find(
+          product =>
+            product.id ===
+            row.dataset.id
+        );
 
-        const p =
-          Number(
-            get('p').value
-          ) || 0;
+      const name =
+        get('name')
+          .value
+          .trim();
 
-        const f =
-          Number(
-            get('f').value
-          ) || 0;
+      const p =
+        Number(
+          get('p').value
+        ) || 0;
 
-        const c =
-          Number(
-            get('c').value
-          ) || 0;
+      const f =
+        Number(
+          get('f').value
+        ) || 0;
 
-        const gramsPerPiece =
-          Number(
-            get(
-              'gramsPerPiece'
-            ).value
-          ) || 0;
+      const c =
+        Number(
+          get('c').value
+        ) || 0;
 
-        const countProtein =
+      const gramsPerPiece =
+        Number(
           get(
-            'countProtein'
-          ).checked;
+            'gramsPerPiece'
+          ).value
+        ) || 0;
 
-        return {
+      const countProtein =
+        get(
+          'countProtein'
+        ).checked;
 
-          id:
-            row.dataset.id ||
-            crypto.randomUUID(),
+      return {
+        id:
+          row.dataset.id ||
+          crypto.randomUUID(),
 
-          name,
+        name,
 
-          aliases:
-            old?.aliases?.length
-              ? old.aliases
-              : [
-                  name.toLowerCase()
-                ],
+        aliases:
+          old?.aliases?.length
+            ? old.aliases
+            : [
+                name.toLowerCase()
+              ],
 
-          unit:
-            gramsPerPiece > 0
-              ? (
-                  old?.unit ||
-                  'g'
-                )
-              : 'g',
+        unit:
+          gramsPerPiece > 0
+            ? (
+                old?.unit ||
+                'g'
+              )
+            : 'g',
 
-          gramsPerPiece,
+        gramsPerPiece,
 
-          p,
-          f,
-          c,
+        p,
+        f,
+        c,
 
-          countProtein,
+        countProtein,
 
-          kcal:
-            calculateKcal(
-              p,
-              f,
-              c
-            )
-        };
-      })
-
-      .filter(
-        product =>
-          product.name
-      );
+        kcal:
+          calculateKcal(
+            p,
+            f,
+            c
+          )
+      };
+    })
+    .filter(
+      product =>
+        product.name
+    );
 
   saveProducts();
 
@@ -2379,55 +2433,50 @@ function saveProductEditor() {
 els.dayPicker.value =
   localDateString();
 
-els.dayPicker
-  .addEventListener(
-    'change',
-    render
-  );
+els.dayPicker.addEventListener(
+  'change',
+  render
+);
 
-els.prevDay
-  .addEventListener(
-    'click',
-    () => {
-
-      const d =
-        new Date(
-          els.dayPicker.value +
-          'T12:00:00'
-        );
-
-      d.setDate(
-        d.getDate() - 1
+els.prevDay.addEventListener(
+  'click',
+  () => {
+    const d =
+      new Date(
+        els.dayPicker.value +
+        'T12:00:00'
       );
 
-      els.dayPicker.value =
-        localDateString(d);
+    d.setDate(
+      d.getDate() - 1
+    );
 
-      render();
-    }
-  );
+    els.dayPicker.value =
+      localDateString(d);
 
-els.nextDay
-  .addEventListener(
-    'click',
-    () => {
+    render();
+  }
+);
 
-      const d =
-        new Date(
-          els.dayPicker.value +
-          'T12:00:00'
-        );
-
-      d.setDate(
-        d.getDate() + 1
+els.nextDay.addEventListener(
+  'click',
+  () => {
+    const d =
+      new Date(
+        els.dayPicker.value +
+        'T12:00:00'
       );
 
-      els.dayPicker.value =
-        localDateString(d);
+    d.setDate(
+      d.getDate() + 1
+    );
 
-      render();
-    }
-  );
+    els.dayPicker.value =
+      localDateString(d);
+
+    render();
+  }
+);
 
 
 /* =========================================================
@@ -2439,18 +2488,12 @@ els.nextDay
   els.targetFat,
   els.targetCarbs
 ].forEach(input => {
-
   input.addEventListener(
     'change',
     () => {
       saveTargets();
       render();
     }
-  );
-
-  input.addEventListener(
-    'blur',
-    saveTargets
   );
 });
 
@@ -2459,232 +2502,169 @@ els.nextDay
    БЫСТРЫЙ ВВОД
 ========================================================= */
 
-els.parseBtn
-  .addEventListener(
-    'click',
-    () => {
+els.parseBtn.addEventListener(
+  'click',
+  () => {
+    const text =
+      els.quickInput
+        .value
+        .trim();
 
-      const text =
-        els.quickInput
-          .value
-          .trim();
-
-      if (!text) {
-        return;
-      }
-
-      const parsed =
-        parseQuickText(
-          text
-        );
-
-      if (
-        !parsed.length
-      ) {
-
-        alert(
-          'Не получилось распознать продукт. Например: «рис 100 г» или «200 грамм куриной грудки».'
-        );
-
-        return;
-      }
-
-      parsed.forEach(
-        item => {
-
-          addEntry(
-            item.product,
-            item.amount,
-            item.unit
-          );
-        }
+    const parsed =
+      parseQuickText(
+        text
       );
 
-      els.quickInput.value =
-        '';
-    }
-  );
-
-els.quickInput
-  .addEventListener(
-    'keydown',
-    event => {
-
-      if (
-        event.key ===
-        'Enter'
-      ) {
-
-        event.preventDefault();
-
-        els.parseBtn.click();
-      }
-    }
-  );
-
-
-/* =========================================================
-   РУЧНОЕ ДОБАВЛЕНИЕ
-========================================================= */
-
-els.manualBtn
-  .addEventListener(
-    'click',
-    () => {
-
-      renderManualProducts();
-
-      els.manualAmount.value =
-        '';
-
-      els.manualDialog
-        .showModal();
-    }
-  );
-
-els.manualProduct
-  .addEventListener(
-    'change',
-    () => {
-
-      const product =
-        products.find(
-          p =>
-            p.id ===
-            els.manualProduct.value
-        );
-
-      if (product) {
-
-        els.manualUnit.value =
-          product.unit ||
-          'g';
-      }
-    }
-  );
-
-els.manualSubmit
-  .addEventListener(
-    'click',
-    () => {
-
-      const product =
-        products.find(
-          p =>
-            p.id ===
-            els.manualProduct.value
-        );
-
-      addEntry(
-        product,
-        Number(
-          els.manualAmount.value
-        ),
-        els.manualUnit.value
+    if (!parsed.length) {
+      alert(
+        'Не получилось распознать продукт.'
       );
 
-      els.manualDialog.close();
+      return;
     }
-  );
 
-
-/* =========================================================
-   ОЧИСТИТЬ ДЕНЬ
-========================================================= */
-
-els.clearDayBtn
-  .addEventListener(
-    'click',
-    () => {
-
-      const yes =
-        confirm(
-          'Удалить все записи еды за этот день? Цели БЖУ останутся.'
+    parsed.forEach(
+      item => {
+        addEntry(
+          item.product,
+          item.amount,
+          item.unit
         );
-
-      if (!yes) {
-        return;
       }
+    );
 
-      ensureDay(
-        els.dayPicker.value
-      ).entries = [];
-
-      saveData();
-      render();
-    }
-  );
+    els.quickInput.value =
+      '';
+  }
+);
 
 
 /* =========================================================
-   НАСТРОЙКИ ПРОДУКТОВ
+   РУЧНОЕ
 ========================================================= */
 
-els.settingsBtn
-  .addEventListener(
-    'click',
-    openProductEditor
-  );
+els.manualBtn.addEventListener(
+  'click',
+  () => {
+    renderManualProducts();
 
-els.addProductBtn
-  .addEventListener(
-    'click',
-    () => {
+    els.manualAmount.value =
+      '';
 
-      const product = {
+    els.manualDialog
+      .showModal();
+  }
+);
 
-        id:
-          crypto.randomUUID(),
-
-        name:
-          'Новый продукт',
-
-        aliases:
-          [
-            'новый продукт'
-          ],
-
-        unit:
-          'g',
-
-        gramsPerPiece:
-          0,
-
-        p: 0,
-        f: 0,
-        c: 0,
-
-        countProtein:
-          false,
-
-        kcal: 0
-      };
-
-      products.push(
-        product
+els.manualSubmit.addEventListener(
+  'click',
+  () => {
+    const product =
+      products.find(
+        p =>
+          p.id ===
+          els.manualProduct.value
       );
 
-      els.productEditor
-        .insertAdjacentHTML(
-          'beforeend',
-          productRowHtml(
-            product
-          )
-        );
+    addEntry(
+      product,
+      Number(
+        els.manualAmount.value
+      ),
+      els.manualUnit.value
+    );
 
-      bindProductEditorRemovers();
-    }
-  );
-
-els.saveProductsBtn
-  .addEventListener(
-    'click',
-    saveProductEditor
-  );
+    els.manualDialog.close();
+  }
+);
 
 
 /* =========================================================
-   ГОЛОСОВОЙ ВВОД
+   ОЧИСТКА
+========================================================= */
+
+els.clearDayBtn.addEventListener(
+  'click',
+  () => {
+    const yes =
+      confirm(
+        'Удалить все записи за этот день?'
+      );
+
+    if (!yes) {
+      return;
+    }
+
+    ensureDay(
+      els.dayPicker.value
+    ).entries = [];
+
+    saveData();
+    render();
+  }
+);
+
+
+/* =========================================================
+   НАСТРОЙКИ
+========================================================= */
+
+els.settingsBtn.addEventListener(
+  'click',
+  openProductEditor
+);
+
+els.addProductBtn.addEventListener(
+  'click',
+  () => {
+    const product = {
+      id:
+        crypto.randomUUID(),
+
+      name:
+        'Новый продукт',
+
+      aliases: [
+        'новый продукт'
+      ],
+
+      unit: 'g',
+
+      gramsPerPiece: 0,
+
+      p: 0,
+      f: 0,
+      c: 0,
+
+      countProtein: false,
+
+      kcal: 0
+    };
+
+    products.push(
+      product
+    );
+
+    els.productEditor
+      .insertAdjacentHTML(
+        'beforeend',
+        productRowHtml(
+          product
+        )
+      );
+
+    bindProductEditorRemovers();
+  }
+);
+
+els.saveProductsBtn.addEventListener(
+  'click',
+  saveProductEditor
+);
+
+
+/* =========================================================
+   ГОЛОС
 ========================================================= */
 
 const SpeechRecognition =
@@ -2692,7 +2672,6 @@ const SpeechRecognition =
   window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
-
   const recognition =
     new SpeechRecognition();
 
@@ -2707,101 +2686,35 @@ if (SpeechRecognition) {
 
   recognition.onstart =
     () => {
-
-      els.voiceBtn
-        .classList
-        .add(
-          'listening'
-        );
-
       els.voiceBtn.textContent =
         '🎙️ Слушаю…';
-
-      els.voiceStatus.hidden =
-        false;
-
-      els.voiceStatus.textContent =
-        'Говори, например: «100 грамм риса» или «куриная грудка 200 грамм»';
     };
 
   recognition.onresult =
     event => {
-
-      const transcript =
+      els.quickInput.value =
         event.results[0][0]
           .transcript;
-
-      els.quickInput.value =
-        transcript;
-
-      els.voiceStatus.hidden =
-        false;
-
-      els.voiceStatus.textContent =
-        `Распознано: ${transcript}`;
-    };
-
-  recognition.onerror =
-    event => {
-
-      els.voiceStatus.hidden =
-        false;
-
-      if (
-        event.error ===
-        'not-allowed'
-      ) {
-
-        els.voiceStatus.textContent =
-          'Нет доступа к микрофону. Разреши сайту использовать микрофон в настройках браузера.';
-
-      } else {
-
-        els.voiceStatus.textContent =
-          'Не удалось распознать речь: ' +
-          event.error;
-      }
     };
 
   recognition.onend =
     () => {
-
-      els.voiceBtn
-        .classList
-        .remove(
-          'listening'
-        );
-
       els.voiceBtn.textContent =
         '🎙️ Сказать голосом';
     };
 
-  els.voiceBtn
-    .addEventListener(
-      'click',
-      () => {
-
-        try {
-          recognition.start();
-        } catch {
-          // распознавание уже запущено
-        }
-      }
-    );
+  els.voiceBtn.addEventListener(
+    'click',
+    () => {
+      try {
+        recognition.start();
+      } catch {}
+    }
+  );
 
 } else {
-
   els.voiceBtn.disabled =
     true;
-
-  els.voiceBtn.textContent =
-    '🎙️ Голос недоступен';
-
-  els.voiceStatus.hidden =
-    false;
-
-  els.voiceStatus.textContent =
-    'Этот браузер не поддерживает встроенное распознавание речи.';
 }
 
 
@@ -2809,6 +2722,6 @@ if (SpeechRecognition) {
    ЗАПУСК
 ========================================================= */
 
+ensureCloudStyles();
 ensureEntryEditor();
-
 render();

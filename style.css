@@ -15,6 +15,12 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
 body {
   margin: 0;
   font-family:
@@ -26,21 +32,15 @@ body {
     "Segoe UI",
     sans-serif;
 
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(255,112,183,.18),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at top right,
-      rgba(143,92,255,.16),
-      transparent 30%
-    ),
-    var(--bg);
+  /*
+    Однотонный фон без лишней розовой вставки
+    между блоками.
+  */
+  background: var(--bg);
 
   color: var(--text);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 button,
@@ -58,9 +58,10 @@ button {
   position: relative;
   overflow: hidden;
 
-  width: min(1080px, calc(100% - 28px));
-  margin: 0 auto;
-  padding: 28px 0 60px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 28px 44px 60px;
 }
 
 .hero {
@@ -924,11 +925,50 @@ textarea:focus {
     blur(8px);
 }
 
+/* =====================================
+   САЛАТ В ПРАВОМ ВЕРХНЕМ УГЛУ
+===================================== */
+
+.salad-background {
+  position: absolute;
+  z-index: 0;
+
+  right: -160px;
+  top: -120px;
+
+  width: 620px;
+  height: auto;
+
+  pointer-events: none;
+
+  filter:
+    drop-shadow(
+      0 25px 35px
+      rgba(80,50,90,.16)
+    );
+
+  opacity: .97;
+}
+
+/*
+  Все основные элементы сайта
+  находятся поверх салата.
+*/
+.app-shell > *:not(.salad-background) {
+  position: relative;
+  z-index: 2;
+}
+
 /* =========================================================
    ПЛАНШЕТ
 ========================================================= */
 
 @media (max-width: 820px) {
+
+  .app-shell {
+    padding-left: 26px;
+    padding-right: 26px;
+  }
 
   .stats-grid {
     grid-template-columns:
@@ -944,6 +984,12 @@ textarea:focus {
     grid-column:
       span 2;
   }
+
+  .salad-background {
+    width: 520px;
+    right: -170px;
+    top: -80px;
+  }
 }
 
 /* =========================================================
@@ -953,14 +999,8 @@ textarea:focus {
 @media (max-width: 620px) {
 
   .app-shell {
-    width:
-      min(
-        100% - 18px,
-        1080px
-      );
-
-    padding-top:
-      18px;
+    width: 100%;
+    padding: 18px 18px 40px;
   }
 
   .hero {
@@ -1072,52 +1112,11 @@ textarea:focus {
     height:
       165px;
   }
-}
 
-/* =====================================
-   САЛАТ В ПРАВОМ ВЕРХНЕМ УГЛУ
-===================================== */
-
-.salad-background {
-  position: absolute;
-  z-index: 0;
-
-  /*
-    Уходим вправо и вверх,
-    чтобы салат выглядывал из угла.
-  */
-  right: -180px;
-  top: -130px;
-
-  width: 620px;
-  height: auto;
-
-  pointer-events: none;
-
-  filter:
-    drop-shadow(
-      0 25px 35px
-      rgba(80,50,90,.18)
-    );
-
-  opacity: .95;
-}
-
-/*
-  Все основные элементы сайта
-  находятся поверх салата.
-*/
-.app-shell > *:not(.salad-background) {
-  position: relative;
-  z-index: 2;
-}
-
-/* Телефон */
-@media (max-width: 620px) {
   .salad-background {
-    width: 430px;
-    right: -160px;
-    top: -90px;
-    opacity: .85;
+    width: 420px;
+    right: -170px;
+    top: -65px;
+    opacity: .88;
   }
 }

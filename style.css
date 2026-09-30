@@ -55,6 +55,9 @@ button {
 }
 
 .app-shell {
+  position: relative;
+  overflow: hidden;
+
   width: min(1080px, calc(100% - 28px));
   margin: 0 auto;
   padding: 28px 0 60px;
@@ -1068,5 +1071,53 @@ textarea:focus {
 
     height:
       165px;
+  }
+}
+
+/* =====================================
+   САЛАТ В ПРАВОМ ВЕРХНЕМ УГЛУ
+===================================== */
+
+.salad-background {
+  position: absolute;
+  z-index: 0;
+
+  /*
+    Уходим вправо и вверх,
+    чтобы салат выглядывал из угла.
+  */
+  right: -180px;
+  top: -130px;
+
+  width: 620px;
+  height: auto;
+
+  pointer-events: none;
+
+  filter:
+    drop-shadow(
+      0 25px 35px
+      rgba(80,50,90,.18)
+    );
+
+  opacity: .95;
+}
+
+/*
+  Все основные элементы сайта
+  находятся поверх салата.
+*/
+.app-shell > *:not(.salad-background) {
+  position: relative;
+  z-index: 2;
+}
+
+/* Телефон */
+@media (max-width: 620px) {
+  .salad-background {
+    width: 430px;
+    right: -160px;
+    top: -90px;
+    opacity: .85;
   }
 }

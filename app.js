@@ -1,130 +1,327 @@
 const STORAGE_KEY = 'bju-diary-v1';
 const PRODUCTS_KEY = 'bju-products-v1';
+const PRODUCTS_VERSION_KEY = 'bju-products-version-v2';
+
+
+function macroKcal(p, f, c) {
+
+  return Math.round(
+    (
+      (Number(p) || 0) * 4 +
+      (Number(f) || 0) * 9 +
+      (Number(c) || 0) * 4
+    ) * 10
+  ) / 10;
+
+}
+
+
 
 const defaultProducts = [
+
   {
-    id: crypto.randomUUID(),
-    name: 'Яйцо',
-    aliases: ['яйцо','яйца','яиц'],
-    unit: 'piece',
-    gramsPerPiece: 55,
-    p: 12.7,
-    f: 10.9,
-    c: 0.7,
-    kcal: 157
+    id: 'rice',
+    name: 'Рис',
+    aliases: ['рис', 'риса'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 7.2,
+    f: 0.5,
+    c: 76.9,
+    kcal: macroKcal(7.2, 0.5, 76.9),
+    countProtein: false
   },
 
   {
-    id: crypto.randomUUID(),
-    name: 'Кетчуп',
-    aliases: ['кетчуп','кетчупа'],
+    id: 'pasta',
+    name: 'Макароны',
+    aliases: ['макароны', 'макарон', 'паста', 'пасты'],
     unit: 'g',
     gramsPerPiece: 0,
-    p: 1.3,
-    f: 0.2,
-    c: 22.2,
-    kcal: 101
+    p: 12,
+    f: 1.3,
+    c: 70.5,
+    kcal: macroKcal(12, 1.3, 70.5),
+    countProtein: false
   },
 
   {
-    id: crypto.randomUUID(),
-    name: 'Куриная грудка',
-    aliases: ['куриная грудка','грудка','курицы','курица'],
+    id: 'buckwheat',
+    name: 'Гречка',
+    aliases: ['гречка', 'гречки', 'гречку'],
     unit: 'g',
     gramsPerPiece: 0,
-    p: 31,
-    f: 3.6,
-    c: 0,
-    kcal: 165
-  },
-
-  {
-    id: crypto.randomUUID(),
-    name: 'Рис варёный',
-    aliases: ['рис','риса'],
-    unit: 'g',
-    gramsPerPiece: 0,
-    p: 2.7,
-    f: 0.3,
-    c: 28.2,
-    kcal: 130
-  },
-
-  {
-    id: crypto.randomUUID(),
-    name: 'Овсянка',
-    aliases: ['овсянка','овсянки','овсяные хлопья'],
-    unit: 'g',
-    gramsPerPiece: 0,
-    p: 12.3,
-    f: 6.1,
-    c: 59.5,
-    kcal: 352
-  },
-
-  {
-    id: crypto.randomUUID(),
-    name: 'Молоко 2.5%',
-    aliases: ['молоко','молока'],
-    unit: 'g',
-    gramsPerPiece: 0,
-    p: 2.8,
+    p: 13,
     f: 2.5,
-    c: 4.7,
-    kcal: 52
+    c: 61,
+    kcal: macroKcal(13, 2.5, 61),
+    countProtein: false
   },
 
   {
-    id: crypto.randomUUID(),
-    name: 'Творог 5%',
-    aliases: ['творог','творога'],
+    id: 'chicken',
+    name: 'Куриная грудка',
+    aliases: [
+      'куриная грудка',
+      'грудка',
+      'грудки',
+      'курица',
+      'курицы'
+    ],
     unit: 'g',
     gramsPerPiece: 0,
-    p: 17,
-    f: 5,
-    c: 1.8,
-    kcal: 121
+    p: 22,
+    f: 4,
+    c: null,
+    kcal: macroKcal(22, 4, 0),
+    countProtein: true
   },
 
   {
-    id: crypto.randomUUID(),
-    name: 'Банан',
-    aliases: ['банан','банана','бананы'],
+    id: 'tuna',
+    name: 'Тунец консервированный',
+    aliases: [
+      'тунец',
+      'тунца',
+      'тунец консервированный'
+    ],
     unit: 'g',
     gramsPerPiece: 0,
-    p: 1.1,
-    f: 0.3,
-    c: 22.8,
-    kcal: 96
-  },
-
-  {
-    id: crypto.randomUUID(),
-    name: 'Сыр',
-    aliases: ['сыр','сыра'],
-    unit: 'g',
-    gramsPerPiece: 0,
-    p: 24,
-    f: 29,
-    c: 0.5,
-    kcal: 363
-  },
-
-  {
-    id: crypto.randomUUID(),
-    name: 'Хлеб',
-    aliases: ['хлеб','хлеба'],
-    unit: 'g',
-    gramsPerPiece: 0,
-    p: 8.1,
+    p: 23,
     f: 1,
-    c: 48.8,
-    kcal: 242
+    c: 0,
+    kcal: macroKcal(23, 1, 0),
+    countProtein: true
+  },
+
+  {
+    id: 'eggs',
+    name: 'Яйца',
+    aliases: [
+      'яйцо',
+      'яйца',
+      'яиц'
+    ],
+    unit: 'g',
+    gramsPerPiece: 55,
+    p: 12.6,
+    f: 11.5,
+    c: 0.7,
+    kcal: macroKcal(12.6, 11.5, 0.7),
+    countProtein: true
+  },
+
+  {
+    id: 'ham',
+    name: 'Ветчина',
+    aliases: [
+      'ветчина',
+      'ветчины',
+      'ветчину'
+    ],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 14,
+    f: 4,
+    c: 4,
+    kcal: macroKcal(14, 4, 4),
+    countProtein: true
+  },
+
+  {
+    id: 'greek-yogurt',
+    name: 'Греческий йогурт',
+    aliases: [
+      'греческий йогурт',
+      'йогурт',
+      'йогурта'
+    ],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 8,
+    f: 2,
+    c: 4.2,
+    kcal: macroKcal(8, 2, 4.2),
+    countProtein: true
+  },
+
+  {
+    id: 'cheese',
+    name: 'Сыр',
+    aliases: [
+      'сыр',
+      'сыра'
+    ],
+    unit: 'g',
+    gramsPerPiece: 0,
+
+    /*
+      На присланном скриншоте
+      белок для сыра не указан.
+    */
+    p: null,
+
+    f: 26,
+    c: 0,
+
+    kcal:
+      macroKcal(
+        0,
+        26,
+        0
+      ),
+
+    countProtein:
+      false
+  },
+
+  {
+    id: 'cream-cheese',
+    name: 'Творожный сыр',
+    aliases: [
+      'творожный сыр',
+      'творожного сыра'
+    ],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 6.2,
+    f: 21.7,
+    c: 4.2,
+    kcal: macroKcal(6.2, 21.7, 4.2),
+    countProtein: true
+  },
+
+  {
+    id: 'beans',
+    name: 'Фасоль',
+    aliases: [
+      'фасоль',
+      'фасоли'
+    ],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 4.5,
+    f: 2,
+    c: 14,
+    kcal: macroKcal(4.5, 2, 14),
+    countProtein: false
+  },
+
+  {
+    id: 'bread',
+    name: 'Хлеб',
+    aliases: [
+      'хлеб',
+      'хлеба'
+    ],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 6,
+    f: 0,
+    c: 46,
+    kcal: macroKcal(6, 0, 46),
+    countProtein: false
+  },
+
+  {
+    id: 'cucumber',
+    name: 'Огурцы',
+    aliases: [
+      'огурец',
+      'огурцы',
+      'огурца',
+      'огурцов'
+    ],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 0,
+    f: 0,
+    c: 3,
+    kcal: macroKcal(0, 0, 3),
+    countProtein: false
+  },
+
+  {
+    id: 'olives',
+    name: 'Оливки',
+    aliases: [
+      'оливки',
+      'оливок'
+    ],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 2,
+    f: 16,
+    c: 5,
+    kcal: macroKcal(2, 16, 5),
+    countProtein: false
+  },
+
+  {
+    id: 'asparagus',
+    name: 'Спаржа',
+    aliases: [
+      'спаржа',
+      'спаржи'
+    ],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 12,
+    f: 15,
+    c: 10,
+    kcal: macroKcal(12, 15, 10),
+    countProtein: false
+  },
+
+  {
+    id: 'honey-mustard',
+    name: 'Медово-горчичный соус',
+    aliases: [
+      'медово-горчичный соус',
+      'медово горчичный соус',
+      'медово-горчичного соуса'
+    ],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 1.7,
+    f: 37.2,
+    c: 22.5,
+    kcal: macroKcal(1.7, 37.2, 22.5),
+    countProtein: false
   }
+
 ];
 
 
-const $ = (id) => document.getElementById(id);
+
+/*
+  Старые стандартные продукты предыдущей версии.
+
+  При первом запуске новой версии
+  они будут заменены на новый список,
+  а добавленные пользователем продукты сохранятся.
+*/
+
+const LEGACY_DEFAULT_NAMES =
+  new Set([
+    'яйцо',
+    'кетчуп',
+    'куриная грудка',
+    'рис варёный',
+    'овсянка',
+    'молоко 2.5%',
+    'творог 5%',
+    'банан',
+    'сыр',
+    'хлеб'
+  ]);
+
+
+
+const $ =
+  (id) =>
+    document.getElementById(id);
+
 
 
 const els = {
@@ -250,8 +447,35 @@ const els = {
     $('addProductBtn'),
 
   saveProductsBtn:
-    $('saveProductsBtn')
+    $('saveProductsBtn'),
+
+
+  entryEditDialog:
+    $('entryEditDialog'),
+
+  editEntryName:
+    $('editEntryName'),
+
+  editEntryAmountLabel:
+    $('editEntryAmountLabel'),
+
+  editEntryProtein:
+    $('editEntryProtein'),
+
+  editEntryFat:
+    $('editEntryFat'),
+
+  editEntryCarbs:
+    $('editEntryCarbs'),
+
+  editEntryCountProtein:
+    $('editEntryCountProtein'),
+
+  saveEntryEditBtn:
+    $('saveEntryEditBtn')
+
 };
+
 
 
 let data =
@@ -265,11 +489,18 @@ let products =
   loadProducts();
 
 
+let editingEntryId =
+  null;
 
-function localDateString(date = new Date()) {
+
+
+function localDateString(
+  date = new Date()
+) {
 
   const y =
     date.getFullYear();
+
 
   const m =
     String(
@@ -279,6 +510,7 @@ function localDateString(date = new Date()) {
       '0'
     );
 
+
   const d =
     String(
       date.getDate()
@@ -287,17 +519,23 @@ function localDateString(date = new Date()) {
       '0'
     );
 
+
   return `${y}-${m}-${d}`;
+
 }
 
 
 
-function formatDate(dateString) {
+function formatDate(
+  dateString
+) {
 
   const d =
     new Date(
-      dateString + 'T12:00:00'
+      dateString +
+      'T12:00:00'
     );
+
 
   return d.toLocaleDateString(
     'ru-RU',
@@ -315,6 +553,7 @@ function formatDate(dateString) {
         'numeric'
     }
   );
+
 }
 
 
@@ -332,7 +571,9 @@ function loadJSON(
       ) ?? fallback
     );
 
-  } catch {
+  }
+
+  catch {
 
     return fallback;
 
@@ -364,6 +605,130 @@ function saveProducts() {
 
 
 
+function normalizedName(
+  value = ''
+) {
+
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(
+      /ё/g,
+      'е'
+    );
+
+}
+
+
+
+function optionalProductNumber(
+  value
+) {
+
+  if (
+    value === '' ||
+    value === null ||
+    value === undefined
+  ) {
+
+    return null;
+
+  }
+
+
+  const n =
+    Number(value);
+
+
+  return Number.isFinite(n)
+    ? Math.max(
+        0,
+        n
+      )
+    : null;
+
+}
+
+
+
+function normalizeProduct(
+  product
+) {
+
+  const name =
+    String(
+      product?.name || ''
+    ).trim();
+
+
+  return {
+
+    id:
+      product?.id ||
+      crypto.randomUUID(),
+
+    name,
+
+    aliases:
+      Array.isArray(
+        product?.aliases
+      ) &&
+      product.aliases.length
+
+        ? product.aliases
+
+        : [
+            name.toLowerCase()
+          ],
+
+    unit:
+      'g',
+
+    gramsPerPiece:
+      Number(
+        product?.gramsPerPiece
+      ) || 0,
+
+    p:
+      optionalProductNumber(
+        product?.p
+      ),
+
+    f:
+      optionalProductNumber(
+        product?.f
+      ),
+
+    c:
+      optionalProductNumber(
+        product?.c
+      ),
+
+    kcal:
+      Number(
+        product?.kcal
+      ) ||
+      macroKcal(
+        product?.p,
+        product?.f,
+        product?.c
+      ),
+
+    countProtein:
+      product?.countProtein !== false
+
+  };
+
+}
+
+
+
+/*
+  Загружает сохранённые продукты
+  и один раз переводит старую версию
+  списка на новую.
+*/
+
 function loadProducts() {
 
   const saved =
@@ -372,22 +737,159 @@ function loadProducts() {
       null
     );
 
-  return (
-    Array.isArray(saved) &&
-    saved.length
-      ? saved
-      : structuredClone(
-          defaultProducts
+
+  const version =
+    localStorage.getItem(
+      PRODUCTS_VERSION_KEY
+    );
+
+
+  if (
+    !Array.isArray(saved) ||
+    !saved.length
+  ) {
+
+    const fresh =
+      structuredClone(
+        defaultProducts
+      );
+
+
+    localStorage.setItem(
+      PRODUCTS_VERSION_KEY,
+      '2'
+    );
+
+
+    localStorage.setItem(
+      PRODUCTS_KEY,
+      JSON.stringify(fresh)
+    );
+
+
+    return fresh;
+
+  }
+
+
+  let result;
+
+
+  if (
+    version !== '2'
+  ) {
+
+    /*
+      Свои пользовательские продукты
+      не удаляем.
+
+      Убираем только известные
+      стандартные продукты старой версии.
+    */
+
+    const customSaved =
+      saved
+        .map(
+          normalizeProduct
         )
+        .filter(
+          p =>
+            !LEGACY_DEFAULT_NAMES
+              .has(
+                normalizedName(
+                  p.name
+                )
+              )
+        );
+
+
+    result = [
+
+      ...structuredClone(
+        defaultProducts
+      ),
+
+      ...customSaved
+
+    ];
+
+  }
+
+  else {
+
+    result =
+      saved.map(
+        normalizeProduct
+      );
+
+
+    /*
+      Если какой-то новый стандартный
+      продукт отсутствует — добавляем.
+    */
+
+    const existingNames =
+      new Set(
+        result.map(
+          p =>
+            normalizedName(
+              p.name
+            )
+        )
+      );
+
+
+    for (
+      const preset
+      of defaultProducts
+    ) {
+
+      if (
+        !existingNames.has(
+          normalizedName(
+            preset.name
+          )
+        )
+      ) {
+
+        result.push(
+          structuredClone(
+            preset
+          )
+        );
+
+      }
+
+    }
+
+  }
+
+
+  localStorage.setItem(
+    PRODUCTS_VERSION_KEY,
+    '2'
   );
+
+
+  localStorage.setItem(
+    PRODUCTS_KEY,
+    JSON.stringify(result)
+  );
+
+
+  return result;
 
 }
 
 
 
-function ensureDay(date) {
+function ensureDay(
+  date
+) {
 
-  if (!data[date]) {
+  if (
+    !data[date]
+  ) {
 
     data[date] = {
 
@@ -403,6 +905,7 @@ function ensureDay(date) {
 
   }
 
+
   return data[date];
 
 }
@@ -413,40 +916,99 @@ function round1(n) {
 
   return (
     Math.round(
-      (Number(n) || 0) * 10
-    ) / 10
+      (Number(n) || 0) *
+      10
+    ) /
+    10
   );
 
 }
 
 
 
-function escapeHtml(value = '') {
+function escapeHtml(
+  value = ''
+) {
 
-  return value.replace(
-    /[&<>'"]/g,
-    c => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      "'": '&#39;',
-      '"': '&quot;'
-    }[c])
+  return String(value)
+    .replace(
+      /[&<>'"]/g,
+      c => ({
+        '&':
+          '&amp;',
+
+        '<':
+          '&lt;',
+
+        '>':
+          '&gt;',
+
+        "'":
+          '&#39;',
+
+        '"':
+          '&quot;'
+      }[c])
+    );
+
+}
+
+
+
+/* =========================================================
+   СЧИТАЕМ ЛИ БЕЛОК ЗАПИСИ
+========================================================= */
+
+function entryCountsProtein(
+  entry
+) {
+
+  return (
+    entry.countProtein !==
+    false
   );
 
 }
 
 
 
-function totalsFor(day) {
+/* =========================================================
+   СУММА ЗА ДЕНЬ
+========================================================= */
+
+function totalsFor(
+  day
+) {
 
   return day.entries.reduce(
     (acc, e) => {
 
-      acc.p += e.p;
-      acc.f += e.f;
-      acc.c += e.c;
-      acc.kcal += e.kcal;
+      /*
+        Белок прибавляем только
+        если галочка включена.
+      */
+
+      if (
+        entryCountsProtein(e)
+      ) {
+
+        acc.p +=
+          Number(e.p) || 0;
+
+      }
+
+
+      acc.f +=
+        Number(e.f) || 0;
+
+
+      acc.c +=
+        Number(e.c) || 0;
+
+
+      acc.kcal +=
+        Number(e.kcal) || 0;
+
 
       return acc;
 
@@ -463,22 +1025,29 @@ function totalsFor(day) {
 
 
 
+/* =========================================================
+   БЖУ ПРОДУКТА ПО ВЕСУ
+========================================================= */
+
 function calcFromProduct(
   product,
   amount,
-  unit
+  unit = 'g'
 ) {
 
   let grams =
     Number(amount);
 
 
-  if (unit === 'piece') {
+  if (
+    unit === 'piece'
+  ) {
 
     grams =
       Number(amount) *
       Number(
-        product.gramsPerPiece || 0
+        product.gramsPerPiece ||
+        0
       );
 
   }
@@ -488,26 +1057,41 @@ function calcFromProduct(
     grams / 100;
 
 
+  const p =
+    (Number(product.p) || 0) *
+    factor;
+
+
+  const f =
+    (Number(product.f) || 0) *
+    factor;
+
+
+  const c =
+    (Number(product.c) || 0) *
+    factor;
+
+
+  const kcal =
+    (
+      Number(
+        product.kcal
+      ) ||
+      macroKcal(
+        product.p,
+        product.f,
+        product.c
+      )
+    ) *
+    factor;
+
+
   return {
-
     grams,
-
-    p:
-      product.p *
-      factor,
-
-    f:
-      product.f *
-      factor,
-
-    c:
-      product.c *
-      factor,
-
-    kcal:
-      product.kcal *
-      factor
-
+    p,
+    f,
+    c,
+    kcal
   };
 
 }
@@ -515,7 +1099,7 @@ function calcFromProduct(
 
 
 /* =========================================================
-   ОСНОВНАЯ ОТРИСОВКА
+   ОСНОВНОЙ RENDER
 ========================================================= */
 
 function render() {
@@ -584,7 +1168,7 @@ function render() {
 
 
 /* =========================================================
-   БЕЛКИ / ЖИРЫ / УГЛЕВОДЫ
+   КАРТОЧКИ БЖУ
 ========================================================= */
 
 function updateStat(
@@ -603,10 +1187,13 @@ function updateStat(
 
   const rawPct =
     targetNum
+
       ? (
           eatenNum /
           targetNum
-        ) * 100
+        ) *
+        100
+
       : 0;
 
 
@@ -654,44 +1241,27 @@ function updateStat(
     );
 
 
-  /*
-    Сколько набрано.
-  */
-
   eatenEl.textContent =
     `${round1(eatenNum)} г`;
 
-
-  /*
-    Полоса заполняется максимум до 100%.
-  */
 
   progressEl.style.width =
     `${progressPct}%`;
 
 
-  /*
-    Нет цели.
-  */
-
-  if (!targetNum) {
+  if (
+    !targetNum
+  ) {
 
     statusTextEl.textContent =
       '';
+
 
     leftEl.textContent =
       'цель не задана';
 
   }
 
-
-  /*
-    Цель превышена.
-
-    Никакого знака "+":
-    например:
-    «превысила на 7.4 г».
-  */
 
   else if (
     eatenNum >
@@ -713,10 +1283,6 @@ function updateStat(
   }
 
 
-  /*
-    Цель ещё не превышена.
-  */
-
   else {
 
     statusTextEl.textContent =
@@ -734,26 +1300,11 @@ function updateStat(
   }
 
 
-  /*
-    Сначала убираем предыдущую
-    цветовую подсветку.
-  */
-
   card.classList.remove(
     'goal-near',
     'goal-over'
   );
 
-
-  /*
-    От 95% до 100% включительно:
-    зелёная карточка.
-
-    Работает для:
-    - белков;
-    - жиров;
-    - углеводов.
-  */
 
   if (
     targetNum > 0 &&
@@ -767,14 +1318,6 @@ function updateStat(
 
   }
 
-
-  /*
-    Больше 100%:
-    красная подсветка только
-    для жиров и углеводов.
-
-    Для белков красного цвета нет.
-  */
 
   else if (
     targetNum > 0 &&
@@ -796,12 +1339,16 @@ function updateStat(
 
 
 /* =========================================================
-   ЗАПИСИ ЗА ДЕНЬ
+   ЗАПИСИ ТЕКУЩЕГО ДНЯ
 ========================================================= */
 
-function renderEntries(day) {
+function renderEntries(
+  day
+) {
 
-  if (!day.entries.length) {
+  if (
+    !day.entries.length
+  ) {
 
     els.entriesList.innerHTML =
       '<div class="empty">Пока ничего не записано.</div>';
@@ -814,60 +1361,112 @@ function renderEntries(day) {
   els.entriesList.innerHTML =
     day.entries
       .map(
-        e => `
+        e => {
 
-          <div class="entry">
+          const proteinNote =
+            entryCountsProtein(e)
 
-            <div>
+              ? ''
 
-              <div class="entry-title">
+              : ' · белок не считается';
 
-                ${escapeHtml(e.name)}
-                —
-                ${round1(e.amount)}
-                ${e.unit === 'piece' ? 'шт.' : 'г'}
+
+          return `
+
+            <div class="entry">
+
+              <div>
+
+                <div class="entry-title">
+
+                  ${escapeHtml(e.name)}
+                  —
+                  ${round1(e.amount)}
+                  ${e.unit === 'piece' ? 'шт.' : 'г'}
+
+                </div>
+
+
+                <div class="entry-macros">
+
+                  Б ${round1(e.p)}
+                  ·
+                  Ж ${round1(e.f)}
+                  ·
+                  У ${round1(e.c)}
+                  ·
+                  ${Math.round(e.kcal)} ккал
+                  ${proteinNote}
+
+                </div>
 
               </div>
 
-              <div class="entry-macros">
 
-                Б ${round1(e.p)}
-                ·
-                Ж ${round1(e.f)}
-                ·
-                У ${round1(e.c)}
-                ·
-                ${Math.round(e.kcal)} ккал
+              <div class="entry-actions">
+
+                <button
+                  class="mini-btn edit-entry"
+                  data-id="${e.id}"
+                  type="button"
+                >
+                  Редактировать
+                </button>
+
+
+                <button
+                  class="mini-btn delete-entry"
+                  data-id="${e.id}"
+                  type="button"
+                >
+                  Удалить
+                </button>
 
               </div>
 
             </div>
 
+          `;
 
-            <div class="entry-actions">
-
-              <button
-                class="mini-btn delete-entry"
-                data-id="${e.id}"
-              >
-                Удалить
-              </button>
-
-            </div>
-
-          </div>
-
-        `
+        }
       )
       .join('');
 
+
+  /*
+    Редактирование.
+  */
+
+  els.entriesList
+    .querySelectorAll(
+      '.edit-entry'
+    )
+    .forEach(
+      btn => {
+
+        btn.addEventListener(
+          'click',
+          () =>
+            openEntryEditor(
+              btn.dataset.id
+            )
+        );
+
+      }
+    );
+
+
+  /*
+    Удаление.
+  */
 
   els.entriesList
     .querySelectorAll(
       '.delete-entry'
     )
     .forEach(
-      btn =>
+      btn => {
+
         btn.addEventListener(
           'click',
           () => {
@@ -885,8 +1484,196 @@ function renderEntries(day) {
             render();
 
           }
-        )
+        );
+
+      }
     );
+
+}
+
+
+
+/* =========================================================
+   ОТКРЫТЬ ОБЛАЧКО РЕДАКТИРОВАНИЯ
+========================================================= */
+
+function openEntryEditor(
+  entryId
+) {
+
+  const day =
+    ensureDay(
+      els.dayPicker.value
+    );
+
+
+  const entry =
+    day.entries.find(
+      e =>
+        e.id ===
+        entryId
+    );
+
+
+  if (
+    !entry
+  ) {
+
+    return;
+
+  }
+
+
+  editingEntryId =
+    entryId;
+
+
+  els.editEntryName.textContent =
+    entry.name;
+
+
+  els.editEntryAmountLabel.textContent =
+    `${
+      round1(
+        entry.amount
+      )
+    } ${
+      entry.unit === 'piece'
+        ? 'шт.'
+        : 'г'
+    } в этой записи`;
+
+
+  els.editEntryProtein.value =
+    round1(
+      entry.p
+    );
+
+
+  els.editEntryFat.value =
+    round1(
+      entry.f
+    );
+
+
+  els.editEntryCarbs.value =
+    round1(
+      entry.c
+    );
+
+
+  els.editEntryCountProtein.checked =
+    entryCountsProtein(
+      entry
+    );
+
+
+  els.entryEditDialog
+    .showModal();
+
+}
+
+
+
+/* =========================================================
+   СОХРАНИТЬ РЕДАКТИРОВАНИЕ ЗАПИСИ
+========================================================= */
+
+function saveEntryEdit() {
+
+  if (
+    !editingEntryId
+  ) {
+
+    return;
+
+  }
+
+
+  const day =
+    ensureDay(
+      els.dayPicker.value
+    );
+
+
+  const entry =
+    day.entries.find(
+      e =>
+        e.id ===
+        editingEntryId
+    );
+
+
+  if (
+    !entry
+  ) {
+
+    return;
+
+  }
+
+
+  entry.p =
+    Math.max(
+      0,
+      Number(
+        els.editEntryProtein.value
+      ) || 0
+    );
+
+
+  entry.f =
+    Math.max(
+      0,
+      Number(
+        els.editEntryFat.value
+      ) || 0
+    );
+
+
+  entry.c =
+    Math.max(
+      0,
+      Number(
+        els.editEntryCarbs.value
+      ) || 0
+    );
+
+
+  /*
+    Эта галочка относится только
+    к конкретной записи конкретного дня.
+  */
+
+  entry.countProtein =
+    els.editEntryCountProtein.checked;
+
+
+  /*
+    После ручного изменения БЖУ
+    пересчитываем калории.
+  */
+
+  entry.kcal =
+    macroKcal(
+      entry.p,
+      entry.f,
+      entry.c
+    );
+
+
+  saveData();
+
+
+  editingEntryId =
+    null;
+
+
+  els.entryEditDialog
+    .close();
+
+
+  render();
 
 }
 
@@ -914,7 +1701,9 @@ function renderHistory() {
       );
 
 
-  if (!dates.length) {
+  if (
+    !dates.length
+  ) {
 
     els.historyList.innerHTML =
       '<div class="empty">История появится после первой записи.</div>';
@@ -962,7 +1751,9 @@ function renderHistory() {
 
               </div>
 
-              <span>→</span>
+              <span>
+                →
+              </span>
 
             </div>
 
@@ -978,7 +1769,8 @@ function renderHistory() {
       '.history-item'
     )
     .forEach(
-      item =>
+      item => {
+
         item.addEventListener(
           'click',
           () => {
@@ -996,7 +1788,9 @@ function renderHistory() {
             });
 
           }
-        )
+        );
+
+      }
     );
 
 }
@@ -1044,13 +1838,13 @@ function saveTargets() {
 
 
 /* =========================================================
-   ДОБАВЛЕНИЕ ЗАПИСИ
+   ДОБАВИТЬ ПРОДУКТ
 ========================================================= */
 
 function addEntry(
   product,
   amount,
-  unit
+  unit = 'g'
 ) {
 
   if (
@@ -1058,7 +1852,9 @@ function addEntry(
     !amount ||
     amount <= 0
   ) {
+
     return;
+
   }
 
 
@@ -1076,7 +1872,7 @@ function addEntry(
   ) {
 
     alert(
-      'Для этого продукта не указан вес одной штуки. Измени его в разделе «Продукты».'
+      'Для этого продукта не указан вес одной штуки. Добавь его в граммах.'
     );
 
     return;
@@ -1106,6 +1902,15 @@ function addEntry(
 
     unit,
 
+    /*
+      При добавлении запись получает
+      настройку белка от самого продукта.
+    */
+
+    countProtein:
+      product.countProtein !==
+      false,
+
     ...calc
 
   });
@@ -1123,10 +1928,16 @@ function addEntry(
    РАСПОЗНАВАНИЕ ТЕКСТА
 ========================================================= */
 
-function normalizeText(text) {
+function normalizeText(
+  text
+) {
 
   return text
     .toLowerCase()
+    .replace(
+      /ё/g,
+      'е'
+    )
     .replace(
       /,/g,
       '.'
@@ -1144,7 +1955,9 @@ function normalizeText(text) {
 
 
 
-function parseQuickText(raw) {
+function parseQuickText(
+  raw
+) {
 
   const text =
     normalizeText(raw);
@@ -1157,18 +1970,40 @@ function parseQuickText(raw) {
   const sorted =
     [...products]
       .sort(
-        (a, b) =>
-          Math.max(
-            ...b.aliases.map(
-              x => x.length
-            )
-          )
-          -
-          Math.max(
-            ...a.aliases.map(
-              x => x.length
-            )
-          )
+        (a, b) => {
+
+          const aMax =
+            Math.max(
+              ...(
+                a.aliases ||
+                [a.name]
+              )
+              .map(
+                x =>
+                  x.length
+              )
+            );
+
+
+          const bMax =
+            Math.max(
+              ...(
+                b.aliases ||
+                [b.name]
+              )
+              .map(
+                x =>
+                  x.length
+              )
+            );
+
+
+          return (
+            bMax -
+            aMax
+          );
+
+        }
       );
 
 
@@ -1221,22 +2056,30 @@ function parseQuickText(raw) {
 
 
       for (
-        const p
+        const pattern
         of patterns
       ) {
 
         match =
-          text.match(p);
+          text.match(
+            pattern
+          );
 
 
-        if (match) {
+        if (
+          match
+        ) {
+
           break;
+
         }
 
       }
 
 
-      if (match) {
+      if (
+        match
+      ) {
 
         const amount =
           Number(
@@ -1248,12 +2091,10 @@ function parseQuickText(raw) {
           match[2];
 
 
-        let unit =
+        const unit =
           token === 'шт'
             ? 'piece'
-            : token === 'г'
-              ? 'g'
-              : product.unit;
+            : 'g';
 
 
         found.push({
@@ -1284,6 +2125,10 @@ function parseQuickText(raw) {
 
 function renderManualProducts() {
 
+  const currentValue =
+    els.manualProduct.value;
+
+
   els.manualProduct.innerHTML =
     products
       .map(
@@ -1293,28 +2138,29 @@ function renderManualProducts() {
       .join('');
 
 
-  const selected =
-    products.find(
+  if (
+    products.some(
       p =>
         p.id ===
-        els.manualProduct.value
-    ) ||
-    products[0];
+        currentValue
+    )
+  ) {
 
-
-  if (selected) {
-
-    els.manualUnit.value =
-      selected.unit || 'g';
+    els.manualProduct.value =
+      currentValue;
 
   }
+
+
+  els.manualUnit.value =
+    'g';
 
 }
 
 
 
 /* =========================================================
-   РЕДАКТОР ПРОДУКТОВ
+   НАСТРОЙКИ ПРОДУКТОВ
 ========================================================= */
 
 function openProductEditor() {
@@ -1327,6 +2173,9 @@ function openProductEditor() {
       .join('');
 
 
+  bindProductEditorRemovers();
+
+
   els.settingsDialog
     .showModal();
 
@@ -1334,7 +2183,44 @@ function openProductEditor() {
 
 
 
-function productRowHtml(p) {
+function productRowHtml(
+  p
+) {
+
+  const proteinValue =
+    p.p === null ||
+    p.p === undefined
+
+      ? ''
+
+      : p.p;
+
+
+  const fatValue =
+    p.f === null ||
+    p.f === undefined
+
+      ? ''
+
+      : p.f;
+
+
+  const carbsValue =
+    p.c === null ||
+    p.c === undefined
+
+      ? ''
+
+      : p.c;
+
+
+  const checked =
+    p.countProtein !== false
+
+      ? 'checked'
+
+      : '';
+
 
   return `
 
@@ -1344,66 +2230,89 @@ function productRowHtml(p) {
     >
 
       <label>
+
         Название
+
         <input
           data-field="name"
           value="${escapeHtml(p.name)}"
         >
+
       </label>
 
 
       <label>
+
         Б/100г
+
         <input
           data-field="p"
           type="number"
+          min="0"
           step="0.1"
-          value="${p.p}"
+          value="${proteinValue}"
         >
+
       </label>
 
 
       <label>
+
         Ж/100г
+
         <input
           data-field="f"
           type="number"
+          min="0"
           step="0.1"
-          value="${p.f}"
+          value="${fatValue}"
         >
+
       </label>
 
 
       <label>
+
         У/100г
+
         <input
           data-field="c"
           type="number"
+          min="0"
           step="0.1"
-          value="${p.c}"
+          value="${carbsValue}"
         >
+
       </label>
 
 
       <label>
+
         ккал/100г
+
         <input
           data-field="kcal"
           type="number"
+          min="0"
           step="0.1"
-          value="${p.kcal}"
+          value="${round1(p.kcal)}"
         >
+
       </label>
 
 
-      <label>
-        г/шт
+      <label class="product-protein-toggle">
+
+        <span>
+          Считать белок
+        </span>
+
         <input
-          data-field="gramsPerPiece"
-          type="number"
-          step="0.1"
-          value="${p.gramsPerPiece || 0}"
+          data-field="countProtein"
+          type="checkbox"
+          ${checked}
         >
+
       </label>
 
 
@@ -1422,6 +2331,10 @@ function productRowHtml(p) {
 
 
 
+/* =========================================================
+   УДАЛЕНИЕ ПРОДУКТА ИЗ НАСТРОЕК
+========================================================= */
+
 function bindProductEditorRemovers() {
 
   els.productEditor
@@ -1429,23 +2342,53 @@ function bindProductEditorRemovers() {
       '.remove-product'
     )
     .forEach(
-      btn =>
+      btn => {
+
         btn.addEventListener(
           'click',
-          () =>
+          () => {
 
             btn
               .closest(
                 '.product-row'
               )
-              .remove()
+              .remove();
 
-        )
+          }
+        );
+
+      }
     );
 
 }
 
 
+
+function readOptionalNumber(
+  input
+) {
+
+  const raw =
+    input.value.trim();
+
+
+  return raw === ''
+
+    ? null
+
+    : Math.max(
+        0,
+        Number(raw) ||
+        0
+      );
+
+}
+
+
+
+/* =========================================================
+   СОХРАНЕНИЕ НАСТРОЕК ПРОДУКТОВ
+========================================================= */
 
 function saveProductEditor() {
 
@@ -1463,13 +2406,6 @@ function saveProductEditor() {
       .map(
         row => {
 
-          const get =
-            f =>
-              row.querySelector(
-                `[data-field="${f}"]`
-              ).value;
-
-
           const old =
             products.find(
               p =>
@@ -1478,9 +2414,78 @@ function saveProductEditor() {
             );
 
 
+          const nameInput =
+            row.querySelector(
+              '[data-field="name"]'
+            );
+
+
+          const pInput =
+            row.querySelector(
+              '[data-field="p"]'
+            );
+
+
+          const fInput =
+            row.querySelector(
+              '[data-field="f"]'
+            );
+
+
+          const cInput =
+            row.querySelector(
+              '[data-field="c"]'
+            );
+
+
+          const kcalInput =
+            row.querySelector(
+              '[data-field="kcal"]'
+            );
+
+
+          const countProteinInput =
+            row.querySelector(
+              '[data-field="countProtein"]'
+            );
+
+
           const name =
-            get('name')
-              .trim();
+            nameInput.value.trim();
+
+
+          const p =
+            readOptionalNumber(
+              pInput
+            );
+
+
+          const f =
+            readOptionalNumber(
+              fInput
+            );
+
+
+          const c =
+            readOptionalNumber(
+              cInput
+            );
+
+
+          const kcal =
+            Math.max(
+              0,
+
+              Number(
+                kcalInput.value
+              ) ||
+
+              macroKcal(
+                p,
+                f,
+                c
+              )
+            );
 
 
           return {
@@ -1493,49 +2498,35 @@ function saveProductEditor() {
 
             aliases:
               old?.aliases?.length
+
                 ? old.aliases
+
                 : [
                     name.toLowerCase()
                   ],
 
             unit:
-              Number(
-                get(
-                  'gramsPerPiece'
-                )
-              ) > 0
-                ? (
-                    old?.unit ||
-                    'g'
-                  )
-                : 'g',
+              'g',
+
+            /*
+              Оставлено только для
+              совместимости со старыми записями.
+
+              В интерфейсе этот столбец
+              больше не показывается.
+            */
 
             gramsPerPiece:
-              Number(
-                get(
-                  'gramsPerPiece'
-                )
-              ) || 0,
+              old?.gramsPerPiece ||
+              0,
 
-            p:
-              Number(
-                get('p')
-              ) || 0,
+            p,
+            f,
+            c,
+            kcal,
 
-            f:
-              Number(
-                get('f')
-              ) || 0,
-
-            c:
-              Number(
-                get('c')
-              ) || 0,
-
-            kcal:
-              Number(
-                get('kcal')
-              ) || 0
+            countProtein:
+              countProteinInput.checked
 
           };
 
@@ -1561,7 +2552,7 @@ function saveProductEditor() {
 
 
 /* =========================================================
-   ПЕРЕКЛЮЧЕНИЕ ДНЕЙ
+   ДАТА
 ========================================================= */
 
 els.dayPicker.value =
@@ -1588,7 +2579,8 @@ els.prevDay
 
 
       d.setDate(
-        d.getDate() - 1
+        d.getDate() -
+        1
       );
 
 
@@ -1615,7 +2607,8 @@ els.nextDay
 
 
       d.setDate(
-        d.getDate() + 1
+        d.getDate() +
+        1
       );
 
 
@@ -1631,7 +2624,7 @@ els.nextDay
 
 
 /* =========================================================
-   СОХРАНЕНИЕ ЦЕЛЕЙ
+   ЦЕЛИ
 ========================================================= */
 
 [
@@ -1640,11 +2633,14 @@ els.nextDay
   els.targetCarbs
 ]
 .forEach(
-  input =>
+  input => {
+
     input.addEventListener(
       'change',
       saveTargets
-    )
+    );
+
+  }
 );
 
 
@@ -1664,7 +2660,9 @@ els.parseBtn
         );
 
 
-      if (!parsed.length) {
+      if (
+        !parsed.length
+      ) {
 
         alert(
           'Не получилось распознать продукты. Проверь названия или добавь запись вручную.'
@@ -1676,12 +2674,15 @@ els.parseBtn
 
 
       parsed.forEach(
-        x =>
+        x => {
+
           addEntry(
             x.product,
             x.amount,
             x.unit
-          )
+          );
+
+        }
       );
 
 
@@ -1716,36 +2717,12 @@ els.manualBtn
   );
 
 
-els.manualProduct
-  .addEventListener(
-    'change',
-    () => {
-
-      const p =
-        products.find(
-          x =>
-            x.id ===
-            els.manualProduct.value
-        );
-
-
-      if (p) {
-
-        els.manualUnit.value =
-          p.unit || 'g';
-
-      }
-
-    }
-  );
-
-
 els.manualSubmit
   .addEventListener(
     'click',
     () => {
 
-      const p =
+      const product =
         products.find(
           x =>
             x.id ===
@@ -1754,11 +2731,11 @@ els.manualSubmit
 
 
       addEntry(
-        p,
+        product,
         Number(
           els.manualAmount.value
         ),
-        els.manualUnit.value
+        'g'
       );
 
 
@@ -1802,28 +2779,27 @@ els.clearDayBtn
 
 
 /* =========================================================
-   ПРОДУКТЫ
+   ОТКРЫТЬ НАСТРОЙКИ
 ========================================================= */
 
 els.settingsBtn
   .addEventListener(
     'click',
-    () => {
-
-      openProductEditor();
-
-      bindProductEditorRemovers();
-
-    }
+    openProductEditor
   );
 
+
+
+/* =========================================================
+   ДОБАВИТЬ СВОЙ ПРОДУКТ
+========================================================= */
 
 els.addProductBtn
   .addEventListener(
     'click',
     () => {
 
-      const p = {
+      const product = {
 
         id:
           crypto.randomUUID(),
@@ -1850,7 +2826,10 @@ els.addProductBtn
           0,
 
         kcal:
-          0
+          0,
+
+        countProtein:
+          true
 
       };
 
@@ -1858,7 +2837,9 @@ els.addProductBtn
       els.productEditor
         .insertAdjacentHTML(
           'beforeend',
-          productRowHtml(p)
+          productRowHtml(
+            product
+          )
         );
 
 
@@ -1868,10 +2849,35 @@ els.addProductBtn
   );
 
 
+
 els.saveProductsBtn
   .addEventListener(
     'click',
     saveProductEditor
+  );
+
+
+
+/* =========================================================
+   СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ ЗАПИСИ
+========================================================= */
+
+els.saveEntryEditBtn
+  .addEventListener(
+    'click',
+    saveEntryEdit
+  );
+
+
+els.entryEditDialog
+  .addEventListener(
+    'close',
+    () => {
+
+      editingEntryId =
+        null;
+
+    }
   );
 
 
@@ -1885,7 +2891,9 @@ const SpeechRecognition =
   window.webkitSpeechRecognition;
 
 
-if (SpeechRecognition) {
+if (
+  SpeechRecognition
+) {
 
   const rec =
     new SpeechRecognition();
@@ -1922,13 +2930,13 @@ if (SpeechRecognition) {
 
 
       els.voiceStatus.textContent =
-        'Говори, например: «2 яйца и 30 грамм кетчупа»';
+        'Говори, например: «100 грамм риса и 120 грамм тунца»';
 
     };
 
 
   rec.onresult =
-    e => {
+    (e) => {
 
       els.quickInput.value =
         e.results[0][0]
@@ -1938,7 +2946,7 @@ if (SpeechRecognition) {
 
 
   rec.onerror =
-    e => {
+    (e) => {
 
       els.voiceStatus.hidden =
         false;
@@ -1991,7 +2999,7 @@ else {
 
 
 /* =========================================================
-   ПЕРВЫЙ РЕНДЕР
+   ПЕРВЫЙ RENDER
 ========================================================= */
 
 render();

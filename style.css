@@ -160,33 +160,35 @@ textarea:focus {
 }
 
 .stat-card {
-  padding: 20px;
-  padding-right: 120px;
-  overflow: hidden;
   position: relative;
-  min-height: 220px;
+  overflow: hidden;
   isolation: isolate;
+  padding: 20px;
+  padding-right: 132px;
+  min-height: 220px;
+}
+
+.stat-card span,
+.stat-card strong,
+.stat-card small,
+.progress {
+  position: relative;
+  z-index: 2;
 }
 
 .stat-card span {
   color: var(--muted);
   font-weight: 700;
-  position: relative;
-  z-index: 2;
 }
 
 .stat-card strong {
   display: block;
   margin: 7px 0 3px;
   font-size: 28px;
-  position: relative;
-  z-index: 2;
 }
 
 .stat-card small {
   color: var(--muted);
-  position: relative;
-  z-index: 2;
 }
 
 .progress {
@@ -195,8 +197,6 @@ textarea:focus {
   border-radius: 999px;
   margin-top: 15px;
   overflow: hidden;
-  position: relative;
-  z-index: 2;
 }
 
 .progress i {
@@ -213,73 +213,66 @@ textarea:focus {
 }
 
 /* =========================================================
-   МИЛЫЕ ФИГУРКИ В КАРТОЧКАХ БЖУ
+   МИЛЫЕ НАРИСОВАННЫЕ ФИГУРКИ В КАРТОЧКАХ БЖУ
 ========================================================= */
+
+.stats-grid .stat-card:nth-child(1),
+.stats-grid .stat-card:nth-child(2),
+.stats-grid .stat-card:nth-child(3) {
+  background:
+    radial-gradient(circle at top right, rgba(255,255,255,.55), transparent 32%),
+    radial-gradient(circle at 88% 24%, rgba(255,255,255,.48), transparent 22%),
+    var(--surface);
+}
 
 .stats-grid .stat-card:nth-child(1)::before,
 .stats-grid .stat-card:nth-child(2)::before,
 .stats-grid .stat-card:nth-child(3)::before {
   content: "";
   position: absolute;
-  right: 16px;
-  top: 18px;
-  width: 92px;
-  height: 92px;
-  border-radius: 28px;
+  right: 12px;
+  top: 12px;
+  width: 106px;
+  height: 106px;
+  border-radius: 30px;
   background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.95), rgba(255,255,255,.55) 40%, rgba(255,255,255,.16) 72%, transparent 73%),
-    linear-gradient(145deg, rgba(255,220,239,.95), rgba(229,219,255,.92));
+    radial-gradient(circle at 30% 28%, rgba(255,255,255,.95), rgba(255,255,255,.55) 42%, rgba(255,255,255,.10) 74%, transparent 75%),
+    linear-gradient(145deg, rgba(255,227,241,.95), rgba(232,222,255,.95));
   box-shadow:
     inset 0 2px 0 rgba(255,255,255,.95),
-    0 12px 28px rgba(123, 78, 135, .14);
+    0 12px 30px rgba(123, 78, 135, .14);
   z-index: 1;
 }
 
 .stats-grid .stat-card:nth-child(1)::after,
 .stats-grid .stat-card:nth-child(2)::after,
 .stats-grid .stat-card:nth-child(3)::after {
+  content: "";
   position: absolute;
-  right: 23px;
-  top: 21px;
-  width: 78px;
-  height: 78px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 52px;
-  line-height: 1;
+  right: 12px;
+  top: 12px;
+  width: 106px;
+  height: 106px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 94px 94px;
   z-index: 2;
-  filter: drop-shadow(0 8px 10px rgba(113, 73, 126, .14));
+  filter: drop-shadow(0 10px 10px rgba(101, 63, 113, .10));
 }
 
+/* Белки — милая куриная ножка */
 .stats-grid .stat-card:nth-child(1)::after {
-  content: "🐔";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M74 74c10 0 18 8 18 18s-8 18-18 18c-8 0-14-5-17-12l-7-2-5-7 4-6-2-8c3-6 11-11 20-11z' fill='%23f3c36a' stroke='%23c58f49' stroke-width='3'/%3E%3Cpath d='M56 78c0-16 13-29 29-29 13 0 24 8 28 20 2 7 2 14-1 21-2-9-10-15-19-15-6 0-11 2-15 6-7 0-14-1-22-3z' fill='%23ffd98f'/%3E%3Cpath d='M36 76c-5 0-9 4-9 9 0 3 1 5 3 7-3 2-5 5-5 9 0 6 5 11 11 11 4 0 7-2 9-5 2 3 5 5 9 5 6 0 11-5 11-11 0-4-2-7-5-9 2-2 3-4 3-7 0-5-4-9-9-9-3 0-6 1-8 4-2-3-5-4-10-4z' fill='white' stroke='%23d8d8d8' stroke-width='3'/%3E%3Ccircle cx='76' cy='82' r='3.5' fill='%23341936'/%3E%3Ccircle cx='91' cy='82' r='3.5' fill='%23341936'/%3E%3Cpath d='M77 94c4 4 9 4 13 0' fill='none' stroke='%23341936' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='72' cy='89' r='2.5' fill='%23ffb3cf'/%3E%3Ccircle cx='95' cy='89' r='2.5' fill='%23ffb3cf'/%3E%3Cpath d='M67 86c-5-4-10-4-15 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M97 85c5-4 10-4 15 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M72 103c-4 6-4 10 0 14' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M93 103c4 6 4 10 0 14' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
+/* Жиры — милый авокадик */
 .stats-grid .stat-card:nth-child(2)::after {
-  content: "🥑";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M60 18c20 0 35 18 35 41 0 23-16 43-35 43S25 82 25 59c0-23 15-41 35-41z' fill='%236fb866' stroke='%234f8e48' stroke-width='3'/%3E%3Cpath d='M60 28c14 0 25 13 25 30 0 17-11 31-25 31S35 75 35 58c0-17 11-30 25-30z' fill='%23d9f3b6' stroke='%2392c978' stroke-width='2.5'/%3E%3Ccircle cx='60' cy='68' r='12' fill='%23b5794f'/%3E%3Ccircle cx='60' cy='68' r='6' fill='%23c99263'/%3E%3Ccircle cx='51' cy='50' r='3.5' fill='%23341936'/%3E%3Ccircle cx='68' cy='50' r='3.5' fill='%23341936'/%3E%3Cpath d='M52 61c5 5 11 5 16 0' fill='none' stroke='%23341936' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='46' cy='57' r='2.5' fill='%23ffb3cf'/%3E%3Ccircle cx='73' cy='57' r='2.5' fill='%23ffb3cf'/%3E%3Cpath d='M36 55c-5-4-10-4-14 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M84 55c5-4 10-4 14 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M50 91c-4 7-4 11 0 15' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M70 91c4 7 4 11 0 15' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
+/* Углеводы — милые макарошки в тарелочке */
 .stats-grid .stat-card:nth-child(3)::after {
-  content: "🍝";
-}
-
-.stats-grid .stat-card:nth-child(1) {
-  background:
-    radial-gradient(circle at top right, rgba(255,224,141,.18), transparent 28%),
-    var(--surface);
-}
-
-.stats-grid .stat-card:nth-child(2) {
-  background:
-    radial-gradient(circle at top right, rgba(160,226,175,.16), transparent 28%),
-    var(--surface);
-}
-
-.stats-grid .stat-card:nth-child(3) {
-  background:
-    radial-gradient(circle at top right, rgba(255,192,120,.18), transparent 28%),
-    var(--surface);
+  background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M28 76c2 13 15 23 32 23s30-10 32-23H28z' fill='%23ffd9ee' stroke='%23d39ab9' stroke-width='3'/%3E%3Cpath d='M24 72c0-6 4-10 10-10h52c6 0 10 4 10 10 0 4-3 8-7 8H31c-4 0-7-4-7-8z' fill='%23fff2fb' stroke='%23d39ab9' stroke-width='3'/%3E%3Cpath d='M41 49c4-8 12-12 20-12 9 0 17 4 20 12' fill='none' stroke='%23f0b545' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M33 57c6-10 14-16 24-16s18 6 24 16' fill='none' stroke='%23f0b545' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M36 63c7-7 15-10 24-10 10 0 18 3 24 10' fill='none' stroke='%23f0b545' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='52' cy='64' r='3.5' fill='%23341936'/%3E%3Ccircle cx='67' cy='64' r='3.5' fill='%23341936'/%3E%3Cpath d='M53 74c4 4 9 4 13 0' fill='none' stroke='%23341936' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='48' cy='70' r='2.5' fill='%23ffb3cf'/%3E%3Ccircle cx='71' cy='70' r='2.5' fill='%23ffb3cf'/%3E%3Cpath d='M31 70c-5-4-10-4-14 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M88 70c5-4 10-4 14 0' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M48 94c-4 6-4 10 0 14' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M71 94c4 6 4 10 0 14' fill='none' stroke='%237a5c83' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E\");
 }
 
 .section-heading {
@@ -790,27 +783,26 @@ textarea:focus {
   }
 
   .stat-card {
-    padding-right: 112px;
+    padding-right: 118px;
     min-height: 205px;
   }
 
   .stats-grid .stat-card:nth-child(1)::before,
   .stats-grid .stat-card:nth-child(2)::before,
-  .stats-grid .stat-card:nth-child(3)::before {
-    width: 82px;
-    height: 82px;
-    right: 14px;
-    top: 16px;
+  .stats-grid .stat-card:nth-child(3)::before,
+  .stats-grid .stat-card:nth-child(1)::after,
+  .stats-grid .stat-card:nth-child(2)::after,
+  .stats-grid .stat-card:nth-child(3)::after {
+    width: 92px;
+    height: 92px;
+    right: 10px;
+    top: 12px;
   }
 
   .stats-grid .stat-card:nth-child(1)::after,
   .stats-grid .stat-card:nth-child(2)::after,
   .stats-grid .stat-card:nth-child(3)::after {
-    width: 70px;
-    height: 70px;
-    right: 20px;
-    top: 21px;
-    font-size: 44px;
+    background-size: 82px 82px;
   }
 
   #entryEditDialog {

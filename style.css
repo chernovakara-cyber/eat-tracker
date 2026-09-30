@@ -8,7 +8,7 @@
   --purple: #8f5cff;
   --purple-soft: #e4d7ff;
   --border: #f1dcef;
-  --shadow: 0 18px 45px rgba(127, 67, 135, .14);
+  --shadow: 0 18px 45px rgba(127,67,135,.14);
 }
 
 * {
@@ -61,7 +61,7 @@ button {
 
 
 /* =========================================================
-   ОСНОВНАЯ ОБЛАСТЬ САЙТА
+   ОСНОВНАЯ ОБЛАСТЬ
 ========================================================= */
 
 .app-shell {
@@ -86,11 +86,6 @@ button {
 }
 
 
-/*
-  Интерфейс занимает 70% страницы,
-  сама страница остаётся шириной 100%.
-*/
-
 .hero,
 main {
   width:
@@ -105,7 +100,7 @@ main {
 
 
 /* =========================================================
-   ВЕРХНЯЯ ЧАСТЬ
+   ШАПКА
 ========================================================= */
 
 .hero {
@@ -146,8 +141,6 @@ main {
     var(--purple);
 }
 
-
-/* Заголовок + белое сердце */
 
 h1 {
   margin:
@@ -240,7 +233,7 @@ h3 {
 
 
 /* =========================================================
-   ОБЩИЕ КАРТОЧКИ
+   КАРТОЧКИ
 ========================================================= */
 
 .card,
@@ -276,7 +269,7 @@ h3 {
 
 
 /* =========================================================
-   ДАТА
+   ДАТА И ЦЕЛИ
 ========================================================= */
 
 .day-nav {
@@ -294,13 +287,6 @@ h3 {
 }
 
 
-/*
-  Отступ между «День» и его полем
-  теперь такой же, как между
-  Белки / Жиры / Углеводы
-  и соответствующими полями.
-*/
-
 .date-wrap {
   display:
     grid;
@@ -312,7 +298,8 @@ h3 {
 
 .date-wrap > label,
 .targets-grid label,
-.modal label {
+.modal label,
+.entry-edit-cloud label {
   font-weight:
     700;
 
@@ -323,11 +310,6 @@ h3 {
     1.2;
 }
 
-
-/*
-  Буквально несколько пикселей:
-  чуть вправо и чуть вверх.
-*/
 
 .date-wrap > label {
   display:
@@ -342,7 +324,8 @@ h3 {
 
 
 .targets-grid label,
-.modal label {
+.modal label,
+.entry-edit-cloud label {
   display:
     grid;
 
@@ -355,6 +338,7 @@ h3 {
 .targets-grid input,
 .modal input,
 .modal select,
+.entry-edit-cloud input,
 textarea,
 select {
   width:
@@ -471,12 +455,6 @@ textarea:focus {
 }
 
 
-/*
-  Для первых трёх карточек
-  оставляем место справа
-  под персонажа.
-*/
-
 .stats-grid
 .stat-card:nth-child(1),
 
@@ -578,17 +556,10 @@ textarea:focus {
 }
 
 
-/* =========================================================
-   ОСТАЛОСЬ + ШКАЛА
-
-   Опускаем вниз только:
-   - осталось / превысила
-   - количество оставшихся грамм
-   - прогресс
-
-   Заголовок, количество съеденного
-   и картинки НЕ двигаются.
-========================================================= */
+/*
+  Осталось / превышено
+  и шкала находятся внизу карточек.
+*/
 
 .stats-grid
 .stat-card:nth-child(1) > small,
@@ -646,15 +617,7 @@ textarea:focus {
 }
 
 
-/* =========================================================
-   ПОДСВЕТКА ЦЕЛЕЙ
-========================================================= */
-
-
-/*
-  95–100% цели:
-  нежный светло-зелёный фон.
-*/
+/* 95–100% */
 
 .stat-card.goal-near {
   background:
@@ -673,13 +636,7 @@ textarea:focus {
 }
 
 
-/*
-  Больше 100%:
-  нежно-красный.
-
-  JavaScript применяет этот класс
-  только к жирам и углеводам.
-*/
+/* превышение жиров / углеводов */
 
 .stat-card.goal-over {
   background:
@@ -754,7 +711,7 @@ textarea:focus {
 }
 
 
-/* БЕЛКИ — куриная ножка */
+/* КУРИЦА */
 
 .stats-grid
 .stat-card:nth-child(1)::after {
@@ -772,7 +729,7 @@ textarea:focus {
 }
 
 
-/* ЖИРЫ — авокадо */
+/* АВОКАДО */
 
 .stats-grid
 .stat-card:nth-child(2)::after {
@@ -790,7 +747,7 @@ textarea:focus {
 }
 
 
-/* УГЛЕВОДЫ — макароны */
+/* МАКАРОНЫ */
 
 .stats-grid
 .stat-card:nth-child(3)::after {
@@ -807,11 +764,6 @@ textarea:focus {
     0;
 }
 
-
-/*
-  Мягкое свечение
-  за персонажами.
-*/
 
 .stats-grid
 .stat-card:nth-child(1)::before,
@@ -872,7 +824,7 @@ textarea:focus {
 
 
 /* =========================================================
-   ЗАГОЛОВКИ И КНОПКИ
+   КНОПКИ
 ========================================================= */
 
 .section-heading {
@@ -1118,6 +1070,9 @@ textarea:focus {
 
   flex-wrap:
     wrap;
+
+  justify-content:
+    flex-end;
 }
 
 
@@ -1239,7 +1194,8 @@ textarea:focus {
 }
 
 
-.modal::backdrop {
+.modal::backdrop,
+.entry-edit-dialog::backdrop {
   background:
     rgba(48,22,51,.35);
 
@@ -1266,7 +1222,7 @@ textarea:focus {
 .modal.wide {
   width:
     min(
-      900px,
+      1000px,
       calc(100% - 24px)
     );
 }
@@ -1320,6 +1276,9 @@ textarea:focus {
 
   line-height:
     1;
+
+  flex:
+    0 0 auto;
 }
 
 
@@ -1335,7 +1294,7 @@ textarea:focus {
     10px;
 
   max-height:
-    55vh;
+    58vh;
 
   overflow:
     auto;
@@ -1350,8 +1309,9 @@ textarea:focus {
     grid;
 
   grid-template-columns:
-    1.6fr
-    repeat(5,.8fr)
+    minmax(170px,1.7fr)
+    repeat(4,minmax(82px,.7fr))
+    minmax(105px,.8fr)
     auto;
 
   gap:
@@ -1384,9 +1344,75 @@ textarea:focus {
 }
 
 
-.product-row input {
+.product-row input:not([type="checkbox"]) {
   padding:
     9px;
+}
+
+
+/*
+  Вместо "г/шт" —
+  галочка подсчёта белка.
+*/
+
+.product-protein-toggle {
+  align-self:
+    stretch;
+
+  display:
+    flex !important;
+
+  flex-direction:
+    column;
+
+  justify-content:
+    flex-end;
+
+  align-items:
+    center;
+
+  gap:
+    7px !important;
+
+  text-align:
+    center;
+}
+
+
+.product-protein-toggle span {
+  display:
+    block;
+
+  font-size:
+    11px;
+
+  color:
+    var(--muted);
+
+  font-weight:
+    700;
+}
+
+
+.product-protein-toggle input[type="checkbox"],
+.protein-checkbox input[type="checkbox"] {
+  width:
+    22px;
+
+  height:
+    22px;
+
+  margin:
+    0;
+
+  padding:
+    0;
+
+  accent-color:
+    var(--purple);
+
+  cursor:
+    pointer;
 }
 
 
@@ -1418,38 +1444,219 @@ textarea:focus {
 
 
 /* =========================================================
-   ОКНО РЕДАКТИРОВАНИЯ
+   РЕДАКТИРОВАНИЕ ЗАПИСИ — ОБЛАЧКО
 ========================================================= */
 
-#entryEditDialog {
+.entry-edit-dialog {
   border:
     none;
 
   padding:
-    0;
+    26px;
 
   background:
     transparent;
 
   overflow:
     visible;
+
+  width:
+    min(
+      620px,
+      calc(100% - 24px)
+    );
+
+  max-width:
+    none;
 }
 
 
-#entryEditDialog::backdrop {
+.entry-edit-cloud {
+  position:
+    relative;
+
+  z-index:
+    1;
+
+  display:
+    grid;
+
+  gap:
+    18px;
+
+  padding:
+    28px;
+
   background:
-    rgba(71,35,76,.32);
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.98),
+      rgba(255,241,249,.98) 55%,
+      rgba(239,232,255,.98)
+    );
 
-  backdrop-filter:
-    blur(8px);
+  border:
+    1px solid
+    rgba(255,255,255,.95);
 
-  -webkit-backdrop-filter:
-    blur(8px);
+  border-radius:
+    44px 56px 46px 58px;
+
+  box-shadow:
+    0 30px 85px
+    rgba(86,45,99,.27),
+    0 12px 34px
+    rgba(143,92,255,.14);
+}
+
+
+.entry-edit-cloud::before,
+.entry-edit-cloud::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  z-index:
+    -1;
+
+  background:
+    rgba(255,247,252,.98);
+
+  border:
+    1px solid
+    rgba(255,255,255,.95);
+
+  border-radius:
+    50%;
+
+  box-shadow:
+    0 14px 34px
+    rgba(86,45,99,.12);
+}
+
+
+.entry-edit-cloud::before {
+  width:
+    76px;
+
+  height:
+    76px;
+
+  left:
+    -18px;
+
+  bottom:
+    34px;
+}
+
+
+.entry-edit-cloud::after {
+  width:
+    48px;
+
+  height:
+    48px;
+
+  left:
+    18px;
+
+  bottom:
+    -18px;
+}
+
+
+.entry-edit-head {
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
+
+  gap:
+    18px;
+}
+
+
+.edit-entry-subtitle {
+  margin:
+    7px 0 0;
+
+  color:
+    var(--muted);
+
+  font-size:
+    13px;
+}
+
+
+.entry-edit-grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:
+    12px;
+}
+
+
+.protein-checkbox {
+  display:
+    flex !important;
+
+  flex-direction:
+    row !important;
+
+  align-items:
+    center;
+
+  gap:
+    10px !important;
+
+  padding:
+    13px 15px;
+
+  border-radius:
+    16px;
+
+  background:
+    rgba(255,255,255,.76);
+
+  border:
+    1px solid
+    var(--border);
+
+  color:
+    var(--text) !important;
+}
+
+
+.protein-checkbox span {
+  font-weight:
+    750;
+
+  color:
+    var(--text);
+}
+
+
+.entry-edit-footer {
+  display:
+    flex;
+
+  justify-content:
+    flex-end;
 }
 
 
 /* =========================================================
-   САЛАТ В ПРАВОМ ВЕРХНЕМ УГЛУ
+   САЛАТ
 ========================================================= */
 
 .salad-background {
@@ -1498,6 +1705,23 @@ textarea:focus {
    ПЛАНШЕТ
 ========================================================= */
 
+@media (max-width: 980px) {
+
+  .product-row {
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+
+  .product-protein-toggle,
+  .remove-product {
+    min-height:
+      58px;
+  }
+
+}
+
+
 @media (max-width: 820px) {
 
   .hero,
@@ -1510,18 +1734,6 @@ textarea:focus {
   .stats-grid {
     grid-template-columns:
       repeat(2,1fr);
-  }
-
-
-  .product-row {
-    grid-template-columns:
-      repeat(2,1fr);
-  }
-
-
-  .remove-product {
-    grid-column:
-      span 2;
   }
 
 
@@ -1629,11 +1841,6 @@ textarea:focus {
   }
 
 
-  /*
-    На телефоне статус и шкала
-    тоже учитывают более крупные картинки.
-  */
-
   .stats-grid
   .stat-card:nth-child(1) > small,
 
@@ -1708,6 +1915,82 @@ textarea:focus {
 
     height:
       165px;
+  }
+
+
+  .product-row {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .product-protein-toggle {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      row !important;
+
+    justify-content:
+      flex-start;
+
+    padding:
+      8px 0;
+  }
+
+
+  .entry-edit-dialog {
+    padding:
+      18px;
+  }
+
+
+  .entry-edit-cloud {
+    padding:
+      22px;
+
+    border-radius:
+      34px 42px 36px 46px;
+  }
+
+
+  .entry-edit-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .entry-edit-cloud::before {
+    width:
+      58px;
+
+    height:
+      58px;
+
+    left:
+      -12px;
+  }
+
+
+  .entry-edit-cloud::after {
+    width:
+      38px;
+
+    height:
+      38px;
+
+    left:
+      14px;
+
+    bottom:
+      -13px;
+  }
+
+
+  .entry-edit-footer
+  .primary-btn {
+    width:
+      100%;
   }
 
 

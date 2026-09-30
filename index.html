@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Мой БЖУ дневник</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Личный дневник питания</p>
+        <h1>Мой БЖУ дневник</h1>
+        <p class="subtitle">Записывай еду голосом или вручную и следи, сколько белков, жиров и углеводов осталось на сегодня.</p>
+      </div>
+      <button id="settingsBtn" class="ghost-btn" type="button">⚙️ Продукты</button>
+    </header>
+
+    <main>
+      <section class="card day-card">
+        <div class="day-nav">
+          <button id="prevDay" class="icon-btn" type="button" aria-label="Предыдущий день">←</button>
+          <div class="date-wrap">
+            <label for="dayPicker">День</label>
+            <input id="dayPicker" type="date" />
+          </div>
+          <button id="nextDay" class="icon-btn" type="button" aria-label="Следующий день">→</button>
+        </div>
+
+        <div class="targets-grid">
+          <label>Белки, г
+            <input id="targetProtein" type="number" min="0" step="0.1" placeholder="например 120" />
+          </label>
+          <label>Жиры, г
+            <input id="targetFat" type="number" min="0" step="0.1" placeholder="например 60" />
+          </label>
+          <label>Углеводы, г
+            <input id="targetCarbs" type="number" min="0" step="0.1" placeholder="например 180" />
+          </label>
+        </div>
+        <p class="hint">Цели сохраняются отдельно для каждого дня.</p>
+      </section>
+
+      <section class="stats-grid">
+        <article class="stat-card protein">
+          <span>Белки</span>
+          <strong id="proteinEaten">0 г</strong>
+          <small>осталось <b id="proteinLeft">0 г</b></small>
+          <div class="progress"><i id="proteinProgress"></i></div>
+        </article>
+        <article class="stat-card fat">
+          <span>Жиры</span>
+          <strong id="fatEaten">0 г</strong>
+          <small>осталось <b id="fatLeft">0 г</b></small>
+          <div class="progress"><i id="fatProgress"></i></div>
+        </article>
+        <article class="stat-card carbs">
+          <span>Углеводы</span>
+          <strong id="carbsEaten">0 г</strong>
+          <small>осталось <b id="carbsLeft">0 г</b></small>
+          <div class="progress"><i id="carbsProgress"></i></div>
+        </article>
+        <article class="stat-card kcal">
+          <span>Калории</span>
+          <strong id="kcalEaten">0 ккал</strong>
+          <small>сумма за день</small>
+        </article>
+      </section>
+
+      <section class="card input-card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Добавить еду</p>
+            <h2>Что ты съела?</h2>
+          </div>
+          <button id="voiceBtn" class="voice-btn" type="button">🎙️ Сказать голосом</button>
+        </div>
+
+        <div id="voiceStatus" class="voice-status" hidden></div>
+        <textarea id="quickInput" rows="3" placeholder="Например: 2 яйца и 30 грамм кетчупа"></textarea>
+        <div class="actions-row">
+          <button id="parseBtn" class="primary-btn" type="button">Добавить из текста</button>
+          <button id="manualBtn" class="secondary-btn" type="button">Добавить вручную</button>
+        </div>
+        <p class="hint">Голосовой ввод работает в браузерах с поддержкой Web Speech API. Если он недоступен, можно использовать обычный текст.</p>
+      </section>
+
+      <section class="card diary-card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Записи</p>
+            <h2 id="diaryTitle">Еда за день</h2>
+          </div>
+          <button id="clearDayBtn" class="danger-link" type="button">Очистить день</button>
+        </div>
+        <div id="entriesList" class="entries-list"></div>
+      </section>
+
+      <section class="card history-card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">История</p>
+            <h2>Все записанные дни</h2>
+          </div>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="manualDialog" class="modal">
+    <form method="dialog" id="manualForm">
+      <div class="modal-head">
+        <h3>Добавить вручную</h3>
+        <button class="close-btn" value="cancel" type="submit">×</button>
+      </div>
+      <label>Продукт
+        <select id="manualProduct"></select>
+      </label>
+      <label>Количество
+        <input id="manualAmount" type="number" min="0.1" step="0.1" required />
+      </label>
+      <label>Единица
+        <select id="manualUnit">
+          <option value="g">грамм</option>
+          <option value="piece">штук</option>
+        </select>
+      </label>
+      <button id="manualSubmit" class="primary-btn full" value="default" type="button">Добавить</button>
+    </form>
+  </dialog>
+
+  <dialog id="settingsDialog" class="modal wide">
+    <form method="dialog">
+      <div class="modal-head">
+        <div>
+          <h3>Мои продукты</h3>
+          <p>Можно менять значения и добавлять свои продукты.</p>
+        </div>
+        <button class="close-btn" value="cancel" type="submit">×</button>
+      </div>
+      <div id="productEditor" class="product-editor"></div>
+      <button id="addProductBtn" class="secondary-btn full" type="button">+ Добавить продукт</button>
+      <div class="modal-footer">
+        <button id="saveProductsBtn" class="primary-btn" type="button">Сохранить продукты</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

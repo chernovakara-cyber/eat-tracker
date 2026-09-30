@@ -1,498 +1,429 @@
 const STORAGE_KEY = 'bju-diary-v1';
-const PRODUCTS_KEY = 'bju-products-v5';
-
-/* =========================================================
-   БАЗОВЫЕ ФУНКЦИИ
-========================================================= */
-
-function calculateKcal(p, f, c) {
-  return (
-    Number(p || 0) * 4 +
-    Number(f || 0) * 9 +
-    Number(c || 0) * 4
-  );
-}
-
-function makeProduct(
-  id,
-  name,
-  aliases,
-  p,
-  f,
-  c,
-  options = {}
-) {
-  return {
-    id,
-    name,
-    aliases,
-    unit: options.unit || 'g',
-    gramsPerPiece: options.gramsPerPiece || 0,
-    p,
-    f,
-    c,
-    countProtein: options.countProtein === true,
-    kcal: calculateKcal(p, f, c)
-  };
-}
-
-
-/* =========================================================
-   МОИ ПРОДУКТЫ
-========================================================= */
+const PRODUCTS_KEY = 'bju-products-v1';
 
 const defaultProducts = [
-  makeProduct(
-    'rice',
-    'Рис',
-    ['рис', 'риса'],
-    7.2,
-    0.5,
-    76.9
-  ),
+  {
+    id: crypto.randomUUID(),
+    name: 'Яйцо',
+    aliases: ['яйцо','яйца','яиц'],
+    unit: 'piece',
+    gramsPerPiece: 55,
+    p: 12.7,
+    f: 10.9,
+    c: 0.7,
+    kcal: 157
+  },
 
-  makeProduct(
-    'pasta',
-    'Макароны',
-    ['макароны', 'макарон'],
-    12,
-    1.3,
-    70.5
-  ),
+  {
+    id: crypto.randomUUID(),
+    name: 'Кетчуп',
+    aliases: ['кетчуп','кетчупа'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 1.3,
+    f: 0.2,
+    c: 22.2,
+    kcal: 101
+  },
 
-  makeProduct(
-    'buckwheat',
-    'Гречка',
-    ['гречка', 'гречки', 'гречку'],
-    13,
-    2.5,
-    61
-  ),
+  {
+    id: crypto.randomUUID(),
+    name: 'Куриная грудка',
+    aliases: ['куриная грудка','грудка','курицы','курица'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 31,
+    f: 3.6,
+    c: 0,
+    kcal: 165
+  },
 
-  makeProduct(
-    'chicken',
-    'Куриная грудка',
-    [
-      'куриная грудка',
-      'куриной грудки',
-      'куриную грудку',
-      'грудка',
-      'грудки',
-      'грудку',
-      'курица',
-      'курицы',
-      'курицу'
-    ],
-    22,
-    4,
-    0,
-    {
-      countProtein: true
-    }
-  ),
+  {
+    id: crypto.randomUUID(),
+    name: 'Рис варёный',
+    aliases: ['рис','риса'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 2.7,
+    f: 0.3,
+    c: 28.2,
+    kcal: 130
+  },
 
-  makeProduct(
-    'tuna',
-    'Тунец консервированный',
-    [
-      'тунец',
-      'тунца',
-      'консервированный тунец',
-      'консервированного тунца',
-      'тунца консервированного'
-    ],
-    23,
-    1,
-    0,
-    {
-      countProtein: true
-    }
-  ),
+  {
+    id: crypto.randomUUID(),
+    name: 'Овсянка',
+    aliases: ['овсянка','овсянки','овсяные хлопья'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 12.3,
+    f: 6.1,
+    c: 59.5,
+    kcal: 352
+  },
 
-  makeProduct(
-    'eggs',
-    'Яйца',
-    [
-      'яйцо',
-      'яйца',
-      'яиц',
-      'яйцами'
-    ],
-    12.6,
-    11.5,
-    0.7,
-    {
-      countProtein: true
-    }
-  ),
+  {
+    id: crypto.randomUUID(),
+    name: 'Молоко 2.5%',
+    aliases: ['молоко','молока'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 2.8,
+    f: 2.5,
+    c: 4.7,
+    kcal: 52
+  },
 
-  makeProduct(
-    'ham',
-    'Ветчина',
-    [
-      'ветчина',
-      'ветчины',
-      'ветчину'
-    ],
-    14,
-    4,
-    4,
-    {
-      countProtein: true
-    }
-  ),
+  {
+    id: crypto.randomUUID(),
+    name: 'Творог 5%',
+    aliases: ['творог','творога'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 17,
+    f: 5,
+    c: 1.8,
+    kcal: 121
+  },
 
-  makeProduct(
-    'greek-yogurt',
-    'Греческий йогурт',
-    [
-      'греческий йогурт',
-      'греческого йогурта',
-      'йогурт',
-      'йогурта'
-    ],
-    8,
-    2,
-    4.2,
-    {
-      countProtein: true
-    }
-  ),
+  {
+    id: crypto.randomUUID(),
+    name: 'Банан',
+    aliases: ['банан','банана','бананы'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 1.1,
+    f: 0.3,
+    c: 22.8,
+    kcal: 96
+  },
 
-  makeProduct(
-    'cheese',
-    'Сыр',
-    [
-      'сыр',
-      'сыра'
-    ],
-    26,
-    26,
-    0,
-    {
-      countProtein: true
-    }
-  ),
+  {
+    id: crypto.randomUUID(),
+    name: 'Сыр',
+    aliases: ['сыр','сыра'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 24,
+    f: 29,
+    c: 0.5,
+    kcal: 363
+  },
 
-  makeProduct(
-    'cream-cheese',
-    'Творожный сыр',
-    [
-      'творожный сыр',
-      'творожного сыра'
-    ],
-    6.2,
-    21.7,
-    4.2,
-    {
-      countProtein: true
-    }
-  ),
-
-  makeProduct(
-    'beans',
-    'Фасоль',
-    [
-      'фасоль',
-      'фасоли'
-    ],
-    4.5,
-    2,
-    14
-  ),
-
-  makeProduct(
-    'bread',
-    'Хлеб',
-    [
-      'хлеб',
-      'хлеба'
-    ],
-    6,
-    0,
-    46
-  ),
-
-  makeProduct(
-    'cucumbers',
-    'Огурцы',
-    [
-      'огурец',
-      'огурца',
-      'огурцы',
-      'огурцов'
-    ],
-    0,
-    0,
-    3
-  ),
-
-  makeProduct(
-    'olives',
-    'Оливки',
-    [
-      'оливки',
-      'оливок',
-      'оливку'
-    ],
-    2,
-    16,
-    5
-  ),
-
-  makeProduct(
-    'asparagus',
-    'Спаржа',
-    [
-      'спаржа',
-      'спаржи',
-      'спаржу'
-    ],
-    12,
-    15,
-    10
-  ),
-
-  makeProduct(
-    'honey-mustard',
-    'Медово-горчичный соус',
-    [
-      'медово-горчичный соус',
-      'медово горчичный соус',
-      'медово-горчичного соуса',
-      'медово горчичного соуса',
-      'горчичный соус',
-      'горчичного соуса'
-    ],
-    1.7,
-    37.2,
-    22.5
-  )
+  {
+    id: crypto.randomUUID(),
+    name: 'Хлеб',
+    aliases: ['хлеб','хлеба'],
+    unit: 'g',
+    gramsPerPiece: 0,
+    p: 8.1,
+    f: 1,
+    c: 48.8,
+    kcal: 242
+  }
 ];
 
 
-/* =========================================================
-   ЭЛЕМЕНТЫ
-========================================================= */
+const $ = (id) => document.getElementById(id);
 
-const $ = id => document.getElementById(id);
 
 const els = {
-  dayPicker: $('dayPicker'),
-  prevDay: $('prevDay'),
-  nextDay: $('nextDay'),
 
-  targetProtein: $('targetProtein'),
-  targetFat: $('targetFat'),
-  targetCarbs: $('targetCarbs'),
+  dayPicker:
+    $('dayPicker'),
 
-  proteinEaten: $('proteinEaten'),
-  fatEaten: $('fatEaten'),
-  carbsEaten: $('carbsEaten'),
-  kcalEaten: $('kcalEaten'),
+  prevDay:
+    $('prevDay'),
 
-  proteinLeft: $('proteinLeft'),
-  fatLeft: $('fatLeft'),
-  carbsLeft: $('carbsLeft'),
+  nextDay:
+    $('nextDay'),
 
-  proteinProgress: $('proteinProgress'),
-  fatProgress: $('fatProgress'),
-  carbsProgress: $('carbsProgress'),
 
-  quickInput: $('quickInput'),
-  parseBtn: $('parseBtn'),
-  manualBtn: $('manualBtn'),
-  voiceBtn: $('voiceBtn'),
-  voiceStatus: $('voiceStatus'),
+  targetProtein:
+    $('targetProtein'),
 
-  entriesList: $('entriesList'),
-  historyList: $('historyList'),
-  diaryTitle: $('diaryTitle'),
-  clearDayBtn: $('clearDayBtn'),
+  targetFat:
+    $('targetFat'),
 
-  manualDialog: $('manualDialog'),
-  manualProduct: $('manualProduct'),
-  manualAmount: $('manualAmount'),
-  manualUnit: $('manualUnit'),
-  manualSubmit: $('manualSubmit'),
+  targetCarbs:
+    $('targetCarbs'),
 
-  settingsBtn: $('settingsBtn'),
-  settingsDialog: $('settingsDialog'),
-  productEditor: $('productEditor'),
-  addProductBtn: $('addProductBtn'),
-  saveProductsBtn: $('saveProductsBtn')
+
+  proteinEaten:
+    $('proteinEaten'),
+
+  fatEaten:
+    $('fatEaten'),
+
+  carbsEaten:
+    $('carbsEaten'),
+
+  kcalEaten:
+    $('kcalEaten'),
+
+
+  proteinLeft:
+    $('proteinLeft'),
+
+  fatLeft:
+    $('fatLeft'),
+
+  carbsLeft:
+    $('carbsLeft'),
+
+
+  proteinStatusText:
+    $('proteinStatusText'),
+
+  fatStatusText:
+    $('fatStatusText'),
+
+  carbsStatusText:
+    $('carbsStatusText'),
+
+
+  proteinProgress:
+    $('proteinProgress'),
+
+  fatProgress:
+    $('fatProgress'),
+
+  carbsProgress:
+    $('carbsProgress'),
+
+
+  quickInput:
+    $('quickInput'),
+
+  parseBtn:
+    $('parseBtn'),
+
+  manualBtn:
+    $('manualBtn'),
+
+  voiceBtn:
+    $('voiceBtn'),
+
+  voiceStatus:
+    $('voiceStatus'),
+
+
+  entriesList:
+    $('entriesList'),
+
+  historyList:
+    $('historyList'),
+
+  diaryTitle:
+    $('diaryTitle'),
+
+  clearDayBtn:
+    $('clearDayBtn'),
+
+
+  manualDialog:
+    $('manualDialog'),
+
+  manualProduct:
+    $('manualProduct'),
+
+  manualAmount:
+    $('manualAmount'),
+
+  manualUnit:
+    $('manualUnit'),
+
+  manualSubmit:
+    $('manualSubmit'),
+
+
+  settingsBtn:
+    $('settingsBtn'),
+
+  settingsDialog:
+    $('settingsDialog'),
+
+  productEditor:
+    $('productEditor'),
+
+  addProductBtn:
+    $('addProductBtn'),
+
+  saveProductsBtn:
+    $('saveProductsBtn')
 };
 
 
-/* =========================================================
-   ДАННЫЕ
-========================================================= */
-
-let data = loadJSON(
-  STORAGE_KEY,
-  {}
-);
-
-let products = loadProducts();
-
-let editingEntryId = null;
-
-
-/* =========================================================
-   СОХРАНЕНИЕ
-========================================================= */
-
-function loadJSON(key, fallback) {
-  try {
-    return JSON.parse(
-      localStorage.getItem(key)
-    ) ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function saveData() {
-  localStorage.setItem(
+let data =
+  loadJSON(
     STORAGE_KEY,
-    JSON.stringify(data)
+    {}
   );
-}
-
-function saveProducts() {
-  localStorage.setItem(
-    PRODUCTS_KEY,
-    JSON.stringify(products)
-  );
-}
-
-function loadProducts() {
-  const saved =
-    loadJSON(
-      PRODUCTS_KEY,
-      null
-    );
-
-  if (
-    Array.isArray(saved) &&
-    saved.length
-  ) {
-    return saved;
-  }
-
-  return structuredClone(
-    defaultProducts
-  );
-}
 
 
-/* =========================================================
-   БЕЛОК
-========================================================= */
-
-function shouldProteinCountByName(name = '') {
-  const n =
-    name.toLowerCase();
-
-  const allowedWords = [
-    'курин',
-    'грудк',
-    'мяс',
-    'говядин',
-    'индейк',
-    'свинин',
-    'рыб',
-    'тунец',
-    'тунц',
-    'лосос',
-    'семг',
-    'форел',
-    'кревет',
-    'яйц',
-    'ветчин',
-    'йогурт',
-    'сыр',
-    'творог',
-    'молок',
-    'кефир',
-    'протеин'
-  ];
-
-  return allowedWords.some(
-    word => n.includes(word)
-  );
-}
+let products =
+  loadProducts();
 
 
-/* =========================================================
-   ДАТЫ
-========================================================= */
 
-function localDateString(
-  date = new Date()
-) {
+function localDateString(date = new Date()) {
+
   const y =
     date.getFullYear();
 
   const m =
     String(
       date.getMonth() + 1
-    ).padStart(2, '0');
+    ).padStart(
+      2,
+      '0'
+    );
 
   const d =
     String(
       date.getDate()
-    ).padStart(2, '0');
+    ).padStart(
+      2,
+      '0'
+    );
 
   return `${y}-${m}-${d}`;
 }
 
+
+
 function formatDate(dateString) {
+
   const d =
     new Date(
-      dateString +
-      'T12:00:00'
+      dateString + 'T12:00:00'
     );
 
   return d.toLocaleDateString(
     'ru-RU',
     {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
+      weekday:
+        'long',
+
+      day:
+        'numeric',
+
+      month:
+        'long',
+
+      year:
+        'numeric'
     }
   );
 }
 
 
-/* =========================================================
-   ОБЩИЕ
-========================================================= */
+
+function loadJSON(
+  key,
+  fallback
+) {
+
+  try {
+
+    return (
+      JSON.parse(
+        localStorage.getItem(key)
+      ) ?? fallback
+    );
+
+  } catch {
+
+    return fallback;
+
+  }
+
+}
+
+
+
+function saveData() {
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(data)
+  );
+
+}
+
+
+
+function saveProducts() {
+
+  localStorage.setItem(
+    PRODUCTS_KEY,
+    JSON.stringify(products)
+  );
+
+}
+
+
+
+function loadProducts() {
+
+  const saved =
+    loadJSON(
+      PRODUCTS_KEY,
+      null
+    );
+
+  return (
+    Array.isArray(saved) &&
+    saved.length
+      ? saved
+      : structuredClone(
+          defaultProducts
+        )
+  );
+
+}
+
+
 
 function ensureDay(date) {
+
   if (!data[date]) {
+
     data[date] = {
+
       targets: {
         p: 0,
         f: 0,
         c: 0
       },
+
       entries: []
+
     };
+
   }
 
   return data[date];
+
 }
+
+
 
 function round1(n) {
-  return Math.round(
-    (Number(n) || 0) * 10
-  ) / 10;
+
+  return (
+    Math.round(
+      (Number(n) || 0) * 10
+    ) / 10
+  );
+
 }
 
+
+
 function escapeHtml(value = '') {
-  return String(value).replace(
+
+  return value.replace(
     /[&<>'"]/g,
     c => ({
       '&': '&amp;',
@@ -502,29 +433,23 @@ function escapeHtml(value = '') {
       '"': '&quot;'
     }[c])
   );
+
 }
 
 
-/* =========================================================
-   ПОДСЧЁТ
-========================================================= */
 
 function totalsFor(day) {
+
   return day.entries.reduce(
-    (acc, entry) => {
-      acc.p +=
-        Number(entry.p) || 0;
+    (acc, e) => {
 
-      acc.f +=
-        Number(entry.f) || 0;
-
-      acc.c +=
-        Number(entry.c) || 0;
-
-      acc.kcal +=
-        Number(entry.kcal) || 0;
+      acc.p += e.p;
+      acc.f += e.f;
+      acc.c += e.c;
+      acc.kcal += e.kcal;
 
       return acc;
+
     },
     {
       p: 0,
@@ -533,109 +458,95 @@ function totalsFor(day) {
       kcal: 0
     }
   );
+
 }
 
-function calcFromValues(
-  amount,
-  unit,
-  gramsPerPiece,
-  p100,
-  f100,
-  c100,
-  countProtein
-) {
-  let grams =
-    Number(amount);
 
-  if (
-    unit === 'piece'
-  ) {
-    grams =
-      Number(amount) *
-      Number(
-        gramsPerPiece || 0
-      );
-  }
-
-  const factor =
-    grams / 100;
-
-  const realProtein =
-    Number(p100 || 0) *
-    factor;
-
-  const fat =
-    Number(f100 || 0) *
-    factor;
-
-  const carbs =
-    Number(c100 || 0) *
-    factor;
-
-  return {
-    grams,
-
-    p:
-      countProtein
-        ? realProtein
-        : 0,
-
-    realProtein,
-
-    f: fat,
-    c: carbs,
-
-    kcal:
-      calculateKcal(
-        p100,
-        f100,
-        c100
-      ) * factor
-  };
-}
 
 function calcFromProduct(
   product,
   amount,
   unit
 ) {
-  return calcFromValues(
-    amount,
-    unit,
-    product.gramsPerPiece,
-    product.p,
-    product.f,
-    product.c,
-    product.countProtein
-  );
+
+  let grams =
+    Number(amount);
+
+
+  if (unit === 'piece') {
+
+    grams =
+      Number(amount) *
+      Number(
+        product.gramsPerPiece || 0
+      );
+
+  }
+
+
+  const factor =
+    grams / 100;
+
+
+  return {
+
+    grams,
+
+    p:
+      product.p *
+      factor,
+
+    f:
+      product.f *
+      factor,
+
+    c:
+      product.c *
+      factor,
+
+    kcal:
+      product.kcal *
+      factor
+
+  };
+
 }
 
 
+
 /* =========================================================
-   ОТРИСОВКА
+   ОСНОВНАЯ ОТРИСОВКА
 ========================================================= */
 
 function render() {
+
   const date =
     els.dayPicker.value;
+
 
   const day =
     ensureDay(date);
 
+
   const totals =
     totalsFor(day);
+
 
   els.diaryTitle.textContent =
     `Еда за ${formatDate(date)}`;
 
+
   els.targetProtein.value =
     day.targets.p || '';
+
 
   els.targetFat.value =
     day.targets.f || '';
 
+
   els.targetCarbs.value =
     day.targets.c || '';
+
 
   updateStat(
     'protein',
@@ -643,11 +554,13 @@ function render() {
     day.targets.p
   );
 
+
   updateStat(
     'fat',
     totals.f,
     day.targets.f
   );
+
 
   updateStat(
     'carbs',
@@ -655,1158 +568,328 @@ function render() {
     day.targets.c
   );
 
+
   els.kcalEaten.textContent =
-    `${Math.round(
-      totals.kcal
-    )} ккал`;
+    `${Math.round(totals.kcal)} ккал`;
+
 
   renderEntries(day);
+
   renderHistory();
+
   renderManualProducts();
+
 }
+
+
+
+/* =========================================================
+   БЕЛКИ / ЖИРЫ / УГЛЕВОДЫ
+========================================================= */
 
 function updateStat(
   type,
   eaten,
   target
 ) {
+
   const targetNum =
     Number(target) || 0;
 
-  const left =
-    targetNum - eaten;
 
-  els[
-    type + 'Eaten'
-  ].textContent =
-    `${round1(eaten)} г`;
+  const eatenNum =
+    Number(eaten) || 0;
 
-  if (!targetNum) {
-    els[
-      type + 'Left'
-    ].textContent =
-      'цель не задана';
-  } else if (
-    left >= 0
-  ) {
-    els[
-      type + 'Left'
-    ].textContent =
-      `${round1(left)} г`;
-  } else {
-    els[
-      type + 'Left'
-    ].textContent =
-      `+${round1(
-        Math.abs(left)
-      )} г`;
-  }
 
-  const pct =
+  const rawPct =
     targetNum
-      ? Math.min(
-          100,
-          eaten /
-          targetNum *
-          100
-        )
+      ? (
+          eatenNum /
+          targetNum
+        ) * 100
       : 0;
 
-  els[
-    type + 'Progress'
-  ].style.width =
-    `${pct}%`;
+
+  const progressPct =
+    Math.min(
+      100,
+      Math.max(
+        0,
+        rawPct
+      )
+    );
+
+
+  const eatenEl =
+    els[
+      type +
+      'Eaten'
+    ];
+
+
+  const leftEl =
+    els[
+      type +
+      'Left'
+    ];
+
+
+  const statusTextEl =
+    els[
+      type +
+      'StatusText'
+    ];
+
+
+  const progressEl =
+    els[
+      type +
+      'Progress'
+    ];
+
+
+  const card =
+    eatenEl.closest(
+      '.stat-card'
+    );
+
+
+  /*
+    Сколько набрано.
+  */
+
+  eatenEl.textContent =
+    `${round1(eatenNum)} г`;
+
+
+  /*
+    Полоса заполняется максимум до 100%.
+  */
+
+  progressEl.style.width =
+    `${progressPct}%`;
+
+
+  /*
+    Нет цели.
+  */
+
+  if (!targetNum) {
+
+    statusTextEl.textContent =
+      '';
+
+    leftEl.textContent =
+      'цель не задана';
+
+  }
+
+
+  /*
+    Цель превышена.
+
+    Никакого знака "+":
+    например:
+    «превысила на 7.4 г».
+  */
+
+  else if (
+    eatenNum >
+    targetNum
+  ) {
+
+    statusTextEl.textContent =
+      'превысила на';
+
+
+    leftEl.textContent =
+      `${
+        round1(
+          eatenNum -
+          targetNum
+        )
+      } г`;
+
+  }
+
+
+  /*
+    Цель ещё не превышена.
+  */
+
+  else {
+
+    statusTextEl.textContent =
+      'осталось';
+
+
+    leftEl.textContent =
+      `${
+        round1(
+          targetNum -
+          eatenNum
+        )
+      } г`;
+
+  }
+
+
+  /*
+    Сначала убираем предыдущую
+    цветовую подсветку.
+  */
+
+  card.classList.remove(
+    'goal-near',
+    'goal-over'
+  );
+
+
+  /*
+    От 95% до 100% включительно:
+    зелёная карточка.
+
+    Работает для:
+    - белков;
+    - жиров;
+    - углеводов.
+  */
+
+  if (
+    targetNum > 0 &&
+    rawPct >= 95 &&
+    rawPct <= 100
+  ) {
+
+    card.classList.add(
+      'goal-near'
+    );
+
+  }
+
+
+  /*
+    Больше 100%:
+    красная подсветка только
+    для жиров и углеводов.
+
+    Для белков красного цвета нет.
+  */
+
+  else if (
+    targetNum > 0 &&
+    rawPct > 100 &&
+    (
+      type === 'fat' ||
+      type === 'carbs'
+    )
+  ) {
+
+    card.classList.add(
+      'goal-over'
+    );
+
+  }
+
 }
 
 
+
 /* =========================================================
-   СПИСОК ЕДЫ
+   ЗАПИСИ ЗА ДЕНЬ
 ========================================================= */
 
 function renderEntries(day) {
-  if (
-    !day.entries.length
-  ) {
+
+  if (!day.entries.length) {
+
     els.entriesList.innerHTML =
       '<div class="empty">Пока ничего не записано.</div>';
 
     return;
+
   }
 
+
   els.entriesList.innerHTML =
-    day.entries.map(entry => `
-      <div class="entry">
+    day.entries
+      .map(
+        e => `
 
-        <div>
-          <div class="entry-title">
-            ${escapeHtml(entry.name)}
-            —
-            ${round1(entry.amount)}
-            ${
-              entry.unit === 'piece'
-                ? 'шт.'
-                : 'г'
-            }
+          <div class="entry">
+
+            <div>
+
+              <div class="entry-title">
+
+                ${escapeHtml(e.name)}
+                —
+                ${round1(e.amount)}
+                ${e.unit === 'piece' ? 'шт.' : 'г'}
+
+              </div>
+
+              <div class="entry-macros">
+
+                Б ${round1(e.p)}
+                ·
+                Ж ${round1(e.f)}
+                ·
+                У ${round1(e.c)}
+                ·
+                ${Math.round(e.kcal)} ккал
+
+              </div>
+
+            </div>
+
+
+            <div class="entry-actions">
+
+              <button
+                class="mini-btn delete-entry"
+                data-id="${e.id}"
+              >
+                Удалить
+              </button>
+
+            </div>
+
           </div>
 
-          <div class="entry-macros">
-            Б ${round1(entry.p)} ·
-            Ж ${round1(entry.f)} ·
-            У ${round1(entry.c)} ·
-            ${Math.round(entry.kcal)} ккал
-          </div>
-        </div>
+        `
+      )
+      .join('');
 
-        <div class="entry-actions">
-
-          <button
-            class="mini-btn edit-entry"
-            data-id="${entry.id}"
-          >
-            ✏️ Редактировать
-          </button>
-
-          <button
-            class="mini-btn delete-entry"
-            data-id="${entry.id}"
-          >
-            Удалить
-          </button>
-
-        </div>
-
-      </div>
-    `).join('');
 
   els.entriesList
     .querySelectorAll(
       '.delete-entry'
     )
-    .forEach(btn => {
-      btn.addEventListener(
-        'click',
-        () => {
-          day.entries =
-            day.entries.filter(
-              entry =>
-                entry.id !==
-                btn.dataset.id
-            );
+    .forEach(
+      btn =>
+        btn.addEventListener(
+          'click',
+          () => {
 
-          saveData();
-          render();
-        }
-      );
-    });
+            day.entries =
+              day.entries.filter(
+                e =>
+                  e.id !==
+                  btn.dataset.id
+              );
 
-  els.entriesList
-    .querySelectorAll(
-      '.edit-entry'
-    )
-    .forEach(btn => {
-      btn.addEventListener(
-        'click',
-        () => {
-          const entry =
-            day.entries.find(
-              item =>
-                item.id ===
-                btn.dataset.id
-            );
 
-          if (entry) {
-            openEntryEditor(
-              entry
-            );
+            saveData();
+
+            render();
+
           }
-        }
-      );
-    });
+        )
+    );
+
 }
 
-
-/* =========================================================
-   СТИЛИ ОБЛАЧКА
-   Добавляются прямо через JS
-========================================================= */
-
-function ensureCloudStyles() {
-  if (
-    document.getElementById(
-      'cloud-editor-styles'
-    )
-  ) {
-    return;
-  }
-
-  const style =
-    document.createElement(
-      'style'
-    );
-
-  style.id =
-    'cloud-editor-styles';
-
-  style.textContent = `
-
-    #entryEditDialog {
-      border: none !important;
-      padding: 0 !important;
-      margin: auto !important;
-      background: transparent !important;
-      width: min(94vw, 480px) !important;
-      max-width: 480px !important;
-      overflow: visible !important;
-    }
-
-    #entryEditDialog::backdrop {
-      background: rgba(55, 25, 67, .34) !important;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .cloud-editor {
-      position: relative;
-      border-radius: 40px;
-      padding: 30px 26px 24px;
-      background:
-        linear-gradient(
-          145deg,
-          #fff2fa 0%,
-          #f9e8ff 50%,
-          #eee5ff 100%
-        );
-      border: 2px solid rgba(255,255,255,.95);
-      box-shadow:
-        0 30px 80px rgba(101, 54, 120, .30),
-        inset 0 2px 0 rgba(255,255,255,.95);
-      animation: cloudEditorPop .25s ease;
-      overflow: visible;
-    }
-
-    .cloud-editor::before,
-    .cloud-editor::after {
-      content: "";
-      position: absolute;
-      background:
-        linear-gradient(
-          145deg,
-          #fff2fa,
-          #f1e7ff
-        );
-      border: 2px solid rgba(255,255,255,.9);
-      z-index: -1;
-    }
-
-    .cloud-editor::before {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      top: -35px;
-      left: 35px;
-      box-shadow:
-        185px 15px 0 -12px #f0e6ff;
-    }
-
-    .cloud-editor::after {
-      width: 95px;
-      height: 95px;
-      border-radius: 50%;
-      bottom: -28px;
-      right: 42px;
-      box-shadow:
-        -260px -8px 0 -10px #fff0f8;
-    }
-
-    @keyframes cloudEditorPop {
-      from {
-        opacity: 0;
-        transform:
-          translateY(15px)
-          scale(.95);
-      }
-
-      to {
-        opacity: 1;
-        transform:
-          translateY(0)
-          scale(1);
-      }
-    }
-
-    .cloud-editor-header {
-      position: relative;
-      z-index: 2;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .cloud-editor-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      margin:
-        -55px auto 10px;
-      font-size: 25px;
-      background:
-        linear-gradient(
-          135deg,
-          #ff83bf,
-          #9c70ff
-        );
-      color: white;
-      box-shadow:
-        0 12px 28px
-        rgba(143,92,255,.28);
-    }
-
-    .cloud-editor-title {
-      margin: 0;
-      font-size: 26px;
-      font-weight: 900;
-      line-height: 1.15;
-      background:
-        linear-gradient(
-          90deg,
-          #ee5ba5,
-          #8250e8
-        );
-      color: transparent;
-      -webkit-background-clip: text;
-      background-clip: text;
-    }
-
-    .cloud-editor-subtitle {
-      margin: 6px 0 0;
-      color: #806287;
-      font-size: 13px;
-    }
-
-    .cloud-editor-body {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      gap: 12px;
-    }
-
-    .cloud-field {
-      display: grid;
-      gap: 6px;
-    }
-
-    .cloud-field > span {
-      font-size: 13px;
-      font-weight: 800;
-      color: #745079;
-      padding-left: 4px;
-    }
-
-    .cloud-field input,
-    .cloud-field select {
-      width: 100%;
-      border:
-        1px solid
-        rgba(211,181,222,.9);
-      border-radius: 18px;
-      padding: 13px 15px;
-      color: #341936;
-      background:
-        rgba(255,255,255,.90);
-      outline: none;
-      box-shadow:
-        0 7px 18px
-        rgba(101,63,115,.06);
-    }
-
-    .cloud-field input:focus,
-    .cloud-field select:focus {
-      border-color: #9568ee;
-      box-shadow:
-        0 0 0 4px
-        rgba(143,92,255,.11),
-        0 8px 22px
-        rgba(101,63,115,.10);
-    }
-
-    .cloud-macro-grid {
-      display: grid;
-      grid-template-columns:
-        repeat(3, 1fr);
-      gap: 9px;
-    }
-
-    .cloud-check {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px 13px;
-      border-radius: 18px;
-      background:
-        rgba(255,255,255,.58);
-      border:
-        1px solid
-        rgba(255,255,255,.9);
-      color: #68496f;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .cloud-check input {
-      width: 19px;
-      height: 19px;
-      flex:
-        0 0 auto;
-      margin-top: 1px;
-      accent-color: #945eff;
-    }
-
-    .cloud-editor-footer {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .cloud-cancel,
-    .cloud-save {
-      flex: 1;
-      border: 0;
-      border-radius: 18px;
-      padding: 13px 16px;
-      font-weight: 900;
-      cursor: pointer;
-      transition:
-        transform .15s ease,
-        box-shadow .15s ease;
-    }
-
-    .cloud-cancel {
-      background:
-        rgba(255,255,255,.84);
-      color: #785e7d;
-      box-shadow:
-        0 6px 16px
-        rgba(97,64,110,.09);
-    }
-
-    .cloud-save {
-      background:
-        linear-gradient(
-          90deg,
-          #ff70b7,
-          #8f5cff
-        );
-      color: white;
-      box-shadow:
-        0 12px 26px
-        rgba(143,92,255,.26);
-    }
-
-    .cloud-cancel:hover,
-    .cloud-save:hover {
-      transform:
-        translateY(-2px);
-    }
-
-    @media (
-      max-width: 600px
-    ) {
-
-      #entryEditDialog {
-        width:
-          calc(100% - 18px)
-          !important;
-      }
-
-      .cloud-editor {
-        padding:
-          27px 17px 20px;
-        border-radius: 34px;
-        max-height: 88vh;
-        overflow-y: auto;
-      }
-
-      .cloud-editor::before {
-        width: 95px;
-        height: 95px;
-        top: -25px;
-        left: 28px;
-      }
-
-      .cloud-editor::after {
-        width: 75px;
-        height: 75px;
-      }
-
-      .cloud-editor-icon {
-        margin-top: -45px;
-      }
-
-      .cloud-editor-title {
-        font-size: 23px;
-      }
-
-      .cloud-macro-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .cloud-editor-footer {
-        flex-direction:
-          column-reverse;
-      }
-
-      .cloud-cancel,
-      .cloud-save {
-        width: 100%;
-      }
-    }
-  `;
-
-  document.head.appendChild(
-    style
-  );
-}
-
-
-/* =========================================================
-   СОЗДАНИЕ ОБЛАЧКА
-========================================================= */
-
-function ensureEntryEditor() {
-  ensureCloudStyles();
-
-  if (
-    document.getElementById(
-      'entryEditDialog'
-    )
-  ) {
-    return;
-  }
-
-  const dialog =
-    document.createElement(
-      'dialog'
-    );
-
-  dialog.id =
-    'entryEditDialog';
-
-  dialog.innerHTML = `
-    <div class="cloud-editor">
-
-      <div class="cloud-editor-header">
-
-        <div class="cloud-editor-icon">
-          ✏️
-        </div>
-
-        <h2 class="cloud-editor-title">
-          Редактировать продукт
-        </h2>
-
-        <p class="cloud-editor-subtitle">
-          Измени количество или БЖУ с упаковки
-        </p>
-
-      </div>
-
-      <div class="cloud-editor-body">
-
-        <label class="cloud-field">
-
-          <span>
-            Название
-          </span>
-
-          <input
-            id="editEntryName"
-            type="text"
-          >
-
-        </label>
-
-
-        <label class="cloud-field">
-
-          <span>
-            Количество
-          </span>
-
-          <input
-            id="editEntryAmount"
-            type="number"
-            min="0"
-            step="0.1"
-          >
-
-        </label>
-
-
-        <label class="cloud-field">
-
-          <span>
-            Единица
-          </span>
-
-          <select
-            id="editEntryUnit"
-          >
-            <option value="g">
-              граммы
-            </option>
-
-            <option value="piece">
-              штуки
-            </option>
-          </select>
-
-        </label>
-
-
-        <div class="cloud-macro-grid">
-
-          <label class="cloud-field">
-
-            <span>
-              Белки / 100 г
-            </span>
-
-            <input
-              id="editEntryProtein"
-              type="number"
-              min="0"
-              step="0.1"
-            >
-
-          </label>
-
-
-          <label class="cloud-field">
-
-            <span>
-              Жиры / 100 г
-            </span>
-
-            <input
-              id="editEntryFat"
-              type="number"
-              min="0"
-              step="0.1"
-            >
-
-          </label>
-
-
-          <label class="cloud-field">
-
-            <span>
-              Углеводы / 100 г
-            </span>
-
-            <input
-              id="editEntryCarbs"
-              type="number"
-              min="0"
-              step="0.1"
-            >
-
-          </label>
-
-        </div>
-
-
-        <label
-          class="cloud-field"
-          id="editEntryPieceWeightWrap"
-        >
-
-          <span>
-            Вес одной штуки, г
-          </span>
-
-          <input
-            id="editEntryPieceWeight"
-            type="number"
-            min="0"
-            step="0.1"
-          >
-
-        </label>
-
-
-        <label class="cloud-check">
-
-          <input
-            id="editEntryCountProtein"
-            type="checkbox"
-          >
-
-          <span>
-            Учитывать белок этого продукта
-            в моей дневной норме
-          </span>
-
-        </label>
-
-
-        <label class="cloud-check">
-
-          <input
-            id="editEntrySaveProduct"
-            type="checkbox"
-          >
-
-          <span>
-            Сохранить эти БЖУ для этого продукта
-            на будущее
-          </span>
-
-        </label>
-
-      </div>
-
-
-      <div class="cloud-editor-footer">
-
-        <button
-          type="button"
-          id="cancelEntryEdit"
-          class="cloud-cancel"
-        >
-          Отмена
-        </button>
-
-        <button
-          type="button"
-          id="saveEntryEdit"
-          class="cloud-save"
-        >
-          Сохранить
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-  document.body.appendChild(
-    dialog
-  );
-
-  document
-    .getElementById(
-      'cancelEntryEdit'
-    )
-    .addEventListener(
-      'click',
-      () => {
-        dialog.close();
-      }
-    );
-
-  document
-    .getElementById(
-      'editEntryUnit'
-    )
-    .addEventListener(
-      'change',
-      updateEntryPieceField
-    );
-
-  document
-    .getElementById(
-      'saveEntryEdit'
-    )
-    .addEventListener(
-      'click',
-      saveEntryEdit
-    );
-
-  dialog.addEventListener(
-    'click',
-    event => {
-      if (
-        event.target ===
-        dialog
-      ) {
-        dialog.close();
-      }
-    }
-  );
-}
-
-
-/* =========================================================
-   ОТКРЫТИЕ РЕДАКТИРОВАНИЯ
-========================================================= */
-
-function findProductForEntry(
-  entry
-) {
-  return (
-    products.find(
-      product =>
-        product.id ===
-        entry.productId
-    )
-    ||
-    products.find(
-      product =>
-        product.name
-          .toLowerCase() ===
-        String(
-          entry.name || ''
-        ).toLowerCase()
-    )
-  );
-}
-
-function openEntryEditor(entry) {
-  ensureEntryEditor();
-
-  editingEntryId =
-    entry.id;
-
-  const product =
-    findProductForEntry(
-      entry
-    );
-
-  document.getElementById(
-    'editEntryName'
-  ).value =
-    entry.name || '';
-
-  document.getElementById(
-    'editEntryAmount'
-  ).value =
-    entry.amount || '';
-
-  document.getElementById(
-    'editEntryUnit'
-  ).value =
-    entry.unit || 'g';
-
-  document.getElementById(
-    'editEntryProtein'
-  ).value =
-    entry.p100 ??
-    product?.p ??
-    0;
-
-  document.getElementById(
-    'editEntryFat'
-  ).value =
-    entry.f100 ??
-    product?.f ??
-    0;
-
-  document.getElementById(
-    'editEntryCarbs'
-  ).value =
-    entry.c100 ??
-    product?.c ??
-    0;
-
-  document.getElementById(
-    'editEntryPieceWeight'
-  ).value =
-    entry.gramsPerPiece ??
-    product?.gramsPerPiece ??
-    0;
-
-  const countProtein =
-    typeof entry.countProtein ===
-    'boolean'
-      ? entry.countProtein
-      : (
-          product
-            ? product.countProtein
-            : shouldProteinCountByName(
-                entry.name
-              )
-        );
-
-  document.getElementById(
-    'editEntryCountProtein'
-  ).checked =
-    countProtein;
-
-  document.getElementById(
-    'editEntrySaveProduct'
-  ).checked =
-    false;
-
-  updateEntryPieceField();
-
-  document
-    .getElementById(
-      'entryEditDialog'
-    )
-    .showModal();
-}
-
-function updateEntryPieceField() {
-  const unit =
-    document.getElementById(
-      'editEntryUnit'
-    ).value;
-
-  const wrap =
-    document.getElementById(
-      'editEntryPieceWeightWrap'
-    );
-
-  wrap.style.display =
-    unit === 'piece'
-      ? 'grid'
-      : 'none';
-}
-
-
-/* =========================================================
-   СОХРАНЕНИЕ РЕДАКТИРОВАНИЯ
-========================================================= */
-
-function saveEntryEdit() {
-  const day =
-    ensureDay(
-      els.dayPicker.value
-    );
-
-  const entry =
-    day.entries.find(
-      item =>
-        item.id ===
-        editingEntryId
-    );
-
-  if (!entry) {
-    return;
-  }
-
-  const name =
-    document.getElementById(
-      'editEntryName'
-    ).value.trim();
-
-  const amount =
-    Number(
-      document.getElementById(
-        'editEntryAmount'
-      ).value
-    );
-
-  const unit =
-    document.getElementById(
-      'editEntryUnit'
-    ).value;
-
-  const p100 =
-    Number(
-      document.getElementById(
-        'editEntryProtein'
-      ).value
-    ) || 0;
-
-  const f100 =
-    Number(
-      document.getElementById(
-        'editEntryFat'
-      ).value
-    ) || 0;
-
-  const c100 =
-    Number(
-      document.getElementById(
-        'editEntryCarbs'
-      ).value
-    ) || 0;
-
-  const gramsPerPiece =
-    Number(
-      document.getElementById(
-        'editEntryPieceWeight'
-      ).value
-    ) || 0;
-
-  const countProtein =
-    document.getElementById(
-      'editEntryCountProtein'
-    ).checked;
-
-  const saveForFuture =
-    document.getElementById(
-      'editEntrySaveProduct'
-    ).checked;
-
-  if (
-    !name ||
-    amount <= 0
-  ) {
-    alert(
-      'Укажи название и количество продукта.'
-    );
-    return;
-  }
-
-  if (
-    unit === 'piece' &&
-    gramsPerPiece <= 0
-  ) {
-    alert(
-      'Укажи вес одной штуки.'
-    );
-    return;
-  }
-
-  const calc =
-    calcFromValues(
-      amount,
-      unit,
-      gramsPerPiece,
-      p100,
-      f100,
-      c100,
-      countProtein
-    );
-
-  entry.name =
-    name;
-
-  entry.amount =
-    amount;
-
-  entry.unit =
-    unit;
-
-  entry.gramsPerPiece =
-    gramsPerPiece;
-
-  entry.p100 =
-    p100;
-
-  entry.f100 =
-    f100;
-
-  entry.c100 =
-    c100;
-
-  entry.countProtein =
-    countProtein;
-
-  entry.p =
-    calc.p;
-
-  entry.realProtein =
-    calc.realProtein;
-
-  entry.f =
-    calc.f;
-
-  entry.c =
-    calc.c;
-
-  entry.kcal =
-    calc.kcal;
-
-  entry.grams =
-    calc.grams;
-
-  if (saveForFuture) {
-    let product =
-      findProductForEntry(
-        entry
-      );
-
-    if (!product) {
-      product = {
-        id:
-          crypto.randomUUID(),
-
-        name,
-
-        aliases: [
-          name.toLowerCase()
-        ],
-
-        unit,
-
-        gramsPerPiece,
-
-        p: p100,
-        f: f100,
-        c: c100,
-
-        countProtein,
-
-        kcal:
-          calculateKcal(
-            p100,
-            f100,
-            c100
-          )
-      };
-
-      products.push(
-        product
-      );
-
-      entry.productId =
-        product.id;
-
-    } else {
-      product.name =
-        name;
-
-      product.p =
-        p100;
-
-      product.f =
-        f100;
-
-      product.c =
-        c100;
-
-      product.unit =
-        unit;
-
-      product.gramsPerPiece =
-        gramsPerPiece;
-
-      product.countProtein =
-        countProtein;
-
-      product.kcal =
-        calculateKcal(
-          p100,
-          f100,
-          c100
-        );
-
-      entry.productId =
-        product.id;
-    }
-
-    saveProducts();
-  }
-
-  saveData();
-
-  document
-    .getElementById(
-      'entryEditDialog'
-    )
-    .close();
-
-  editingEntryId =
-    null;
-
-  render();
-}
 
 
 /* =========================================================
@@ -1814,79 +897,110 @@ function saveEntryEdit() {
 ========================================================= */
 
 function renderHistory() {
+
   const dates =
-    Object.keys(data)
-      .filter(date =>
-        data[date].entries.length ||
-        data[date].targets.p ||
-        data[date].targets.f ||
-        data[date].targets.c
+    Object
+      .keys(data)
+      .filter(
+        d =>
+          data[d].entries.length ||
+          data[d].targets.p ||
+          data[d].targets.f ||
+          data[d].targets.c
       )
       .sort(
         (a, b) =>
           b.localeCompare(a)
       );
 
+
   if (!dates.length) {
+
     els.historyList.innerHTML =
       '<div class="empty">История появится после первой записи.</div>';
 
     return;
+
   }
 
+
   els.historyList.innerHTML =
-    dates.map(date => {
-      const totals =
-        totalsFor(
-          data[date]
-        );
+    dates
+      .map(
+        date => {
 
-      return `
-        <div
-          class="history-item"
-          data-date="${date}"
-        >
+          const t =
+            totalsFor(
+              data[date]
+            );
 
-          <div>
-            <div class="history-date">
-              ${formatDate(date)}
+
+          return `
+
+            <div
+              class="history-item"
+              data-date="${date}"
+            >
+
+              <div>
+
+                <div class="history-date">
+                  ${formatDate(date)}
+                </div>
+
+                <div class="history-meta">
+
+                  Б ${round1(t.p)}
+                  ·
+                  Ж ${round1(t.f)}
+                  ·
+                  У ${round1(t.c)}
+                  ·
+                  ${Math.round(t.kcal)} ккал
+
+                </div>
+
+              </div>
+
+              <span>→</span>
+
             </div>
 
-            <div class="history-meta">
-              Б ${round1(totals.p)} ·
-              Ж ${round1(totals.f)} ·
-              У ${round1(totals.c)} ·
-              ${Math.round(totals.kcal)} ккал
-            </div>
-          </div>
+          `;
 
-          <span>→</span>
+        }
+      )
+      .join('');
 
-        </div>
-      `;
-    }).join('');
 
   els.historyList
     .querySelectorAll(
       '.history-item'
     )
-    .forEach(item => {
-      item.addEventListener(
-        'click',
-        () => {
-          els.dayPicker.value =
-            item.dataset.date;
+    .forEach(
+      item =>
+        item.addEventListener(
+          'click',
+          () => {
 
-          render();
+            els.dayPicker.value =
+              item.dataset.date;
 
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-        }
-      );
-    });
+
+            render();
+
+
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+
+          }
+        )
+    );
+
 }
+
 
 
 /* =========================================================
@@ -1894,12 +1008,15 @@ function renderHistory() {
 ========================================================= */
 
 function saveTargets() {
+
   const day =
     ensureDay(
       els.dayPicker.value
     );
 
+
   day.targets = {
+
     p:
       Number(
         els.targetProtein.value
@@ -1914,14 +1031,20 @@ function saveTargets() {
       Number(
         els.targetCarbs.value
       ) || 0
+
   };
 
+
   saveData();
+
+  render();
+
 }
 
 
+
 /* =========================================================
-   ДОБАВЛЕНИЕ
+   ДОБАВЛЕНИЕ ЗАПИСИ
 ========================================================= */
 
 function addEntry(
@@ -1929,6 +1052,7 @@ function addEntry(
   amount,
   unit
 ) {
+
   if (
     !product ||
     !amount ||
@@ -1937,6 +1061,7 @@ function addEntry(
     return;
   }
 
+
   const calc =
     calcFromProduct(
       product,
@@ -1944,12 +1069,29 @@ function addEntry(
       unit
     );
 
+
+  if (
+    unit === 'piece' &&
+    !product.gramsPerPiece
+  ) {
+
+    alert(
+      'Для этого продукта не указан вес одной штуки. Измени его в разделе «Продукты».'
+    );
+
+    return;
+
+  }
+
+
   const day =
     ensureDay(
       els.dayPicker.value
     );
 
+
   day.entries.push({
+
     id:
       crypto.randomUUID(),
 
@@ -1964,214 +1106,176 @@ function addEntry(
 
     unit,
 
-    gramsPerPiece:
-      product.gramsPerPiece || 0,
-
-    p100:
-      product.p,
-
-    f100:
-      product.f,
-
-    c100:
-      product.c,
-
-    countProtein:
-      product.countProtein,
-
     ...calc
+
   });
 
+
   saveData();
+
   render();
+
 }
+
 
 
 /* =========================================================
-   РАСПОЗНАВАНИЕ ФРАЗ
+   РАСПОЗНАВАНИЕ ТЕКСТА
 ========================================================= */
 
 function normalizeText(text) {
-  return String(text)
+
+  return text
     .toLowerCase()
-    .replace(/,/g, '.')
-    .replace(/\bкилограммов\b/g, 'кг')
-    .replace(/\bкилограмма\b/g, 'кг')
-    .replace(/\bкилограмм\b/g, 'кг')
-    .replace(/\bграммов\b/g, 'г')
-    .replace(/\bграмма\b/g, 'г')
-    .replace(/\bграмм\b/g, 'г')
-    .replace(/\bгр\.?/g, 'г')
-    .replace(/\bштуки\b/g, 'шт')
-    .replace(/\bштук\b/g, 'шт')
-    .replace(/\bштука\b/g, 'шт')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function escapeRegExp(text) {
-  return String(text).replace(
-    /[.*+?^${}()|[\]\\]/g,
-    '\\$&'
-  );
-}
-
-function getProductAliases(product) {
-  return [
-    product.name.toLowerCase(),
-    ...(product.aliases || [])
-      .map(
-        alias =>
-          alias.toLowerCase()
-      )
-  ]
-    .filter(
-      (
-        value,
-        index,
-        array
-      ) =>
-        array.indexOf(value) === index
+    .replace(
+      /,/g,
+      '.'
     )
-    .sort(
-      (a, b) =>
-        b.length - a.length
-    );
-}
-
-function convertAmount(
-  amount,
-  unit
-) {
-  if (
-    unit === 'кг'
-  ) {
-    return {
-      amount:
-        amount * 1000,
-      unit: 'g'
-    };
-  }
-
-  if (
-    unit === 'шт'
-  ) {
-    return {
-      amount,
-      unit: 'piece'
-    };
-  }
-
-  return {
-    amount,
-    unit: 'g'
-  };
-}
-
-function parseProductAmount(
-  text,
-  product
-) {
-  const aliases =
-    getProductAliases(
-      product
+    .replace(
+      /(граммов|грамма|грамм|гр\.?)/g,
+      'г'
+    )
+    .replace(
+      /(штуки|штук|штука)/g,
+      'шт'
     );
 
-  for (
-    const alias
-    of aliases
-  ) {
-    const a =
-      escapeRegExp(
-        alias
-      );
-
-    let match;
-
-    match =
-      text.match(
-        new RegExp(
-          `(\\d+(?:\\.\\d+)?)\\s*(кг|г|шт)\\s*(?:${a})(?=\\s|$|,|\\.|и\\b)`,
-          'i'
-        )
-      );
-
-    if (match) {
-      return convertAmount(
-        Number(match[1]),
-        match[2]
-      );
-    }
-
-    match =
-      text.match(
-        new RegExp(
-          `(?:${a})\\s*(\\d+(?:\\.\\d+)?)\\s*(кг|г|шт)(?=\\s|$|,|\\.|и\\b)`,
-          'i'
-        )
-      );
-
-    if (match) {
-      return convertAmount(
-        Number(match[1]),
-        match[2]
-      );
-    }
-  }
-
-  return null;
 }
+
+
 
 function parseQuickText(raw) {
+
   const text =
     normalizeText(raw);
 
-  const found = [];
 
-  const sortedProducts =
-    [...products].sort(
-      (a, b) => {
-        const maxA =
+  const found =
+    [];
+
+
+  const sorted =
+    [...products]
+      .sort(
+        (a, b) =>
           Math.max(
-            ...getProductAliases(a)
-              .map(x => x.length)
-          );
-
-        const maxB =
+            ...b.aliases.map(
+              x => x.length
+            )
+          )
+          -
           Math.max(
-            ...getProductAliases(b)
-              .map(x => x.length)
-          );
+            ...a.aliases.map(
+              x => x.length
+            )
+          )
+      );
 
-        return maxB - maxA;
-      }
-    );
 
   for (
     const product
-    of sortedProducts
+    of sorted
   ) {
-    const result =
-      parseProductAmount(
-        text,
-        product
-      );
 
-    if (!result) {
-      continue;
+    const aliases =
+      [
+        product.name.toLowerCase(),
+        ...(product.aliases || [])
+      ];
+
+
+    for (
+      const alias
+      of aliases.sort(
+        (a, b) =>
+          b.length -
+          a.length
+      )
+    ) {
+
+      const esc =
+        alias.replace(
+          /[.*+?^${}()|[\]\\]/g,
+          '\\$&'
+        );
+
+
+      const patterns =
+        [
+
+          new RegExp(
+            `(\\d+(?:\\.\\d+)?)\\s*(г|шт)?\\s*(?:${esc})`,
+            'i'
+          ),
+
+          new RegExp(
+            `(?:${esc})\\s*(\\d+(?:\\.\\d+)?)\\s*(г|шт)?`,
+            'i'
+          )
+
+        ];
+
+
+      let match =
+        null;
+
+
+      for (
+        const p
+        of patterns
+      ) {
+
+        match =
+          text.match(p);
+
+
+        if (match) {
+          break;
+        }
+
+      }
+
+
+      if (match) {
+
+        const amount =
+          Number(
+            match[1]
+          );
+
+
+        const token =
+          match[2];
+
+
+        let unit =
+          token === 'шт'
+            ? 'piece'
+            : token === 'г'
+              ? 'g'
+              : product.unit;
+
+
+        found.push({
+          product,
+          amount,
+          unit
+        });
+
+
+        break;
+
+      }
+
     }
 
-    found.push({
-      product,
-      amount:
-        result.amount,
-      unit:
-        result.unit
-    });
   }
 
+
   return found;
+
 }
+
 
 
 /* =========================================================
@@ -2179,28 +1283,42 @@ function parseQuickText(raw) {
 ========================================================= */
 
 function renderManualProducts() {
+
   els.manualProduct.innerHTML =
     products
       .map(
-        product => `
-          <option
-            value="${product.id}"
-          >
-            ${escapeHtml(
-              product.name
-            )}
-          </option>
-        `
+        p =>
+          `<option value="${p.id}">${escapeHtml(p.name)}</option>`
       )
       .join('');
+
+
+  const selected =
+    products.find(
+      p =>
+        p.id ===
+        els.manualProduct.value
+    ) ||
+    products[0];
+
+
+  if (selected) {
+
+    els.manualUnit.value =
+      selected.unit || 'g';
+
+  }
+
 }
 
 
+
 /* =========================================================
-   НАСТРОЙКИ ПРОДУКТОВ
+   РЕДАКТОР ПРОДУКТОВ
 ========================================================= */
 
 function openProductEditor() {
+
   els.productEditor.innerHTML =
     products
       .map(
@@ -2208,89 +1326,86 @@ function openProductEditor() {
       )
       .join('');
 
-  bindProductEditorRemovers();
 
   els.settingsDialog
     .showModal();
+
 }
 
-function productRowHtml(product) {
+
+
+function productRowHtml(p) {
+
   return `
+
     <div
       class="product-row"
-      data-id="${product.id}"
+      data-id="${p.id}"
     >
 
       <label>
         Название
-
         <input
           data-field="name"
-          value="${escapeHtml(
-            product.name
-          )}"
+          value="${escapeHtml(p.name)}"
         >
       </label>
 
-      <label>
-        Б / 100 г
 
+      <label>
+        Б/100г
         <input
           data-field="p"
           type="number"
           step="0.1"
-          value="${product.p}"
+          value="${p.p}"
         >
       </label>
 
-      <label>
-        Ж / 100 г
 
+      <label>
+        Ж/100г
         <input
           data-field="f"
           type="number"
           step="0.1"
-          value="${product.f}"
+          value="${p.f}"
         >
       </label>
 
-      <label>
-        У / 100 г
 
+      <label>
+        У/100г
         <input
           data-field="c"
           type="number"
           step="0.1"
-          value="${product.c}"
+          value="${p.c}"
         >
       </label>
 
-      <label>
-        Вес 1 штуки
 
+      <label>
+        ккал/100г
+        <input
+          data-field="kcal"
+          type="number"
+          step="0.1"
+          value="${p.kcal}"
+        >
+      </label>
+
+
+      <label>
+        г/шт
         <input
           data-field="gramsPerPiece"
           type="number"
           step="0.1"
-          value="${
-            product.gramsPerPiece || 0
-          }"
+          value="${p.gramsPerPiece || 0}"
         >
       </label>
 
-      <label>
-        Учитывать белок
-
-        <input
-          data-field="countProtein"
-          type="checkbox"
-          ${
-            product.countProtein
-              ? 'checked'
-              : ''
-          }
-        >
-      </label>
 
       <button
         class="remove-product"
@@ -2300,428 +1415,583 @@ function productRowHtml(product) {
       </button>
 
     </div>
+
   `;
+
 }
 
+
+
 function bindProductEditorRemovers() {
+
   els.productEditor
     .querySelectorAll(
       '.remove-product'
     )
-    .forEach(btn => {
-      btn.addEventListener(
-        'click',
-        () => {
-          btn.closest(
-            '.product-row'
-          ).remove();
-        }
-      );
-    });
+    .forEach(
+      btn =>
+        btn.addEventListener(
+          'click',
+          () =>
+
+            btn
+              .closest(
+                '.product-row'
+              )
+              .remove()
+
+        )
+    );
+
 }
 
+
+
 function saveProductEditor() {
-  const rows = [
-    ...els.productEditor
-      .querySelectorAll(
-        '.product-row'
-      )
-  ];
+
+  const rows =
+    [
+      ...els.productEditor
+        .querySelectorAll(
+          '.product-row'
+        )
+    ];
+
 
   products =
-    rows.map(row => {
-      const get =
-        field =>
-          row.querySelector(
-            `[data-field="${field}"]`
-          );
+    rows
+      .map(
+        row => {
 
-      const old =
-        products.find(
-          product =>
-            product.id ===
-            row.dataset.id
-        );
+          const get =
+            f =>
+              row.querySelector(
+                `[data-field="${f}"]`
+              ).value;
 
-      const name =
-        get('name')
-          .value
-          .trim();
 
-      const p =
-        Number(
-          get('p').value
-        ) || 0;
+          const old =
+            products.find(
+              p =>
+                p.id ===
+                row.dataset.id
+            );
 
-      const f =
-        Number(
-          get('f').value
-        ) || 0;
 
-      const c =
-        Number(
-          get('c').value
-        ) || 0;
+          const name =
+            get('name')
+              .trim();
 
-      const gramsPerPiece =
-        Number(
-          get(
-            'gramsPerPiece'
-          ).value
-        ) || 0;
 
-      const countProtein =
-        get(
-          'countProtein'
-        ).checked;
+          return {
 
-      return {
-        id:
-          row.dataset.id ||
-          crypto.randomUUID(),
+            id:
+              row.dataset.id ||
+              crypto.randomUUID(),
 
-        name,
+            name,
 
-        aliases:
-          old?.aliases?.length
-            ? old.aliases
-            : [
-                name.toLowerCase()
-              ],
+            aliases:
+              old?.aliases?.length
+                ? old.aliases
+                : [
+                    name.toLowerCase()
+                  ],
 
-        unit:
-          gramsPerPiece > 0
-            ? (
-                old?.unit ||
-                'g'
-              )
-            : 'g',
+            unit:
+              Number(
+                get(
+                  'gramsPerPiece'
+                )
+              ) > 0
+                ? (
+                    old?.unit ||
+                    'g'
+                  )
+                : 'g',
 
-        gramsPerPiece,
+            gramsPerPiece:
+              Number(
+                get(
+                  'gramsPerPiece'
+                )
+              ) || 0,
 
-        p,
-        f,
-        c,
+            p:
+              Number(
+                get('p')
+              ) || 0,
 
-        countProtein,
+            f:
+              Number(
+                get('f')
+              ) || 0,
 
-        kcal:
-          calculateKcal(
-            p,
-            f,
-            c
-          )
-      };
-    })
-    .filter(
-      product =>
-        product.name
-    );
+            c:
+              Number(
+                get('c')
+              ) || 0,
+
+            kcal:
+              Number(
+                get('kcal')
+              ) || 0
+
+          };
+
+        }
+      )
+      .filter(
+        p =>
+          p.name
+      );
+
 
   saveProducts();
 
-  els.settingsDialog.close();
+
+  els.settingsDialog
+    .close();
+
 
   render();
+
 }
 
 
+
 /* =========================================================
-   ДАТА
+   ПЕРЕКЛЮЧЕНИЕ ДНЕЙ
 ========================================================= */
 
 els.dayPicker.value =
   localDateString();
 
-els.dayPicker.addEventListener(
-  'change',
-  render
-);
 
-els.prevDay.addEventListener(
-  'click',
-  () => {
-    const d =
-      new Date(
-        els.dayPicker.value +
-        'T12:00:00'
+els.dayPicker
+  .addEventListener(
+    'change',
+    render
+  );
+
+
+els.prevDay
+  .addEventListener(
+    'click',
+    () => {
+
+      const d =
+        new Date(
+          els.dayPicker.value +
+          'T12:00:00'
+        );
+
+
+      d.setDate(
+        d.getDate() - 1
       );
 
-    d.setDate(
-      d.getDate() - 1
-    );
 
-    els.dayPicker.value =
-      localDateString(d);
+      els.dayPicker.value =
+        localDateString(d);
 
-    render();
-  }
-);
 
-els.nextDay.addEventListener(
-  'click',
-  () => {
-    const d =
-      new Date(
-        els.dayPicker.value +
-        'T12:00:00'
+      render();
+
+    }
+  );
+
+
+els.nextDay
+  .addEventListener(
+    'click',
+    () => {
+
+      const d =
+        new Date(
+          els.dayPicker.value +
+          'T12:00:00'
+        );
+
+
+      d.setDate(
+        d.getDate() + 1
       );
 
-    d.setDate(
-      d.getDate() + 1
-    );
 
-    els.dayPicker.value =
-      localDateString(d);
+      els.dayPicker.value =
+        localDateString(d);
 
-    render();
-  }
-);
+
+      render();
+
+    }
+  );
+
 
 
 /* =========================================================
-   ЦЕЛИ
+   СОХРАНЕНИЕ ЦЕЛЕЙ
 ========================================================= */
 
 [
   els.targetProtein,
   els.targetFat,
   els.targetCarbs
-].forEach(input => {
-  input.addEventListener(
-    'change',
+]
+.forEach(
+  input =>
+    input.addEventListener(
+      'change',
+      saveTargets
+    )
+);
+
+
+
+/* =========================================================
+   ДОБАВИТЬ ИЗ ТЕКСТА
+========================================================= */
+
+els.parseBtn
+  .addEventListener(
+    'click',
     () => {
-      saveTargets();
-      render();
+
+      const parsed =
+        parseQuickText(
+          els.quickInput.value.trim()
+        );
+
+
+      if (!parsed.length) {
+
+        alert(
+          'Не получилось распознать продукты. Проверь названия или добавь запись вручную.'
+        );
+
+        return;
+
+      }
+
+
+      parsed.forEach(
+        x =>
+          addEntry(
+            x.product,
+            x.amount,
+            x.unit
+          )
+      );
+
+
+      els.quickInput.value =
+        '';
+
     }
   );
-});
+
 
 
 /* =========================================================
-   БЫСТРЫЙ ВВОД
+   ДОБАВИТЬ ВРУЧНУЮ
 ========================================================= */
 
-els.parseBtn.addEventListener(
-  'click',
-  () => {
-    const text =
-      els.quickInput
-        .value
-        .trim();
+els.manualBtn
+  .addEventListener(
+    'click',
+    () => {
 
-    const parsed =
-      parseQuickText(
-        text
-      );
+      renderManualProducts();
 
-    if (!parsed.length) {
-      alert(
-        'Не получилось распознать продукт.'
-      );
 
-      return;
+      els.manualAmount.value =
+        '';
+
+
+      els.manualDialog
+        .showModal();
+
     }
+  );
 
-    parsed.forEach(
-      item => {
-        addEntry(
-          item.product,
-          item.amount,
-          item.unit
+
+els.manualProduct
+  .addEventListener(
+    'change',
+    () => {
+
+      const p =
+        products.find(
+          x =>
+            x.id ===
+            els.manualProduct.value
         );
+
+
+      if (p) {
+
+        els.manualUnit.value =
+          p.unit || 'g';
+
       }
-    );
 
-    els.quickInput.value =
-      '';
-  }
-);
-
-
-/* =========================================================
-   РУЧНОЕ
-========================================================= */
-
-els.manualBtn.addEventListener(
-  'click',
-  () => {
-    renderManualProducts();
-
-    els.manualAmount.value =
-      '';
-
-    els.manualDialog
-      .showModal();
-  }
-);
-
-els.manualSubmit.addEventListener(
-  'click',
-  () => {
-    const product =
-      products.find(
-        p =>
-          p.id ===
-          els.manualProduct.value
-      );
-
-    addEntry(
-      product,
-      Number(
-        els.manualAmount.value
-      ),
-      els.manualUnit.value
-    );
-
-    els.manualDialog.close();
-  }
-);
-
-
-/* =========================================================
-   ОЧИСТКА
-========================================================= */
-
-els.clearDayBtn.addEventListener(
-  'click',
-  () => {
-    const yes =
-      confirm(
-        'Удалить все записи за этот день?'
-      );
-
-    if (!yes) {
-      return;
     }
-
-    ensureDay(
-      els.dayPicker.value
-    ).entries = [];
-
-    saveData();
-    render();
-  }
-);
+  );
 
 
-/* =========================================================
-   НАСТРОЙКИ
-========================================================= */
+els.manualSubmit
+  .addEventListener(
+    'click',
+    () => {
 
-els.settingsBtn.addEventListener(
-  'click',
-  openProductEditor
-);
+      const p =
+        products.find(
+          x =>
+            x.id ===
+            els.manualProduct.value
+        );
 
-els.addProductBtn.addEventListener(
-  'click',
-  () => {
-    const product = {
-      id:
-        crypto.randomUUID(),
 
-      name:
-        'Новый продукт',
-
-      aliases: [
-        'новый продукт'
-      ],
-
-      unit: 'g',
-
-      gramsPerPiece: 0,
-
-      p: 0,
-      f: 0,
-      c: 0,
-
-      countProtein: false,
-
-      kcal: 0
-    };
-
-    products.push(
-      product
-    );
-
-    els.productEditor
-      .insertAdjacentHTML(
-        'beforeend',
-        productRowHtml(
-          product
-        )
+      addEntry(
+        p,
+        Number(
+          els.manualAmount.value
+        ),
+        els.manualUnit.value
       );
 
-    bindProductEditorRemovers();
-  }
-);
 
-els.saveProductsBtn.addEventListener(
-  'click',
-  saveProductEditor
-);
+      els.manualDialog
+        .close();
+
+    }
+  );
+
 
 
 /* =========================================================
-   ГОЛОС
+   ОЧИСТИТЬ ДЕНЬ
+========================================================= */
+
+els.clearDayBtn
+  .addEventListener(
+    'click',
+    () => {
+
+      if (
+        confirm(
+          'Удалить все записи этого дня? Цели БЖУ останутся.'
+        )
+      ) {
+
+        ensureDay(
+          els.dayPicker.value
+        ).entries = [];
+
+
+        saveData();
+
+        render();
+
+      }
+
+    }
+  );
+
+
+
+/* =========================================================
+   ПРОДУКТЫ
+========================================================= */
+
+els.settingsBtn
+  .addEventListener(
+    'click',
+    () => {
+
+      openProductEditor();
+
+      bindProductEditorRemovers();
+
+    }
+  );
+
+
+els.addProductBtn
+  .addEventListener(
+    'click',
+    () => {
+
+      const p = {
+
+        id:
+          crypto.randomUUID(),
+
+        name:
+          'Новый продукт',
+
+        aliases:
+          ['новый продукт'],
+
+        unit:
+          'g',
+
+        gramsPerPiece:
+          0,
+
+        p:
+          0,
+
+        f:
+          0,
+
+        c:
+          0,
+
+        kcal:
+          0
+
+      };
+
+
+      els.productEditor
+        .insertAdjacentHTML(
+          'beforeend',
+          productRowHtml(p)
+        );
+
+
+      bindProductEditorRemovers();
+
+    }
+  );
+
+
+els.saveProductsBtn
+  .addEventListener(
+    'click',
+    saveProductEditor
+  );
+
+
+
+/* =========================================================
+   ГОЛОСОВОЙ ВВОД
 ========================================================= */
 
 const SpeechRecognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
+
 if (SpeechRecognition) {
-  const recognition =
+
+  const rec =
     new SpeechRecognition();
 
-  recognition.lang =
+
+  rec.lang =
     'ru-RU';
 
-  recognition.interimResults =
+
+  rec.interimResults =
     false;
 
-  recognition.maxAlternatives =
+
+  rec.maxAlternatives =
     1;
 
-  recognition.onstart =
+
+  rec.onstart =
     () => {
+
+      els.voiceBtn
+        .classList
+        .add(
+          'listening'
+        );
+
+
       els.voiceBtn.textContent =
         '🎙️ Слушаю…';
+
+
+      els.voiceStatus.hidden =
+        false;
+
+
+      els.voiceStatus.textContent =
+        'Говори, например: «2 яйца и 30 грамм кетчупа»';
+
     };
 
-  recognition.onresult =
-    event => {
+
+  rec.onresult =
+    e => {
+
       els.quickInput.value =
-        event.results[0][0]
+        e.results[0][0]
           .transcript;
+
     };
 
-  recognition.onend =
+
+  rec.onerror =
+    e => {
+
+      els.voiceStatus.hidden =
+        false;
+
+
+      els.voiceStatus.textContent =
+        'Не удалось распознать речь: ' +
+        e.error;
+
+    };
+
+
+  rec.onend =
     () => {
+
+      els.voiceBtn
+        .classList
+        .remove(
+          'listening'
+        );
+
+
       els.voiceBtn.textContent =
         '🎙️ Сказать голосом';
+
     };
 
-  els.voiceBtn.addEventListener(
-    'click',
-    () => {
-      try {
-        recognition.start();
-      } catch {}
-    }
-  );
 
-} else {
-  els.voiceBtn.disabled =
-    true;
+  els.voiceBtn
+    .addEventListener(
+      'click',
+      () =>
+        rec.start()
+    );
+
 }
 
 
+else {
+
+  els.voiceBtn.disabled =
+    true;
+
+
+  els.voiceBtn.textContent =
+    '🎙️ Голос недоступен';
+
+}
+
+
+
 /* =========================================================
-   ЗАПУСК
+   ПЕРВЫЙ РЕНДЕР
 ========================================================= */
 
-ensureCloudStyles();
-ensureEntryEditor();
 render();

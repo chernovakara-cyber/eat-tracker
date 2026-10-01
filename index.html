@@ -14,73 +14,41 @@
 
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
   <div class="app-shell">
 
-    <img
-      class="salad-background"
-      src="salad.png"
-      alt=""
-    >
-
+    <img class="salad-background" src="salad.png" alt="" />
 
     <header class="hero">
-
       <div>
-
-        <p class="eyebrow">
-          Личный дневник питания
-        </p>
-
+        <p class="eyebrow">Личный дневник питания</p>
 
         <h1>
-
-          <span class="title-gradient">
-            Мой БЖУ дневник
-          </span>
-
+          <span class="title-gradient">Мой БЖУ дневник</span>
           <img
             class="title-heart-img"
             src="white-heart.png"
             alt=""
             aria-hidden="true"
-          >
-
+          />
         </h1>
 
-
         <p class="subtitle">
-          Записывай еду голосом или вручную и следи,
-          сколько белков, жиров и углеводов осталось на сегодня.
+          Записывай еду голосом или вручную и следи, сколько белков, жиров и
+          углеводов осталось на сегодня.
         </p>
-
       </div>
 
-
-      <button
-        id="settingsBtn"
-        class="ghost-btn"
-        type="button"
-      >
+      <button id="settingsBtn" class="ghost-btn" type="button">
         ⚙️ Продукты
       </button>
-
     </header>
 
-
-
     <main>
-
-      <!-- =========================================
-           ДЕНЬ И ЦЕЛИ
-      ========================================== -->
-
+      <!-- ДЕНЬ И ЦЕЛИ -->
       <section class="card day-card">
-
         <div class="day-nav">
-
           <button
             id="prevDay"
             class="icon-btn"
@@ -90,20 +58,10 @@
             ←
           </button>
 
-
           <div class="date-wrap">
-
-            <label for="dayPicker">
-              День
-            </label>
-
-            <input
-              id="dayPicker"
-              type="date"
-            >
-
+            <label for="dayPicker">День</label>
+            <input id="dayPicker" type="date" />
           </div>
-
 
           <button
             id="nextDay"
@@ -113,249 +71,145 @@
           >
             →
           </button>
-
         </div>
 
-
-
         <div class="targets-grid">
-
           <label>
             Белки, г
-
             <input
               id="targetProtein"
               type="number"
               min="0"
               step="0.1"
               placeholder="например 120"
-            >
+            />
           </label>
-
 
           <label>
             Жиры, г
-
             <input
               id="targetFat"
               type="number"
               min="0"
               step="0.1"
               placeholder="например 60"
-            >
+            />
           </label>
-
 
           <label>
             Углеводы, г
-
             <input
               id="targetCarbs"
               type="number"
               min="0"
               step="0.1"
               placeholder="например 180"
-            >
+            />
           </label>
-
         </div>
 
-
-        <p class="hint">
-          Цели сохраняются отдельно для каждого дня.
-        </p>
-
+        <p class="hint">Цели сохраняются отдельно для каждого дня.</p>
       </section>
 
-
-
-      <!-- =========================================
-           БЖУ И КАЛОРИИ
-      ========================================== -->
-
+      <!-- СТАТИСТИКА -->
       <section class="stats-grid">
-
-
         <!-- БЕЛКИ -->
-
-        <article class="stat-card protein">
-
-          <span>
-            Белки
-          </span>
-
-          <strong id="proteinEaten">
-            0 г
-          </strong>
+        <article class="stat-card protein" id="proteinCard">
+          <span>Белки</span>
+          <strong id="proteinEaten">0 г</strong>
 
           <small>
-
-            <em id="proteinStatusText">
-              осталось
-            </em>
-
-            <b id="proteinLeft">
-              0 г
-            </b>
-
+            <em id="proteinStatusText">осталось</em>
+            <b id="proteinLeft">0 г</b>
           </small>
 
           <div class="progress">
             <i id="proteinProgress"></i>
           </div>
 
+          <div class="mascot-bubble" id="proteinBubble" hidden></div>
 
           <img
             class="macro-mascot chicken-mascot"
+            id="proteinMascot"
             src="chicken.png"
             alt=""
             aria-hidden="true"
-          >
-
+          />
         </article>
 
-
-
         <!-- ЖИРЫ -->
-
-        <article class="stat-card fat">
-
-          <span>
-            Жиры
-          </span>
-
-          <strong id="fatEaten">
-            0 г
-          </strong>
+        <article class="stat-card fat" id="fatCard">
+          <span>Жиры</span>
+          <strong id="fatEaten">0 г</strong>
 
           <small>
-
-            <em id="fatStatusText">
-              осталось
-            </em>
-
-            <b id="fatLeft">
-              0 г
-            </b>
-
+            <em id="fatStatusText">осталось</em>
+            <b id="fatLeft">0 г</b>
           </small>
 
           <div class="progress">
             <i id="fatProgress"></i>
           </div>
 
+          <div class="mascot-bubble" id="fatBubble" hidden></div>
 
           <img
             class="macro-mascot avocado-mascot"
+            id="fatMascot"
             src="avocado.png"
             alt=""
             aria-hidden="true"
-          >
-
+          />
         </article>
 
-
-
         <!-- УГЛЕВОДЫ -->
-
-        <article class="stat-card carbs">
-
-          <span>
-            Углеводы
-          </span>
-
-          <strong id="carbsEaten">
-            0 г
-          </strong>
+        <article class="stat-card carbs" id="carbsCard">
+          <span>Углеводы</span>
+          <strong id="carbsEaten">0 г</strong>
 
           <small>
-
-            <em id="carbsStatusText">
-              осталось
-            </em>
-
-            <b id="carbsLeft">
-              0 г
-            </b>
-
+            <em id="carbsStatusText">осталось</em>
+            <b id="carbsLeft">0 г</b>
           </small>
 
           <div class="progress">
             <i id="carbsProgress"></i>
           </div>
 
+          <div class="mascot-bubble" id="carbsBubble" hidden></div>
 
           <img
             class="macro-mascot pasta-mascot"
+            id="carbsMascot"
             src="pasta.png"
             alt=""
             aria-hidden="true"
-          >
-
+          />
         </article>
-
-
 
         <!-- КАЛОРИИ -->
-
-        <article class="stat-card kcal">
-
-          <span>
-            Калории
-          </span>
-
-          <strong id="kcalEaten">
-            0 ккал
-          </strong>
-
-          <small>
-            сумма за день
-          </small>
-
+        <article class="stat-card kcal" id="kcalCard">
+          <span>Калории</span>
+          <strong id="kcalEaten">0 ккал</strong>
+          <small>сумма за день</small>
         </article>
-
       </section>
 
-
-
-      <!-- =========================================
-           ДОБАВЛЕНИЕ ЕДЫ
-      ========================================== -->
-
+      <!-- ДОБАВИТЬ ЕДУ -->
       <section class="card input-card">
-
         <div class="section-heading">
-
           <div>
-
-            <p class="eyebrow">
-              Добавить еду
-            </p>
-
-            <h2>
-              Что ты съела?
-            </h2>
-
+            <p class="eyebrow">Добавить еду</p>
+            <h2>Что ты съела?</h2>
           </div>
 
-
-          <button
-            id="voiceBtn"
-            class="voice-btn"
-            type="button"
-          >
+          <button id="voiceBtn" class="voice-btn" type="button">
             🎙️ Сказать голосом
           </button>
-
         </div>
 
-
-        <div
-          id="voiceStatus"
-          class="voice-status"
-          hidden
-        ></div>
-
+        <div id="voiceStatus" class="voice-status" hidden></div>
 
         <textarea
           id="quickInput"
@@ -363,173 +217,76 @@
           placeholder="Например: 100 грамм риса и 120 грамм тунца"
         ></textarea>
 
-
         <div class="actions-row">
-
-          <button
-            id="parseBtn"
-            class="primary-btn"
-            type="button"
-          >
+          <button id="parseBtn" class="primary-btn" type="button">
             Добавить из текста
           </button>
 
-
-          <button
-            id="manualBtn"
-            class="secondary-btn"
-            type="button"
-          >
+          <button id="manualBtn" class="secondary-btn" type="button">
             Добавить вручную
           </button>
-
         </div>
-
 
         <p class="hint">
           Голосовой ввод работает в браузерах с поддержкой Web Speech API.
           Если он недоступен, можно использовать обычный текст.
         </p>
-
       </section>
 
-
-
-      <!-- =========================================
-           ЗАПИСИ
-      ========================================== -->
-
+      <!-- ЗАПИСИ -->
       <section class="card diary-card">
-
         <div class="section-heading">
-
           <div>
-
-            <p class="eyebrow">
-              Записи
-            </p>
-
-            <h2 id="diaryTitle">
-              Еда за день
-            </h2>
-
+            <p class="eyebrow">Записи</p>
+            <h2 id="diaryTitle">Еда за день</h2>
           </div>
 
-
-          <button
-            id="clearDayBtn"
-            class="danger-link"
-            type="button"
-          >
+          <button id="clearDayBtn" class="danger-link" type="button">
             Очистить день
           </button>
-
         </div>
 
-
-        <div
-          id="entriesList"
-          class="entries-list"
-        ></div>
-
+        <div id="entriesList" class="entries-list"></div>
       </section>
 
-
-
-      <!-- =========================================
-           ИСТОРИЯ
-      ========================================== -->
-
+      <!-- ИСТОРИЯ -->
       <section class="card history-card">
-
         <div class="section-heading">
-
           <div>
-
-            <p class="eyebrow">
-              История
-            </p>
-
-            <h2>
-              Все записанные дни
-            </h2>
-
+            <p class="eyebrow">История</p>
+            <h2>Все записанные дни</h2>
           </div>
-
         </div>
 
-
-        <div
-          id="historyList"
-          class="history-list"
-        ></div>
-
+        <div id="historyList" class="history-list"></div>
       </section>
-
     </main>
-
   </div>
 
-
-
-  <!-- =============================================
-       ДОБАВИТЬ ВРУЧНУЮ
-  ============================================== -->
-
-  <dialog
-    id="manualDialog"
-    class="modal"
-  >
-
-    <form
-      method="dialog"
-      id="manualForm"
-    >
-
+  <!-- ДОБАВИТЬ ВРУЧНУЮ -->
+  <dialog id="manualDialog" class="modal">
+    <form method="dialog" id="manualForm">
       <div class="modal-head">
+        <h3>Добавить вручную</h3>
 
-        <h3>
-          Добавить вручную
-        </h3>
-
-
-        <button
-          class="close-btn"
-          value="cancel"
-          type="submit"
-        >
-          ×
-        </button>
-
+        <button class="close-btn" value="cancel" type="submit">×</button>
       </div>
-
 
       <label>
         Продукт
-
         <select id="manualProduct"></select>
       </label>
 
-
       <label>
         Количество, г
-
         <input
           id="manualAmount"
           type="number"
           min="0.1"
           step="0.1"
           required
-        >
+        />
       </label>
-
-
-      <input
-        id="manualUnit"
-        type="hidden"
-        value="g"
-      >
-
 
       <button
         id="manualSubmit"
@@ -539,205 +296,81 @@
       >
         Добавить
       </button>
-
     </form>
-
   </dialog>
 
-
-
-  <!-- =============================================
-       НАСТРОЙКИ ПРОДУКТОВ
-  ============================================== -->
-
-  <dialog
-    id="settingsDialog"
-    class="modal wide"
-  >
-
+  <!-- НАСТРОЙКИ ПРОДУКТОВ -->
+  <dialog id="settingsDialog" class="modal wide">
     <form method="dialog">
-
       <div class="modal-head">
-
         <div>
-
-          <h3>
-            Мои продукты
-          </h3>
-
+          <h3>Мои продукты</h3>
           <p>
-            Можно менять БЖУ и выбирать,
-            учитывать ли белок продукта в дневной сумме.
+            Можно менять БЖУ и выбирать, учитывать ли белок продукта в дневной
+            сумме.
           </p>
-
         </div>
 
-
-        <button
-          class="close-btn"
-          value="cancel"
-          type="submit"
-        >
-          ×
-        </button>
-
+        <button class="close-btn" value="cancel" type="submit">×</button>
       </div>
 
+      <div id="productEditor" class="product-editor"></div>
 
-      <div
-        id="productEditor"
-        class="product-editor"
-      ></div>
-
-
-      <button
-        id="addProductBtn"
-        class="secondary-btn full"
-        type="button"
-      >
+      <button id="addProductBtn" class="secondary-btn full" type="button">
         + Добавить продукт
       </button>
 
-
       <div class="modal-footer">
-
-        <button
-          id="saveProductsBtn"
-          class="primary-btn"
-          type="button"
-        >
+        <button id="saveProductsBtn" class="primary-btn" type="button">
           Сохранить продукты
         </button>
-
       </div>
-
     </form>
-
   </dialog>
 
-
-
-  <!-- =============================================
-       РЕДАКТИРОВАНИЕ ЗАПИСИ
-  ============================================== -->
-
-  <dialog
-    id="entryEditDialog"
-    class="entry-edit-dialog"
-  >
-
-    <form
-      method="dialog"
-      id="entryEditForm"
-      class="entry-edit-cloud"
-    >
-
+  <!-- РЕДАКТИРОВАНИЕ ЗАПИСИ -->
+  <dialog id="entryEditDialog" class="entry-edit-dialog">
+    <form method="dialog" id="entryEditForm" class="entry-edit-cloud">
       <div class="entry-edit-head">
-
         <div>
-
-          <p class="eyebrow">
-            Редактировать запись
-          </p>
-
-          <h3 id="editEntryName">
-            Продукт
-          </h3>
-
-          <p
-            id="editEntryAmountLabel"
-            class="edit-entry-subtitle"
-          ></p>
-
+          <p class="eyebrow">Редактировать запись</p>
+          <h3 id="editEntryName">Продукт</h3>
+          <p id="editEntryAmountLabel" class="edit-entry-subtitle"></p>
         </div>
 
-
-        <button
-          class="close-btn"
-          value="cancel"
-          type="submit"
-        >
-          ×
-        </button>
-
+        <button class="close-btn" value="cancel" type="submit">×</button>
       </div>
 
-
-
       <div class="entry-edit-grid">
-
         <label>
           Белки, г
-
-          <input
-            id="editEntryProtein"
-            type="number"
-            min="0"
-            step="0.1"
-          >
+          <input id="editEntryProtein" type="number" min="0" step="0.1" />
         </label>
-
 
         <label>
           Жиры, г
-
-          <input
-            id="editEntryFat"
-            type="number"
-            min="0"
-            step="0.1"
-          >
+          <input id="editEntryFat" type="number" min="0" step="0.1" />
         </label>
-
 
         <label>
           Углеводы, г
-
-          <input
-            id="editEntryCarbs"
-            type="number"
-            min="0"
-            step="0.1"
-          >
+          <input id="editEntryCarbs" type="number" min="0" step="0.1" />
         </label>
-
       </div>
-
-
 
       <label class="protein-checkbox edit-protein-checkbox">
-
-        <input
-          id="editEntryCountProtein"
-          type="checkbox"
-        >
-
-        <span>
-          Учитывать белок этой записи в дневной сумме
-        </span>
-
+        <input id="editEntryCountProtein" type="checkbox" />
+        <span>Учитывать белок этой записи в дневной сумме</span>
       </label>
 
-
-
       <div class="entry-edit-footer">
-
-        <button
-          id="saveEntryEditBtn"
-          class="primary-btn"
-          type="button"
-        >
+        <button id="saveEntryEditBtn" class="primary-btn" type="button">
           Сохранить изменения
         </button>
-
       </div>
-
     </form>
-
   </dialog>
 
-
   <script src="app.js"></script>
-
 </body>
 </html>

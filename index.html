@@ -15,23 +15,48 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <div class="app-shell">
-    <img class="salad-background" src="salad.png" alt="">
+
+    <img
+      class="salad-background"
+      src="salad.png"
+      alt=""
+    >
+
 
     <header class="hero">
+
       <div>
-        <p class="eyebrow">Личный дневник питания</p>
+
+        <p class="eyebrow">
+          Личный дневник питания
+        </p>
+
 
         <h1>
-          <span class="title-gradient">Мой БЖУ дневник</span>
-          <span class="title-heart" aria-hidden="true">🤍</span>
+
+          <span class="title-gradient">
+            Мой БЖУ дневник
+          </span>
+
+          <img
+            class="title-heart-img"
+            src="white-heart.png"
+            alt=""
+            aria-hidden="true"
+          >
+
         </h1>
 
+
         <p class="subtitle">
-          Записывай еду голосом или вручную и следи, сколько белков,
-          жиров и углеводов осталось на сегодня.
+          Записывай еду голосом или вручную и следи,
+          сколько белков, жиров и углеводов осталось на сегодня.
         </p>
+
       </div>
+
 
       <button
         id="settingsBtn"
@@ -40,10 +65,16 @@
       >
         ⚙️ Продукты
       </button>
+
     </header>
 
 
+
     <main>
+
+      <!-- =========================================
+           ДЕНЬ И ЦЕЛИ
+      ========================================== -->
 
       <section class="card day-card">
 
@@ -68,7 +99,7 @@
             <input
               id="dayPicker"
               type="date"
-            />
+            >
 
           </div>
 
@@ -85,6 +116,7 @@
         </div>
 
 
+
         <div class="targets-grid">
 
           <label>
@@ -96,7 +128,7 @@
               min="0"
               step="0.1"
               placeholder="например 120"
-            />
+            >
           </label>
 
 
@@ -109,7 +141,7 @@
               min="0"
               step="0.1"
               placeholder="например 60"
-            />
+            >
           </label>
 
 
@@ -122,7 +154,7 @@
               min="0"
               step="0.1"
               placeholder="например 180"
-            />
+            >
           </label>
 
         </div>
@@ -135,6 +167,10 @@
       </section>
 
 
+
+      <!-- =========================================
+           БЖУ И КАЛОРИИ
+      ========================================== -->
 
       <section class="stats-grid">
 
@@ -149,6 +185,7 @@
           </strong>
 
           <small>
+
             <em id="proteinStatusText">
               осталось
             </em>
@@ -156,6 +193,7 @@
             <b id="proteinLeft">
               0 г
             </b>
+
           </small>
 
           <div class="progress">
@@ -163,6 +201,7 @@
           </div>
 
         </article>
+
 
 
         <article class="stat-card fat">
@@ -176,6 +215,7 @@
           </strong>
 
           <small>
+
             <em id="fatStatusText">
               осталось
             </em>
@@ -183,6 +223,7 @@
             <b id="fatLeft">
               0 г
             </b>
+
           </small>
 
           <div class="progress">
@@ -190,6 +231,7 @@
           </div>
 
         </article>
+
 
 
         <article class="stat-card carbs">
@@ -203,6 +245,7 @@
           </strong>
 
           <small>
+
             <em id="carbsStatusText">
               осталось
             </em>
@@ -210,6 +253,7 @@
             <b id="carbsLeft">
               0 г
             </b>
+
           </small>
 
           <div class="progress">
@@ -217,6 +261,7 @@
           </div>
 
         </article>
+
 
 
         <article class="stat-card kcal">
@@ -238,6 +283,10 @@
       </section>
 
 
+
+      <!-- =========================================
+           ДОБАВЛЕНИЕ ЕДЫ
+      ========================================== -->
 
       <section class="card input-card">
 
@@ -265,6 +314,7 @@
           </button>
 
         </div>
+
 
 
         <div
@@ -312,6 +362,10 @@
 
 
 
+      <!-- =========================================
+           ЗАПИСИ
+      ========================================== -->
+
       <section class="card diary-card">
 
         <div class="section-heading">
@@ -349,6 +403,10 @@
 
 
 
+      <!-- =========================================
+           ИСТОРИЯ
+      ========================================== -->
+
       <section class="card history-card">
 
         <div class="section-heading">
@@ -381,7 +439,9 @@
 
 
 
-  <!-- ДОБАВИТЬ ВРУЧНУЮ -->
+  <!-- =============================================
+       ДОБАВИТЬ ВРУЧНУЮ
+  ============================================== -->
 
   <dialog
     id="manualDialog"
@@ -398,6 +458,7 @@
         <h3>
           Добавить вручную
         </h3>
+
 
         <button
           class="close-btn"
@@ -426,7 +487,7 @@
           min="0.1"
           step="0.1"
           required
-        />
+        >
       </label>
 
 
@@ -434,7 +495,7 @@
         id="manualUnit"
         type="hidden"
         value="g"
-      />
+      >
 
 
       <button
@@ -452,7 +513,9 @@
 
 
 
-  <!-- НАСТРОЙКИ ПРОДУКТОВ -->
+  <!-- =============================================
+       НАСТРОЙКИ ПРОДУКТОВ
+  ============================================== -->
 
   <dialog
     id="settingsDialog"
@@ -521,7 +584,9 @@
 
 
 
-  <!-- РЕДАКТИРОВАТЬ КОНКРЕТНУЮ ЗАПИСЬ -->
+  <!-- =============================================
+       РЕДАКТИРОВАНИЕ ЗАПИСИ
+  ============================================== -->
 
   <dialog
     id="entryEditDialog"
@@ -565,6 +630,7 @@
       </div>
 
 
+
       <div class="entry-edit-grid">
 
         <label>
@@ -575,7 +641,7 @@
             type="number"
             min="0"
             step="0.1"
-          />
+          >
         </label>
 
 
@@ -587,7 +653,7 @@
             type="number"
             min="0"
             step="0.1"
-          />
+          >
         </label>
 
 
@@ -599,10 +665,11 @@
             type="number"
             min="0"
             step="0.1"
-          />
+          >
         </label>
 
       </div>
+
 
 
       <label class="protein-checkbox edit-protein-checkbox">
@@ -610,13 +677,14 @@
         <input
           id="editEntryCountProtein"
           type="checkbox"
-        />
+        >
 
         <span>
           Учитывать белок этой записи в дневной сумме
         </span>
 
       </label>
+
 
 
       <div class="entry-edit-footer">

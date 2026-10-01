@@ -153,7 +153,7 @@ h1 {
     center;
 
   gap:
-    .16em;
+    12px;
 
   flex-wrap:
     wrap;
@@ -189,24 +189,40 @@ h1 {
 }
 
 
-.title-heart {
+/*
+  КАСТОМНОЕ БЕЛОЕ СЕРДЦЕ
+
+  Файл:
+  white-heart.png
+*/
+
+.title-heart-img {
   display:
-    inline-block;
+    block;
 
-  font-size:
-    .70em;
+  width:
+    52px;
 
-  line-height:
-    1;
+  height:
+    52px;
+
+  object-fit:
+    contain;
+
+  flex:
+    0 0 auto;
 
   transform:
-    translateY(-1px);
+    translateY(1px);
 
   filter:
     drop-shadow(
-      0 2px 3px
-      rgba(90,52,98,.14)
+      0 5px 9px
+      rgba(95,54,102,.13)
     );
+
+  pointer-events:
+    none;
 }
 
 
@@ -556,10 +572,9 @@ textarea:focus {
 }
 
 
-/*
-  Осталось / превышено
-  и шкала находятся внизу карточек.
-*/
+/* =========================================================
+   СТАТУС И ШКАЛА ВНИЗУ КАРТОЧЕК
+========================================================= */
 
 .stats-grid
 .stat-card:nth-child(1) > small,
@@ -617,7 +632,9 @@ textarea:focus {
 }
 
 
-/* 95–100% */
+/* =========================================================
+   ПОДСВЕТКА ЦЕЛЕЙ
+========================================================= */
 
 .stat-card.goal-near {
   background:
@@ -635,8 +652,6 @@ textarea:focus {
     rgba(97,174,112,.16);
 }
 
-
-/* превышение жиров / углеводов */
 
 .stat-card.goal-over {
   background:
@@ -1169,7 +1184,7 @@ textarea:focus {
 
 
 /* =========================================================
-   ОБЫЧНЫЕ МОДАЛЬНЫЕ ОКНА
+   МОДАЛЬНЫЕ ОКНА
 ========================================================= */
 
 .modal {
@@ -1349,11 +1364,6 @@ textarea:focus {
     9px;
 }
 
-
-/*
-  Вместо "г/шт" —
-  галочка подсчёта белка.
-*/
 
 .product-protein-toggle {
   align-self:
@@ -1737,6 +1747,20 @@ textarea:focus {
   }
 
 
+  /*
+    Сердце немного уменьшаем
+    на планшете.
+  */
+
+  .title-heart-img {
+    width:
+      44px;
+
+    height:
+      44px;
+  }
+
+
   .salad-background {
     width:
       520px;
@@ -1782,7 +1806,16 @@ textarea:focus {
 
   h1 {
     gap:
-      .12em;
+      8px;
+  }
+
+
+  .title-heart-img {
+    width:
+      35px;
+
+    height:
+      35px;
   }
 
 

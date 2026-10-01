@@ -50,13 +50,11 @@ button,
 input,
 select,
 textarea {
-  font:
-    inherit;
+  font: inherit;
 }
 
 button {
-  cursor:
-    pointer;
+  cursor: pointer;
 }
 
 
@@ -65,20 +63,14 @@ button {
 ========================================================= */
 
 .app-shell {
-  position:
-    relative;
+  position: relative;
 
-  overflow:
-    hidden;
+  overflow: hidden;
 
-  width:
-    100%;
+  width: 100%;
+  max-width: none;
 
-  max-width:
-    none;
-
-  margin:
-    0;
+  margin: 0;
 
   padding:
     28px 0
@@ -88,14 +80,10 @@ button {
 
 .hero,
 main {
-  width:
-    70%;
+  width: 70%;
 
-  margin-left:
-    auto;
-
-  margin-right:
-    auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -104,20 +92,14 @@ main {
 ========================================================= */
 
 .hero {
-  display:
-    flex;
+  display: flex;
 
-  align-items:
-    flex-start;
+  align-items: flex-start;
+  justify-content: space-between;
 
-  justify-content:
-    space-between;
+  gap: 24px;
 
-  gap:
-    24px;
-
-  margin-bottom:
-    22px;
+  margin-bottom: 22px;
 }
 
 
@@ -125,42 +107,28 @@ main {
   margin:
     0 0 6px;
 
-  font-weight:
-    800;
+  font-weight: 800;
 
-  text-transform:
-    uppercase;
+  text-transform: uppercase;
 
-  letter-spacing:
-    .08em;
+  letter-spacing: .08em;
 
-  font-size:
-    12px;
+  font-size: 12px;
 
-  color:
-    var(--purple);
+  color: var(--purple);
 }
 
 
 h1 {
-  margin:
-    0;
+  margin: 0;
 
-  display:
-    flex;
+  display: flex;
 
-  align-items:
-    center;
+  align-items: center;
 
-  /*
-    Сердце немного ближе
-    к названию сайта.
-  */
-  gap:
-    8px;
+  gap: 8px;
 
-  flex-wrap:
-    wrap;
+  flex-wrap: wrap;
 
   font-size:
     clamp(
@@ -169,8 +137,7 @@ h1 {
       62px
     );
 
-  line-height:
-    .98;
+  line-height: .98;
 }
 
 
@@ -182,45 +149,24 @@ h1 {
       var(--purple)
     );
 
-  color:
-    transparent;
+  color: transparent;
 
-  -webkit-background-clip:
-    text;
-
-  background-clip:
-    text;
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 
-/* =========================================================
-   КАСТОМНОЕ СЕРДЦЕ
-========================================================= */
-
 .title-heart-img {
-  display:
-    block;
+  display: block;
 
-  /*
-    Было 52 × 52.
-    Теперь немного крупнее.
-  */
-  width:
-    60px;
+  width: 60px;
+  height: 60px;
 
-  height:
-    60px;
-
-  object-fit:
-    contain;
+  object-fit: contain;
 
   flex:
     0 0 auto;
 
-  /*
-    Небольшая вертикальная
-    корректировка относительно текста.
-  */
   transform:
     translateY(1px);
 
@@ -237,23 +183,18 @@ h1 {
 
 h2,
 h3 {
-  margin:
-    0;
+  margin: 0;
 }
 
 
 .subtitle {
-  max-width:
-    650px;
+  max-width: 650px;
 
-  color:
-    var(--muted);
+  color: var(--muted);
 
-  font-size:
-    17px;
+  font-size: 17px;
 
-  line-height:
-    1.55;
+  line-height: 1.55;
 }
 
 
@@ -279,17 +220,14 @@ h3 {
   box-shadow:
     var(--shadow);
 
-  border-radius:
-    24px;
+  border-radius: 24px;
 }
 
 
 .card {
-  padding:
-    22px;
+  padding: 22px;
 
-  margin-bottom:
-    18px;
+  margin-bottom: 18px;
 }
 
 
@@ -298,26 +236,21 @@ h3 {
 ========================================================= */
 
 .day-nav {
-  display:
-    grid;
+  display: grid;
 
   grid-template-columns:
     auto 1fr auto;
 
-  gap:
-    12px;
+  gap: 12px;
 
-  align-items:
-    end;
+  align-items: end;
 }
 
 
 .date-wrap {
-  display:
-    grid;
+  display: grid;
 
-  gap:
-    7px;
+  gap: 7px;
 }
 
 
@@ -325,20 +258,16 @@ h3 {
 .targets-grid label,
 .modal label,
 .entry-edit-cloud label {
-  font-weight:
-    700;
+  font-weight: 700;
 
-  color:
-    var(--muted);
+  color: var(--muted);
 
-  line-height:
-    1.2;
+  line-height: 1.2;
 }
 
 
 .date-wrap > label {
-  display:
-    block;
+  display: block;
 
   margin:
     0 0 0 2px;
@@ -351,11 +280,9 @@ h3 {
 .targets-grid label,
 .modal label,
 .entry-edit-cloud label {
-  display:
-    grid;
+  display: grid;
 
-  gap:
-    7px;
+  gap: 7px;
 }
 
 
@@ -366,36 +293,29 @@ h3 {
 .entry-edit-cloud input,
 textarea,
 select {
-  width:
-    100%;
+  width: 100%;
 
   border:
     1px solid
     var(--border);
 
-  background:
-    white;
+  background: white;
 
-  color:
-    var(--text);
+  color: var(--text);
 
-  border-radius:
-    14px;
+  border-radius: 14px;
 
   padding:
     12px 14px;
 
-  outline:
-    none;
+  outline: none;
 }
 
 
 textarea {
-  resize:
-    vertical;
+  resize: vertical;
 
-  min-height:
-    88px;
+  min-height: 88px;
 }
 
 
@@ -412,17 +332,14 @@ textarea:focus {
 
 
 .targets-grid {
-  display:
-    grid;
+  display: grid;
 
   grid-template-columns:
     repeat(3,1fr);
 
-  gap:
-    12px;
+  gap: 12px;
 
-  margin-top:
-    18px;
+  margin-top: 18px;
 }
 
 
@@ -430,11 +347,9 @@ textarea:focus {
   margin:
     10px 0 0;
 
-  color:
-    var(--muted);
+  color: var(--muted);
 
-  font-size:
-    13px;
+  font-size: 13px;
 }
 
 
@@ -443,35 +358,27 @@ textarea:focus {
 ========================================================= */
 
 .stats-grid {
-  display:
-    grid;
+  display: grid;
 
   grid-template-columns:
     repeat(4,1fr);
 
-  gap:
-    14px;
+  gap: 14px;
 
-  margin-bottom:
-    18px;
+  margin-bottom: 18px;
 }
 
 
 .stat-card {
-  padding:
-    20px;
+  padding: 20px;
 
-  position:
-    relative;
+  position: relative;
 
-  overflow:
-    hidden;
+  overflow: hidden;
 
-  min-height:
-    205px;
+  min-height: 205px;
 
-  isolation:
-    isolate;
+  isolation: isolate;
 
   transition:
     background .22s ease,
@@ -488,8 +395,7 @@ textarea:focus {
 
 .stats-grid
 .stat-card:nth-child(3) {
-  padding-right:
-    118px;
+  padding-right: 118px;
 }
 
 
@@ -497,77 +403,60 @@ textarea:focus {
 .stat-card > strong,
 .stat-card > small,
 .stat-card > .progress {
-  position:
-    relative;
+  position: relative;
 
-  z-index:
-    3;
+  z-index: 3;
 }
 
 
 .stat-card > span {
-  color:
-    var(--muted);
+  color: var(--muted);
 
-  font-weight:
-    700;
+  font-weight: 700;
 }
 
 
 .stat-card > strong {
-  display:
-    block;
+  display: block;
 
   margin:
     7px 0 3px;
 
-  font-size:
-    28px;
+  font-size: 28px;
 }
 
 
 .stat-card > small {
-  color:
-    var(--muted);
+  color: var(--muted);
 }
 
 
 .stat-card > small em {
-  font-style:
-    normal;
+  font-style: normal;
 }
 
 
 .progress {
-  height:
-    9px;
+  height: 9px;
 
-  background:
-    #f3edf5;
+  background: #f3edf5;
 
-  border-radius:
-    999px;
+  border-radius: 999px;
 
-  margin-top:
-    15px;
+  margin-top: 15px;
 
-  overflow:
-    hidden;
+  overflow: hidden;
 }
 
 
 .progress i {
-  display:
-    block;
+  display: block;
 
-  height:
-    100%;
+  height: 100%;
 
-  width:
-    0;
+  width: 0;
 
-  border-radius:
-    inherit;
+  border-radius: inherit;
 
   transition:
     width .2s ease;
@@ -582,7 +471,7 @@ textarea:focus {
 
 
 /* =========================================================
-   СТАТУС И ШКАЛА ВНИЗУ КАРТОЧЕК
+   СТАТУС И ШКАЛА ВНИЗУ
 ========================================================= */
 
 .stats-grid
@@ -593,23 +482,16 @@ textarea:focus {
 
 .stats-grid
 .stat-card:nth-child(3) > small {
-  position:
-    absolute;
+  position: absolute;
 
-  left:
-    20px;
+  left: 20px;
+  right: 118px;
 
-  right:
-    118px;
+  bottom: 48px;
 
-  bottom:
-    48px;
+  margin: 0;
 
-  margin:
-    0;
-
-  line-height:
-    1.25;
+  line-height: 1.25;
 }
 
 
@@ -621,23 +503,16 @@ textarea:focus {
 
 .stats-grid
 .stat-card:nth-child(3) > .progress {
-  position:
-    absolute;
+  position: absolute;
 
-  left:
-    20px;
+  left: 20px;
+  right: 118px;
 
-  right:
-    118px;
+  bottom: 22px;
 
-  bottom:
-    22px;
+  width: auto;
 
-  width:
-    auto;
-
-  margin:
-    0;
+  margin: 0;
 }
 
 
@@ -683,111 +558,180 @@ textarea:focus {
    ПЕРСОНАЖИ БЖУ
 ========================================================= */
 
-.stats-grid
-.stat-card:nth-child(1)::after,
 
-.stats-grid
-.stat-card:nth-child(2)::after,
+/*
+  Теперь персонажи — настоящие <img>,
+  чтобы :hover срабатывал именно по картинке.
+*/
 
-.stats-grid
-.stat-card:nth-child(3)::after {
-  content:
-    "";
+.macro-mascot {
+  position: absolute;
 
-  position:
-    absolute;
+  top: 50%;
 
-  right:
-    4px;
+  z-index: 2;
 
-  top:
-    50%;
+  object-fit: contain;
 
   transform:
     translateY(-50%);
 
-  width:
-    112px;
+  transform-origin:
+    50% 55%;
 
-  height:
-    150px;
+  user-select: none;
 
-  background-repeat:
-    no-repeat;
+  -webkit-user-drag: none;
 
-  background-position:
-    center;
-
-  background-size:
-    contain;
-
-  z-index:
-    1;
-
-  pointer-events:
-    none;
+  cursor: pointer;
 
   filter:
     drop-shadow(
       0 12px 15px
       rgba(103,63,114,.13)
     );
+
+  will-change:
+    transform;
 }
 
 
 /* КУРИЦА */
 
-.stats-grid
-.stat-card:nth-child(1)::after {
-  background-image:
-    url("chicken.png");
+.chicken-mascot {
+  width: 112px;
+  height: 155px;
 
-  width:
-    112px;
-
-  height:
-    155px;
-
-  right:
-    2px;
+  right: 2px;
 }
 
 
 /* АВОКАДО */
 
-.stats-grid
-.stat-card:nth-child(2)::after {
-  background-image:
-    url("avocado.png");
+.avocado-mascot {
+  width: 108px;
+  height: 145px;
 
-  width:
-    108px;
-
-  height:
-    145px;
-
-  right:
-    4px;
+  right: 4px;
 }
 
 
 /* МАКАРОНЫ */
 
-.stats-grid
-.stat-card:nth-child(3)::after {
-  background-image:
-    url("pasta.png");
+.pasta-mascot {
+  width: 118px;
+  height: 135px;
 
-  width:
-    118px;
-
-  height:
-    135px;
-
-  right:
-    0;
+  right: 0;
 }
 
+
+/* =========================================================
+   ЖИМ-ЖИМ / ЖМЯК-ЖМЯК
+========================================================= */
+
+
+/*
+  Анимация запускается ТОЛЬКО,
+  если мышка непосредственно
+  находится на персонаже.
+*/
+
+.macro-mascot:hover {
+  animation:
+    mascot-squish
+    .78s
+    ease-in-out
+    infinite;
+}
+
+
+/*
+  Небольшой жмяк при клике / нажатии.
+*/
+
+.macro-mascot:active {
+  transform:
+    translateY(-50%)
+    scale(.88,1.08);
+}
+
+
+/*
+  Сам жим-жим.
+
+  1. обычный
+  2. приплюснулся
+  3. вытянулся
+  4. дрыгнулся в сторону
+  5. снова жмякнулся
+  6. вернулся
+*/
+
+@keyframes mascot-squish {
+
+  0%,
+  100% {
+    transform:
+      translateY(-50%)
+      scale(1,1)
+      rotate(0deg);
+  }
+
+
+  14% {
+    transform:
+      translateY(-50%)
+      scale(1.08,.91)
+      rotate(-2deg);
+  }
+
+
+  29% {
+    transform:
+      translateY(-50%)
+      scale(.93,1.08)
+      rotate(2deg);
+  }
+
+
+  44% {
+    transform:
+      translateY(-50%)
+      scale(1.055,.95)
+      rotate(-1.5deg);
+  }
+
+
+  58% {
+    transform:
+      translateY(-50%)
+      scale(.97,1.045)
+      rotate(1.5deg);
+  }
+
+
+  72% {
+    transform:
+      translateY(-50%)
+      scale(1.035,.97)
+      rotate(-1deg);
+  }
+
+
+  86% {
+    transform:
+      translateY(-50%)
+      scale(.99,1.02)
+      rotate(.5deg);
+  }
+
+}
+
+
+/*
+  Мягкое сияние за персонажами.
+*/
 
 .stats-grid
 .stat-card:nth-child(1)::before,
@@ -797,29 +741,21 @@ textarea:focus {
 
 .stats-grid
 .stat-card:nth-child(3)::before {
-  content:
-    "";
+  content: "";
 
-  position:
-    absolute;
+  position: absolute;
 
-  right:
-    -10px;
+  right: -10px;
 
-  top:
-    50%;
+  top: 50%;
 
   transform:
     translateY(-50%);
 
-  width:
-    130px;
+  width: 130px;
+  height: 150px;
 
-  height:
-    150px;
-
-  border-radius:
-    50%;
+  border-radius: 50%;
 
   background:
     radial-gradient(
@@ -829,11 +765,9 @@ textarea:focus {
       transparent 72%
     );
 
-  z-index:
-    0;
+  z-index: 0;
 
-  pointer-events:
-    none;
+  pointer-events: none;
 }
 
 
@@ -852,35 +786,26 @@ textarea:focus {
 ========================================================= */
 
 .section-heading {
-  display:
-    flex;
+  display: flex;
 
-  justify-content:
-    space-between;
+  justify-content: space-between;
 
-  gap:
-    12px;
+  gap: 12px;
 
-  align-items:
-    center;
+  align-items: center;
 
-  margin-bottom:
-    14px;
+  margin-bottom: 14px;
 }
 
 
 .actions-row {
-  display:
-    flex;
+  display: flex;
 
-  gap:
-    10px;
+  gap: 10px;
 
-  margin-top:
-    12px;
+  margin-top: 12px;
 
-  flex-wrap:
-    wrap;
+  flex-wrap: wrap;
 }
 
 
@@ -889,17 +814,14 @@ textarea:focus {
 .ghost-btn,
 .voice-btn,
 .icon-btn {
-  border:
-    0;
+  border: 0;
 
-  border-radius:
-    14px;
+  border-radius: 14px;
 
   padding:
     11px 16px;
 
-  font-weight:
-    800;
+  font-weight: 800;
 }
 
 
@@ -911,8 +833,7 @@ textarea:focus {
       var(--purple)
     );
 
-  color:
-    white;
+  color: white;
 }
 
 
@@ -969,8 +890,7 @@ textarea:focus {
 
 
 .full {
-  width:
-    100%;
+  width: 100%;
 }
 
 
@@ -978,14 +898,12 @@ textarea:focus {
   background:
     transparent;
 
-  border:
-    0;
+  border: 0;
 
   color:
     #c64872;
 
-  font-weight:
-    800;
+  font-weight: 800;
 }
 
 
@@ -1028,30 +946,24 @@ textarea:focus {
 
 .entries-list,
 .history-list {
-  display:
-    grid;
+  display: grid;
 
-  gap:
-    10px;
+  gap: 10px;
 }
 
 
 .entry,
 .history-item {
-  display:
-    grid;
+  display: grid;
 
   grid-template-columns:
     1fr auto;
 
-  gap:
-    14px;
+  gap: 14px;
 
-  align-items:
-    center;
+  align-items: center;
 
-  background:
-    white;
+  background: white;
 
   border:
     1px solid
@@ -1086,14 +998,11 @@ textarea:focus {
 
 
 .entry-actions {
-  display:
-    flex;
+  display: flex;
 
-  gap:
-    8px;
+  gap: 8px;
 
-  flex-wrap:
-    wrap;
+  flex-wrap: wrap;
 
   justify-content:
     flex-end;
@@ -1101,8 +1010,7 @@ textarea:focus {
 
 
 .mini-btn {
-  border:
-    0;
+  border: 0;
 
   border-radius:
     10px;
@@ -1197,14 +1105,12 @@ textarea:focus {
 ========================================================= */
 
 .modal {
-  border:
-    0;
+  border: 0;
 
   border-radius:
     24px;
 
-  padding:
-    0;
+  padding: 0;
 
   width:
     min(
@@ -1235,8 +1141,7 @@ textarea:focus {
   padding:
     22px;
 
-  display:
-    grid;
+  display: grid;
 
   gap:
     14px;
@@ -1253,8 +1158,7 @@ textarea:focus {
 
 
 .modal-head {
-  display:
-    flex;
+  display: flex;
 
   align-items:
     flex-start;
@@ -1277,8 +1181,7 @@ textarea:focus {
 
 
 .close-btn {
-  border:
-    0;
+  border: 0;
 
   background:
     #f7edf7;
@@ -1286,20 +1189,14 @@ textarea:focus {
   color:
     var(--text);
 
-  width:
-    38px;
+  width: 38px;
+  height: 38px;
 
-  height:
-    38px;
+  border-radius: 50%;
 
-  border-radius:
-    50%;
+  font-size: 24px;
 
-  font-size:
-    24px;
-
-  line-height:
-    1;
+  line-height: 1;
 
   flex:
     0 0 auto;
@@ -1311,26 +1208,20 @@ textarea:focus {
 ========================================================= */
 
 .product-editor {
-  display:
-    grid;
+  display: grid;
 
-  gap:
-    10px;
+  gap: 10px;
 
-  max-height:
-    58vh;
+  max-height: 58vh;
 
-  overflow:
-    auto;
+  overflow: auto;
 
-  padding-right:
-    3px;
+  padding-right: 3px;
 }
 
 
 .product-row {
-  display:
-    grid;
+  display: grid;
 
   grid-template-columns:
     minmax(170px,1.7fr)
@@ -1338,20 +1229,16 @@ textarea:focus {
     minmax(105px,.8fr)
     auto;
 
-  gap:
-    8px;
+  gap: 8px;
 
-  align-items:
-    end;
+  align-items: end;
 
   background:
     #fff9fd;
 
-  padding:
-    10px;
+  padding: 10px;
 
-  border-radius:
-    16px;
+  border-radius: 16px;
 
   border:
     1px solid
@@ -1360,23 +1247,19 @@ textarea:focus {
 
 
 .product-row label {
-  font-size:
-    11px;
+  font-size: 11px;
 
-  gap:
-    4px;
+  gap: 4px;
 }
 
 
 .product-row input:not([type="checkbox"]) {
-  padding:
-    9px;
+  padding: 9px;
 }
 
 
 .product-protein-toggle {
-  align-self:
-    stretch;
+  align-self: stretch;
 
   display:
     flex !important;
@@ -1399,45 +1282,34 @@ textarea:focus {
 
 
 .product-protein-toggle span {
-  display:
-    block;
+  display: block;
 
-  font-size:
-    11px;
+  font-size: 11px;
 
   color:
     var(--muted);
 
-  font-weight:
-    700;
+  font-weight: 700;
 }
 
 
 .product-protein-toggle input[type="checkbox"],
 .protein-checkbox input[type="checkbox"] {
-  width:
-    22px;
+  width: 22px;
+  height: 22px;
 
-  height:
-    22px;
-
-  margin:
-    0;
-
-  padding:
-    0;
+  margin: 0;
+  padding: 0;
 
   accent-color:
     var(--purple);
 
-  cursor:
-    pointer;
+  cursor: pointer;
 }
 
 
 .remove-product {
-  border:
-    0;
+  border: 0;
 
   background:
     #ffe2eb;
@@ -1454,8 +1326,7 @@ textarea:focus {
 
 
 .modal-footer {
-  display:
-    flex;
+  display: flex;
 
   justify-content:
     flex-end;
@@ -1463,15 +1334,13 @@ textarea:focus {
 
 
 /* =========================================================
-   РЕДАКТИРОВАНИЕ ЗАПИСИ — ОБЛАЧКО
+   РЕДАКТИРОВАНИЕ ЗАПИСИ
 ========================================================= */
 
 .entry-edit-dialog {
-  border:
-    none;
+  border: none;
 
-  padding:
-    26px;
+  padding: 26px;
 
   background:
     transparent;
@@ -1491,20 +1360,15 @@ textarea:focus {
 
 
 .entry-edit-cloud {
-  position:
-    relative;
+  position: relative;
 
-  z-index:
-    1;
+  z-index: 1;
 
-  display:
-    grid;
+  display: grid;
 
-  gap:
-    18px;
+  gap: 18px;
 
-  padding:
-    28px;
+  padding: 28px;
 
   background:
     linear-gradient(
@@ -1557,38 +1421,27 @@ textarea:focus {
 
 
 .entry-edit-cloud::before {
-  width:
-    76px;
+  width: 76px;
+  height: 76px;
 
-  height:
-    76px;
+  left: -18px;
 
-  left:
-    -18px;
-
-  bottom:
-    34px;
+  bottom: 34px;
 }
 
 
 .entry-edit-cloud::after {
-  width:
-    48px;
+  width: 48px;
+  height: 48px;
 
-  height:
-    48px;
+  left: 18px;
 
-  left:
-    18px;
-
-  bottom:
-    -18px;
+  bottom: -18px;
 }
 
 
 .entry-edit-head {
-  display:
-    flex;
+  display: flex;
 
   justify-content:
     space-between;
@@ -1596,8 +1449,7 @@ textarea:focus {
   align-items:
     flex-start;
 
-  gap:
-    18px;
+  gap: 18px;
 }
 
 
@@ -1614,14 +1466,12 @@ textarea:focus {
 
 
 .entry-edit-grid {
-  display:
-    grid;
+  display: grid;
 
   grid-template-columns:
     repeat(3,1fr);
 
-  gap:
-    12px;
+  gap: 12px;
 }
 
 
@@ -1666,8 +1516,7 @@ textarea:focus {
 
 
 .entry-edit-footer {
-  display:
-    flex;
+  display: flex;
 
   justify-content:
     flex-end;
@@ -1679,26 +1528,19 @@ textarea:focus {
 ========================================================= */
 
 .salad-background {
-  position:
-    absolute;
+  position: absolute;
 
-  z-index:
-    0;
+  z-index: 0;
 
-  right:
-    -160px;
+  right: -160px;
 
-  top:
-    -120px;
+  top: -120px;
 
-  width:
-    620px;
+  width: 620px;
 
-  height:
-    auto;
+  height: auto;
 
-  pointer-events:
-    none;
+  pointer-events: none;
 
   filter:
     drop-shadow(
@@ -1706,17 +1548,14 @@ textarea:focus {
       rgba(80,50,90,.16)
     );
 
-  opacity:
-    .97;
+  opacity: .97;
 }
 
 
 .app-shell > *:not(.salad-background) {
-  position:
-    relative;
+  position: relative;
 
-  z-index:
-    2;
+  z-index: 2;
 }
 
 
@@ -1745,8 +1584,7 @@ textarea:focus {
 
   .hero,
   main {
-    width:
-      86%;
+    width: 86%;
   }
 
 
@@ -1756,30 +1594,18 @@ textarea:focus {
   }
 
 
-  /*
-    На планшете сердце чуть меньше,
-    чем на большом экране,
-    но всё равно крупнее старой версии.
-  */
-
   .title-heart-img {
-    width:
-      50px;
-
-    height:
-      50px;
+    width: 50px;
+    height: 50px;
   }
 
 
   .salad-background {
-    width:
-      520px;
+    width: 520px;
 
-    right:
-      -170px;
+    right: -170px;
 
-    top:
-      -80px;
+    top: -80px;
   }
 
 }
@@ -1792,8 +1618,7 @@ textarea:focus {
 @media (max-width: 620px) {
 
   .app-shell {
-    width:
-      100%;
+    width: 100%;
 
     padding:
       18px 0
@@ -1815,22 +1640,13 @@ textarea:focus {
 
 
   h1 {
-    gap:
-      6px;
+    gap: 6px;
   }
 
 
-  /*
-    Сердце на телефоне тоже
-    немного увеличено.
-  */
-
   .title-heart-img {
-    width:
-      40px;
-
-    height:
-      40px;
+    width: 40px;
+    height: 40px;
   }
 
 
@@ -1856,8 +1672,7 @@ textarea:focus {
 
 
   .voice-btn {
-    width:
-      100%;
+    width: 100%;
   }
 
 
@@ -1911,42 +1726,27 @@ textarea:focus {
   }
 
 
-  .stats-grid
-  .stat-card:nth-child(1)::after {
-    width:
-      125px;
+  .chicken-mascot {
+    width: 125px;
+    height: 160px;
 
-    height:
-      160px;
-
-    right:
-      4px;
+    right: 4px;
   }
 
 
-  .stats-grid
-  .stat-card:nth-child(2)::after {
-    width:
-      118px;
+  .avocado-mascot {
+    width: 118px;
+    height: 150px;
 
-    height:
-      150px;
-
-    right:
-      7px;
+    right: 7px;
   }
 
 
-  .stats-grid
-  .stat-card:nth-child(3)::after {
-    width:
-      130px;
+  .pasta-mascot {
+    width: 130px;
+    height: 145px;
 
-    height:
-      145px;
-
-    right:
-      0;
+    right: 0;
   }
 
 
@@ -1958,11 +1758,8 @@ textarea:focus {
 
   .stats-grid
   .stat-card:nth-child(3)::before {
-    width:
-      145px;
-
-    height:
-      165px;
+    width: 145px;
+    height: 165px;
   }
 
 
@@ -2009,51 +1806,55 @@ textarea:focus {
 
 
   .entry-edit-cloud::before {
-    width:
-      58px;
+    width: 58px;
+    height: 58px;
 
-    height:
-      58px;
-
-    left:
-      -12px;
+    left: -12px;
   }
 
 
   .entry-edit-cloud::after {
-    width:
-      38px;
+    width: 38px;
+    height: 38px;
 
-    height:
-      38px;
+    left: 14px;
 
-    left:
-      14px;
-
-    bottom:
-      -13px;
+    bottom: -13px;
   }
 
 
   .entry-edit-footer
   .primary-btn {
-    width:
-      100%;
+    width: 100%;
   }
 
 
   .salad-background {
-    width:
-      420px;
+    width: 420px;
 
-    right:
-      -170px;
+    right: -170px;
 
-    top:
-      -65px;
+    top: -65px;
 
-    opacity:
-      .88;
+    opacity: .88;
+  }
+
+}
+
+
+/* =========================================================
+   ДОСТУПНОСТЬ:
+   ЕСЛИ ПОЛЬЗОВАТЕЛЬ ОТКЛЮЧИЛ АНИМАЦИИ
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .macro-mascot:hover {
+    animation: none;
+
+    transform:
+      translateY(-50%)
+      scale(1.03);
   }
 
 }

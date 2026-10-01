@@ -363,10 +363,14 @@ textarea:focus {
   gap: 14px;
 
   /*
-    Это пространство специально оставлено
-    для облачков над персонажами.
+    Небольшое пространство сверху
+    для облачков.
+
+    Оно специально уменьшено,
+    чтобы между персонажем и фразой
+    не было большой пустоты.
   */
-  padding-top: 72px;
+  padding-top: 30px;
 
   margin-bottom: 18px;
 }
@@ -392,7 +396,7 @@ textarea:focus {
 
 /*
   Первым трём карточкам разрешаем
-  показывать облачко ЗА их пределами.
+  выводить облачка за их пределы.
 */
 
 .stats-grid .stat-card:nth-child(1),
@@ -774,32 +778,44 @@ textarea:focus {
 ========================================================= */
 
 /*
-  Облачко находится НАД карточкой.
+  Теперь облачко находится непосредственно
+  над самим персонажем, а не выглядит так,
+  будто выходит из карточки.
 
-  Благодаря bottom: calc(100% + 10px)
-  оно вообще не перекрывает текст
-  внутри самой карточки.
+  Оно немного заходит в верхнюю область
+  персонажа, поэтому визуально кажется,
+  что говорит именно он.
 */
 
 .mascot-bubble {
   position: absolute;
 
-  right: 6px;
+  /*
+    Облачко расположено справа,
+    то есть именно над персонажем.
+  */
+  right: -5px;
 
-  bottom:
-    calc(100% + 10px);
+  /*
+    Нижняя часть облачка почти соприкасается
+    с верхней частью картинки персонажа.
+  */
+  top: -20px;
 
   width:
     max-content;
 
   max-width:
-    190px;
+    170px;
+
+  min-height:
+    34px;
 
   padding:
-    9px 13px;
+    8px 12px;
 
   border-radius:
-    18px;
+    18px 18px 18px 8px;
 
   background:
     rgba(255,255,255,.98);
@@ -809,11 +825,11 @@ textarea:focus {
     rgba(240,215,242,.96);
 
   box-shadow:
-    0 10px 24px
-    rgba(93,58,112,.14);
+    0 8px 20px
+    rgba(93,58,112,.13);
 
   color:
-    #7a517d;
+    #76547d;
 
   font-size:
     12px;
@@ -822,18 +838,22 @@ textarea:focus {
     750;
 
   line-height:
-    1.25;
+    1.15;
 
   text-align:
     center;
 
   z-index:
     10;
+
+  pointer-events:
+    none;
 }
 
 
 /*
-  Маленький хвостик облачка.
+  Хвостик направлен вниз
+  прямо к голове персонажа.
 */
 
 .mascot-bubble::after {
@@ -841,12 +861,12 @@ textarea:focus {
 
   position: absolute;
 
-  right: 24px;
+  right: 27px;
 
-  bottom: -7px;
+  bottom: -10px;
 
-  width: 13px;
-  height: 13px;
+  width: 18px;
+  height: 18px;
 
   background:
     inherit;
@@ -861,8 +881,15 @@ textarea:focus {
 
   transform:
     rotate(45deg);
+
+  border-radius:
+    0 0 4px 0;
 }
 
+
+/*
+  Недобор.
+*/
 
 .mascot-bubble.sad-low {
   background:
@@ -872,6 +899,42 @@ textarea:focus {
     #76547d;
 }
 
+
+/*
+  Довольный персонаж.
+*/
+
+.mascot-bubble.happy {
+  background:
+    rgba(244,255,246,.99);
+
+  color:
+    #5d8865;
+
+  border-color:
+    rgba(189,226,195,.96);
+}
+
+
+/*
+  Цель пока не задана.
+*/
+
+.mascot-bubble.no-goal {
+  background:
+    rgba(251,247,255,.99);
+
+  color:
+    #735b91;
+
+  border-color:
+    rgba(219,204,243,.96);
+}
+
+
+/*
+  Перебор жиров / углеводов.
+*/
 
 .mascot-bubble.sad-over {
   background:
@@ -1559,8 +1622,7 @@ textarea:focus {
   color:
     var(--muted);
 
-  font-size:
-    13px;
+  font-size: 13px;
 }
 
 
@@ -1734,19 +1796,18 @@ textarea:focus {
   }
 
 
-  /*
-    При переносе карточек на две строки
-    оставляем место для облачков
-    между строками.
-  */
-
   .stats-grid {
     grid-template-columns:
       repeat(2,1fr);
 
-    row-gap: 88px;
+    /*
+      Между рядами оставляем место
+      для облачков, но существенно меньше,
+      чем раньше.
+    */
+    row-gap: 46px;
 
-    padding-top: 72px;
+    padding-top: 30px;
   }
 
 
@@ -1816,10 +1877,10 @@ textarea:focus {
       1fr;
 
     row-gap:
-      88px;
+      46px;
 
     padding-top:
-      72px;
+      30px;
   }
 
 
@@ -1885,16 +1946,21 @@ textarea:focus {
 
 
   .mascot-bubble {
-    right: 12px;
+    right: 3px;
 
-    bottom:
-      calc(100% + 10px);
+    top: -18px;
 
-    max-width:
-      180px;
+    max-width: 165px;
 
-    font-size:
-      11px;
+    font-size: 11px;
+
+    padding:
+      8px 11px;
+  }
+
+
+  .mascot-bubble::after {
+    right: 30px;
   }
 
 

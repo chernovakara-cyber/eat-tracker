@@ -1,2103 +1,3380 @@
-:root {
-  --bg: #fff7fc;
-  --surface: rgba(255,255,255,.88);
-  --text: #341936;
-  --muted: #7d5c83;
-  --pink: #ff70b7;
-  --pink-soft: #ffd7eb;
-  --purple: #8f5cff;
-  --purple-soft: #e4d7ff;
-  --border: #f1dcef;
-  --shadow: 0 18px 45px rgba(127,67,135,.14);
-  --success-soft: #edfff0;
-  --danger-soft: #ffeef1;
-}
+const STORAGE_PRODUCTS_KEY = "eatTrackerProducts_v6";
+const STORAGE_DAYS_KEY = "eatTrackerDays_v6";
 
-* {
-  box-sizing: border-box;
-}
 
-html,
-body {
-  width: 100%;
-  min-height: 100%;
-}
+const defaultProducts = [
 
-body {
-  margin: 0;
+  {
+    id: uid(),
+    name: "Рис",
+    protein: 7.2,
+    fat: 0.5,
+    carbs: 76.9,
+    countProtein: true
+  },
 
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  {
+    id: uid(),
+    name: "Макароны",
+    protein: 12,
+    fat: 1.3,
+    carbs: 70.5,
+    countProtein: true
+  },
 
-  background: var(--bg);
+  {
+    id: uid(),
+    name: "Гречка",
+    protein: 13,
+    fat: 2.5,
+    carbs: 61,
+    countProtein: true
+  },
 
-  color: var(--text);
+  {
+    id: uid(),
+    name: "Куриная грудка",
+    protein: 22,
+    fat: 4,
+    carbs: 0,
+    countProtein: true
+  },
 
-  min-height: 100vh;
+  {
+    id: uid(),
+    name: "Тунец консервированный",
+    protein: 23,
+    fat: 1,
+    carbs: 0,
+    countProtein: true
+  },
 
-  overflow-x: hidden;
-}
+  {
+    id: uid(),
+    name: "Яйца",
+    protein: 12.6,
+    fat: 11.5,
+    carbs: 0.7,
+    countProtein: true
+  },
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-}
+  {
+    id: uid(),
+    name: "Ветчина",
+    protein: 14,
+    fat: 4,
+    carbs: 4,
+    countProtein: true
+  },
 
-button {
-  cursor: pointer;
-}
+  {
+    id: uid(),
+    name: "Греческий йогурт",
+    protein: 8,
+    fat: 2,
+    carbs: 4.2,
+    countProtein: true
+  },
+
+  {
+    id: uid(),
+    name: "Сыр",
+    protein: 0,
+    fat: 26,
+    carbs: 0,
+    countProtein: true
+  },
+
+  {
+    id: uid(),
+    name: "Творожный сыр",
+    protein: 6.2,
+    fat: 21.7,
+    carbs: 4.2,
+    countProtein: true
+  },
+
+  {
+    id: uid(),
+    name: "Фасоль",
+    protein: 4.5,
+    fat: 2,
+    carbs: 14,
+    countProtein: true
+  },
+
+  {
+    id: uid(),
+    name: "Хлеб",
+    protein: 6,
+    fat: 0,
+    carbs: 46,
+    countProtein: true
+  },
+
+  {
+    id: uid(),
+    name: "Огурцы",
+    protein: 0,
+    fat: 0,
+    carbs: 3,
+    countProtein: true
+  },
+
+  {
+    id: uid(),
+    name: "Оливки",
+    protein: 2,
+    fat: 16,
+    carbs: 5,
+    countProtein: true
+  },
+
+  {
+    id: uid(),
+    name: "Спаржа",
+    protein: 12,
+    fat: 15,
+    carbs: 10,
+    countProtein: true
+  },
+
+  {
+    id: uid(),
+    name: "Медово-горчичный соус",
+    protein: 1.7,
+    fat: 37.2,
+    carbs: 22.5,
+    countProtein: true
+  }
+
+];
+
+
+let products =
+  loadProducts();
+
+
+let days =
+  loadDays();
+
+
+let currentDay =
+  todayIso();
+
+
+let editingEntryId =
+  null;
+
+
+
+const els = {
+
+  dayPicker:
+    document.getElementById(
+      "dayPicker"
+    ),
+
+  prevDay:
+    document.getElementById(
+      "prevDay"
+    ),
+
+  nextDay:
+    document.getElementById(
+      "nextDay"
+    ),
+
+
+  targetProtein:
+    document.getElementById(
+      "targetProtein"
+    ),
+
+  targetFat:
+    document.getElementById(
+      "targetFat"
+    ),
+
+  targetCarbs:
+    document.getElementById(
+      "targetCarbs"
+    ),
+
+
+  proteinEaten:
+    document.getElementById(
+      "proteinEaten"
+    ),
+
+  proteinLeft:
+    document.getElementById(
+      "proteinLeft"
+    ),
+
+  proteinProgress:
+    document.getElementById(
+      "proteinProgress"
+    ),
+
+  proteinStatusText:
+    document.getElementById(
+      "proteinStatusText"
+    ),
+
+
+  fatEaten:
+    document.getElementById(
+      "fatEaten"
+    ),
+
+  fatLeft:
+    document.getElementById(
+      "fatLeft"
+    ),
+
+  fatProgress:
+    document.getElementById(
+      "fatProgress"
+    ),
+
+  fatStatusText:
+    document.getElementById(
+      "fatStatusText"
+    ),
+
+
+  carbsEaten:
+    document.getElementById(
+      "carbsEaten"
+    ),
+
+  carbsLeft:
+    document.getElementById(
+      "carbsLeft"
+    ),
+
+  carbsProgress:
+    document.getElementById(
+      "carbsProgress"
+    ),
+
+  carbsStatusText:
+    document.getElementById(
+      "carbsStatusText"
+    ),
+
+
+  kcalEaten:
+    document.getElementById(
+      "kcalEaten"
+    ),
+
+
+  proteinCard:
+    document.getElementById(
+      "proteinCard"
+    ),
+
+  fatCard:
+    document.getElementById(
+      "fatCard"
+    ),
+
+  carbsCard:
+    document.getElementById(
+      "carbsCard"
+    ),
+
+
+  proteinMascot:
+    document.getElementById(
+      "proteinMascot"
+    ),
+
+  fatMascot:
+    document.getElementById(
+      "fatMascot"
+    ),
+
+  carbsMascot:
+    document.getElementById(
+      "carbsMascot"
+    ),
+
+
+  proteinBubble:
+    document.getElementById(
+      "proteinBubble"
+    ),
+
+  fatBubble:
+    document.getElementById(
+      "fatBubble"
+    ),
+
+  carbsBubble:
+    document.getElementById(
+      "carbsBubble"
+    ),
+
+
+  voiceBtn:
+    document.getElementById(
+      "voiceBtn"
+    ),
+
+  voiceStatus:
+    document.getElementById(
+      "voiceStatus"
+    ),
+
+  quickInput:
+    document.getElementById(
+      "quickInput"
+    ),
+
+  parseBtn:
+    document.getElementById(
+      "parseBtn"
+    ),
+
+  manualBtn:
+    document.getElementById(
+      "manualBtn"
+    ),
+
+  clearDayBtn:
+    document.getElementById(
+      "clearDayBtn"
+    ),
+
+
+  diaryTitle:
+    document.getElementById(
+      "diaryTitle"
+    ),
+
+  entriesList:
+    document.getElementById(
+      "entriesList"
+    ),
+
+  historyList:
+    document.getElementById(
+      "historyList"
+    ),
+
+
+  manualDialog:
+    document.getElementById(
+      "manualDialog"
+    ),
+
+  manualProduct:
+    document.getElementById(
+      "manualProduct"
+    ),
+
+  manualAmount:
+    document.getElementById(
+      "manualAmount"
+    ),
+
+  manualSubmit:
+    document.getElementById(
+      "manualSubmit"
+    ),
+
+
+  settingsBtn:
+    document.getElementById(
+      "settingsBtn"
+    ),
+
+  settingsDialog:
+    document.getElementById(
+      "settingsDialog"
+    ),
+
+  productEditor:
+    document.getElementById(
+      "productEditor"
+    ),
+
+  addProductBtn:
+    document.getElementById(
+      "addProductBtn"
+    ),
+
+  saveProductsBtn:
+    document.getElementById(
+      "saveProductsBtn"
+    ),
+
+
+  entryEditDialog:
+    document.getElementById(
+      "entryEditDialog"
+    ),
+
+  editEntryName:
+    document.getElementById(
+      "editEntryName"
+    ),
+
+  editEntryAmountLabel:
+    document.getElementById(
+      "editEntryAmountLabel"
+    ),
+
+  editEntryProtein:
+    document.getElementById(
+      "editEntryProtein"
+    ),
+
+  editEntryFat:
+    document.getElementById(
+      "editEntryFat"
+    ),
+
+  editEntryCarbs:
+    document.getElementById(
+      "editEntryCarbs"
+    ),
+
+  editEntryCountProtein:
+    document.getElementById(
+      "editEntryCountProtein"
+    ),
+
+  saveEntryEditBtn:
+    document.getElementById(
+      "saveEntryEditBtn"
+    )
+
+};
+
+
+
+setup();
+
+renderAll();
+
 
 
 /* =========================================================
-   ОСНОВНАЯ ОБЛАСТЬ
+   INIT
 ========================================================= */
 
-.app-shell {
-  position: relative;
+function setup() {
 
-  overflow: hidden;
-
-  width: 100%;
-  max-width: none;
-
-  margin: 0;
-
-  padding:
-    28px 0
-    60px;
-}
+  ensureDay(
+    currentDay
+  );
 
 
-.hero,
-main {
-  width: 70%;
-
-  margin-left: auto;
-  margin-right: auto;
-}
+  els.dayPicker.value =
+    currentDay;
 
 
-/* =========================================================
-   ШАПКА
-========================================================= */
+  els.dayPicker
+    .addEventListener(
+      "change",
+      () => {
 
-.hero {
-  display: flex;
-
-  align-items: flex-start;
-  justify-content: space-between;
-
-  gap: 24px;
-
-  margin-bottom: 22px;
-}
+        currentDay =
+          els.dayPicker.value ||
+          todayIso();
 
 
-.eyebrow {
-  margin:
-    0 0 6px;
-
-  font-weight: 800;
-
-  text-transform: uppercase;
-
-  letter-spacing: .08em;
-
-  font-size: 12px;
-
-  color: var(--purple);
-}
+        ensureDay(
+          currentDay
+        );
 
 
-h1 {
-  margin: 0;
+        renderAll();
 
-  display: flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-  flex-wrap: wrap;
-
-  font-size:
-    clamp(
-      34px,
-      6vw,
-      62px
+      }
     );
 
-  line-height: .98;
-}
+
+  els.prevDay
+    .addEventListener(
+      "click",
+      () => {
+
+        currentDay =
+          shiftDay(
+            currentDay,
+            -1
+          );
 
 
-.title-gradient {
-  background:
-    linear-gradient(
-      90deg,
-      var(--pink),
-      var(--purple)
+        ensureDay(
+          currentDay
+        );
+
+
+        renderAll();
+
+      }
     );
 
-  color: transparent;
 
-  -webkit-background-clip: text;
-  background-clip: text;
-}
+  els.nextDay
+    .addEventListener(
+      "click",
+      () => {
+
+        currentDay =
+          shiftDay(
+            currentDay,
+            1
+          );
 
 
-.title-heart-img {
-  display: block;
+        ensureDay(
+          currentDay
+        );
 
-  width: 60px;
-  height: 60px;
 
-  object-fit: contain;
+        renderAll();
 
-  flex:
-    0 0 auto;
-
-  transform:
-    translateY(1px);
-
-  filter:
-    drop-shadow(
-      0 5px 9px
-      rgba(95,54,102,.13)
+      }
     );
 
-  pointer-events: none;
+
+  [
+    els.targetProtein,
+    els.targetFat,
+    els.targetCarbs
+  ]
+  .forEach(
+    input => {
+
+      input.addEventListener(
+        "input",
+        saveTargetsFromInputs
+      );
+
+
+      input.addEventListener(
+        "change",
+        saveTargetsFromInputs
+      );
+
+    }
+  );
+
+
+  els.manualBtn
+    .addEventListener(
+      "click",
+      () => {
+
+        populateManualProducts();
+
+
+        els.manualAmount.value =
+          "";
+
+
+        els.manualDialog
+          .showModal();
+
+      }
+    );
+
+
+  els.manualSubmit
+    .addEventListener(
+      "click",
+      () => {
+
+        const productId =
+          els.manualProduct.value;
+
+
+        const amount =
+          toNumber(
+            els.manualAmount.value
+          );
+
+
+        if (
+          !productId ||
+          amount <= 0
+        ) {
+
+          alert(
+            "Выбери продукт и введи количество."
+          );
+
+          return;
+
+        }
+
+
+        const product =
+          products.find(
+            p =>
+              p.id ===
+              productId
+          );
+
+
+        if (
+          !product
+        ) {
+
+          return;
+
+        }
+
+
+        addEntryFromProduct(
+          product,
+          amount
+        );
+
+
+        els.manualDialog
+          .close();
+
+      }
+    );
+
+
+  els.settingsBtn
+    .addEventListener(
+      "click",
+      () => {
+
+        renderProductsEditor();
+
+
+        els.settingsDialog
+          .showModal();
+
+      }
+    );
+
+
+  els.addProductBtn
+    .addEventListener(
+      "click",
+      () => {
+
+        products.push({
+
+          id:
+            uid(),
+
+          name:
+            "",
+
+          protein:
+            0,
+
+          fat:
+            0,
+
+          carbs:
+            0,
+
+          countProtein:
+            true
+
+        });
+
+
+        renderProductsEditor();
+
+      }
+    );
+
+
+  els.saveProductsBtn
+    .addEventListener(
+      "click",
+      saveProductsFromEditor
+    );
+
+
+  els.productEditor
+    .addEventListener(
+      "click",
+      e => {
+
+        const btn =
+          e.target.closest(
+            ".remove-product"
+          );
+
+
+        if (
+          !btn
+        ) {
+
+          return;
+
+        }
+
+
+        const id =
+          btn.dataset.id;
+
+
+        products =
+          products.filter(
+            p =>
+              p.id !== id
+          );
+
+
+        saveProducts();
+
+        renderProductsEditor();
+
+        populateManualProducts();
+
+      }
+    );
+
+
+  els.entriesList
+    .addEventListener(
+      "click",
+      e => {
+
+        const editBtn =
+          e.target.closest(
+            ".edit-entry"
+          );
+
+
+        const deleteBtn =
+          e.target.closest(
+            ".delete-entry"
+          );
+
+
+        if (
+          editBtn
+        ) {
+
+          openEditEntry(
+            editBtn.dataset.id
+          );
+
+          return;
+
+        }
+
+
+        if (
+          deleteBtn
+        ) {
+
+          deleteEntry(
+            deleteBtn.dataset.id
+          );
+
+        }
+
+      }
+    );
+
+
+  els.saveEntryEditBtn
+    .addEventListener(
+      "click",
+      saveEditedEntry
+    );
+
+
+  els.clearDayBtn
+    .addEventListener(
+      "click",
+      () => {
+
+        if (
+          !confirm(
+            "Очистить все записи за этот день?"
+          )
+        ) {
+
+          return;
+
+        }
+
+
+        const day =
+          getDay(
+            currentDay
+          );
+
+
+        day.entries =
+          [];
+
+
+        saveDays();
+
+        renderAll();
+
+      }
+    );
+
+
+  els.parseBtn
+    .addEventListener(
+      "click",
+      parseQuickInput
+    );
+
+
+  setupVoiceInput();
+
 }
 
-
-h2,
-h3 {
-  margin: 0;
-}
-
-
-.subtitle {
-  max-width: 650px;
-
-  color: var(--muted);
-
-  font-size: 17px;
-
-  line-height: 1.55;
-}
 
 
 /* =========================================================
-   ОБЫЧНЫЕ КАРТОЧКИ
+   DATA
 ========================================================= */
 
-.card,
-.stat-card {
-  background: var(--surface);
+function loadProducts() {
 
-  backdrop-filter:
-    blur(14px);
+  const raw =
+    localStorage.getItem(
+      STORAGE_PRODUCTS_KEY
+    );
 
-  -webkit-backdrop-filter:
-    blur(14px);
 
-  border:
-    1px solid
-    rgba(255,255,255,.9);
+  if (
+    !raw
+  ) {
 
-  box-shadow:
-    var(--shadow);
+    return structuredClone(
+      defaultProducts
+    );
 
-  border-radius:
-    24px;
+  }
+
+
+  try {
+
+    const parsed =
+      JSON.parse(
+        raw
+      );
+
+
+    if (
+      !Array.isArray(parsed) ||
+      !parsed.length
+    ) {
+
+      return structuredClone(
+        defaultProducts
+      );
+
+    }
+
+
+    return parsed.map(
+      p => ({
+
+        id:
+          p.id ||
+          uid(),
+
+        name:
+          p.name ||
+          "",
+
+        protein:
+          toNumber(
+            p.protein
+          ),
+
+        fat:
+          toNumber(
+            p.fat
+          ),
+
+        carbs:
+          toNumber(
+            p.carbs
+          ),
+
+        countProtein:
+          p.countProtein !==
+          false
+
+      })
+    );
+
+  }
+
+
+  catch {
+
+    return structuredClone(
+      defaultProducts
+    );
+
+  }
+
 }
 
 
-.card {
-  padding: 22px;
 
-  margin-bottom: 18px;
+function saveProducts() {
+
+  localStorage.setItem(
+    STORAGE_PRODUCTS_KEY,
+    JSON.stringify(
+      products
+    )
+  );
+
 }
+
+
+
+function loadDays() {
+
+  const raw =
+    localStorage.getItem(
+      STORAGE_DAYS_KEY
+    );
+
+
+  if (
+    !raw
+  ) {
+
+    return {};
+
+  }
+
+
+  try {
+
+    const parsed =
+      JSON.parse(
+        raw
+      );
+
+
+    return (
+      parsed &&
+      typeof parsed ===
+      "object"
+    )
+      ? parsed
+      : {};
+
+  }
+
+
+  catch {
+
+    return {};
+
+  }
+
+}
+
+
+
+function saveDays() {
+
+  localStorage.setItem(
+    STORAGE_DAYS_KEY,
+    JSON.stringify(
+      days
+    )
+  );
+
+}
+
+
+
+function ensureDay(
+  dayKey
+) {
+
+  if (
+    !days[dayKey]
+  ) {
+
+    days[dayKey] = {
+
+      targets: {
+
+        protein:
+          0,
+
+        fat:
+          0,
+
+        carbs:
+          0
+
+      },
+
+      entries:
+        []
+
+    };
+
+
+    saveDays();
+
+  }
+
+
+  if (
+    !days[dayKey].targets
+  ) {
+
+    days[dayKey].targets = {
+
+      protein:
+        0,
+
+      fat:
+        0,
+
+      carbs:
+        0
+
+    };
+
+  }
+
+
+  if (
+    !Array.isArray(
+      days[dayKey].entries
+    )
+  ) {
+
+    days[dayKey].entries =
+      [];
+
+  }
+
+}
+
+
+
+function getDay(
+  dayKey
+) {
+
+  ensureDay(
+    dayKey
+  );
+
+
+  return days[
+    dayKey
+  ];
+
+}
+
 
 
 /* =========================================================
-   ДАТА И ЦЕЛИ
+   RENDER
 ========================================================= */
 
-.day-nav {
-  display: grid;
+function renderAll() {
 
-  grid-template-columns:
-    auto 1fr auto;
+  ensureDay(
+    currentDay
+  );
 
-  gap: 12px;
 
-  align-items: end;
+  els.dayPicker.value =
+    currentDay;
+
+
+  els.diaryTitle.textContent =
+    `Еда за ${formatDateRu(currentDay)}`;
+
+
+  renderTargets();
+
+  renderStats();
+
+  renderEntries();
+
+  renderHistory();
+
+  populateManualProducts();
+
 }
 
 
-.date-wrap {
-  display: grid;
 
-  gap: 7px;
+function renderTargets() {
+
+  const day =
+    getDay(
+      currentDay
+    );
+
+
+  els.targetProtein.value =
+    valueOrEmpty(
+      day.targets.protein
+    );
+
+
+  els.targetFat.value =
+    valueOrEmpty(
+      day.targets.fat
+    );
+
+
+  els.targetCarbs.value =
+    valueOrEmpty(
+      day.targets.carbs
+    );
+
 }
 
 
-.date-wrap > label,
-.targets-grid label,
-.modal label,
-.entry-edit-cloud label {
-  font-weight: 700;
 
-  color: var(--muted);
+function renderStats() {
 
-  line-height: 1.2;
+  const day =
+    getDay(
+      currentDay
+    );
+
+
+  const totals =
+    getTotals(
+      day
+    );
+
+
+  const targets =
+    day.targets;
+
+
+  renderOneMacro({
+
+    type:
+      "protein",
+
+    eaten:
+      totals.protein,
+
+    target:
+      toNumber(
+        targets.protein
+      ),
+
+    card:
+      els.proteinCard,
+
+    eatenEl:
+      els.proteinEaten,
+
+    leftEl:
+      els.proteinLeft,
+
+    progressEl:
+      els.proteinProgress,
+
+    statusEl:
+      els.proteinStatusText,
+
+    mascotEl:
+      els.proteinMascot,
+
+    bubbleEl:
+      els.proteinBubble,
+
+    normalImage:
+      "chicken.png",
+
+    sadImage:
+      "chicken-sad.png"
+
+  });
+
+
+  renderOneMacro({
+
+    type:
+      "fat",
+
+    eaten:
+      totals.fat,
+
+    target:
+      toNumber(
+        targets.fat
+      ),
+
+    card:
+      els.fatCard,
+
+    eatenEl:
+      els.fatEaten,
+
+    leftEl:
+      els.fatLeft,
+
+    progressEl:
+      els.fatProgress,
+
+    statusEl:
+      els.fatStatusText,
+
+    mascotEl:
+      els.fatMascot,
+
+    bubbleEl:
+      els.fatBubble,
+
+    normalImage:
+      "avocado.png",
+
+    sadImage:
+      "avocado-sad.png"
+
+  });
+
+
+  renderOneMacro({
+
+    type:
+      "carbs",
+
+    eaten:
+      totals.carbs,
+
+    target:
+      toNumber(
+        targets.carbs
+      ),
+
+    card:
+      els.carbsCard,
+
+    eatenEl:
+      els.carbsEaten,
+
+    leftEl:
+      els.carbsLeft,
+
+    progressEl:
+      els.carbsProgress,
+
+    statusEl:
+      els.carbsStatusText,
+
+    mascotEl:
+      els.carbsMascot,
+
+    bubbleEl:
+      els.carbsBubble,
+
+    normalImage:
+      "pasta.png",
+
+    sadImage:
+      "pasta-sad.png"
+
+  });
+
+
+  els.kcalEaten.textContent =
+    `${formatNumber(totals.kcal)} ккал`;
+
 }
 
-
-.date-wrap > label {
-  display: block;
-
-  margin:
-    0 0 0 2px;
-
-  transform:
-    translateY(-1px);
-}
-
-
-.targets-grid label,
-.modal label,
-.entry-edit-cloud label {
-  display: grid;
-
-  gap: 7px;
-}
-
-
-.date-wrap input,
-.targets-grid input,
-.modal input,
-.modal select,
-.entry-edit-cloud input,
-textarea,
-select {
-  width: 100%;
-
-  border:
-    1px solid
-    var(--border);
-
-  background: white;
-
-  color: var(--text);
-
-  border-radius: 14px;
-
-  padding:
-    12px 14px;
-
-  outline: none;
-}
-
-
-textarea {
-  resize: vertical;
-
-  min-height: 88px;
-}
-
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color:
-    var(--purple);
-
-  box-shadow:
-    0 0 0 4px
-    rgba(143,92,255,.10);
-}
-
-
-.targets-grid {
-  display: grid;
-
-  grid-template-columns:
-    repeat(3,1fr);
-
-  gap: 12px;
-
-  margin-top: 18px;
-}
-
-
-.hint {
-  margin:
-    10px 0 0;
-
-  color: var(--muted);
-
-  font-size: 13px;
-}
 
 
 /* =========================================================
-   СТАТИСТИКА
+   ОДНА КАРТОЧКА БЖУ
 ========================================================= */
 
-.stats-grid {
-  display: grid;
+function renderOneMacro(
+  config
+) {
 
-  grid-template-columns:
-    repeat(4,1fr);
+  const {
 
-  gap: 14px;
+    type,
+    eaten,
+    target,
+    card,
+    eatenEl,
+    leftEl,
+    progressEl,
+    statusEl,
+    mascotEl,
+    bubbleEl,
+    normalImage,
+    sadImage
+
+  } =
+    config;
+
+
+  eatenEl.textContent =
+    `${formatNumber(eaten)} г`;
+
 
   /*
-    Небольшое пространство сверху
-    для облачков.
-
-    Оно специально уменьшено,
-    чтобы между персонажем и фразой
-    не было большой пустоты.
+    Даже если цель не задана,
+    персонаж остаётся грустным
+    и просит задать ему цель.
   */
-  padding-top: 30px;
 
-  margin-bottom: 18px;
-}
+  if (
+    target <= 0
+  ) {
 
-
-.stat-card {
-  padding: 20px;
-
-  position: relative;
-
-  overflow: hidden;
-
-  min-height: 235px;
-
-  isolation: isolate;
-
-  transition:
-    background .22s ease,
-    border-color .22s ease,
-    box-shadow .22s ease;
-}
+    const state =
+      getMacroMood(
+        type,
+        eaten,
+        target
+      );
 
 
-/*
-  Первым трём карточкам разрешаем
-  выводить облачка за их пределы.
-*/
-
-.stats-grid .stat-card:nth-child(1),
-.stats-grid .stat-card:nth-child(2),
-.stats-grid .stat-card:nth-child(3) {
-  padding-right: 118px;
-
-  overflow: visible;
-}
+    statusEl.textContent =
+      "цель не задана";
 
 
-.stat-card > span,
-.stat-card > strong,
-.stat-card > small,
-.stat-card > .progress {
-  position: relative;
-
-  z-index: 3;
-}
+    leftEl.textContent =
+      "";
 
 
-.stat-card > span {
-  color: var(--muted);
-
-  font-weight: 700;
-}
+    progressEl.style.width =
+      "0%";
 
 
-.stat-card > strong {
-  display: block;
-
-  margin:
-    7px 0 3px;
-
-  font-size: 28px;
-}
-
-
-.stat-card > small {
-  color: var(--muted);
-}
-
-
-.stat-card > small em {
-  font-style: normal;
-}
-
-
-.progress {
-  height: 9px;
-
-  background:
-    #f3edf5;
-
-  border-radius:
-    999px;
-
-  margin-top: 15px;
-
-  overflow: hidden;
-}
-
-
-.progress i {
-  display: block;
-
-  height: 100%;
-
-  width: 0;
-
-  border-radius: inherit;
-
-  transition:
-    width .2s ease;
-
-  background:
-    linear-gradient(
-      90deg,
-      var(--pink),
-      var(--purple)
-    );
-}
-
-
-.stats-grid
-.stat-card:nth-child(1) > small,
-
-.stats-grid
-.stat-card:nth-child(2) > small,
-
-.stats-grid
-.stat-card:nth-child(3) > small {
-  position: absolute;
-
-  left: 20px;
-  right: 118px;
-
-  bottom: 48px;
-
-  margin: 0;
-
-  line-height: 1.25;
-}
-
-
-.stats-grid
-.stat-card:nth-child(1) > .progress,
-
-.stats-grid
-.stat-card:nth-child(2) > .progress,
-
-.stats-grid
-.stat-card:nth-child(3) > .progress {
-  position: absolute;
-
-  left: 20px;
-  right: 118px;
-
-  bottom: 22px;
-
-  width: auto;
-
-  margin: 0;
-}
-
-
-/* =========================================================
-   ПОДСВЕТКА КАРТОЧЕК
-========================================================= */
-
-.stat-card.goal-near {
-  background:
-    linear-gradient(
-      145deg,
-      rgba(235,255,239,.96),
-      rgba(247,255,249,.92)
+    card.classList.remove(
+      "goal-near",
+      "goal-over"
     );
 
-  border-color:
-    rgba(139,211,154,.58);
 
-  box-shadow:
-    0 18px 45px
-    rgba(97,174,112,.16);
-}
+    mascotEl.src =
+      sadImage;
 
 
-.stat-card.goal-over {
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,235,239,.97),
-      rgba(255,247,248,.93)
+    bubbleEl.hidden =
+      false;
+
+
+    bubbleEl.textContent =
+      state.bubbleText;
+
+
+    bubbleEl.className =
+      `mascot-bubble ${state.bubbleType}`;
+
+
+    return;
+
+  }
+
+
+  const state =
+    getMacroMood(
+      type,
+      eaten,
+      target
     );
 
-  border-color:
-    rgba(235,151,163,.60);
 
-  box-shadow:
-    0 18px 45px
-    rgba(205,102,119,.14);
-}
-
-
-/* =========================================================
-   КАЛОРИИ ПО ЦЕНТРУ
-========================================================= */
-
-.stat-card.kcal {
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  justify-content: center;
-
-  text-align: center;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,215,235,.85),
-      rgba(228,215,255,.8)
-    );
-}
-
-
-.stat-card.kcal > strong {
-  margin:
-    8px 0 5px;
-}
-
-
-/* =========================================================
-   ПЕРСОНАЖИ
-========================================================= */
-
-.macro-mascot {
-  position: absolute;
-
-  top: 50%;
-
-  z-index: 2;
-
-  object-fit: contain;
-
-  transform:
-    translateY(-50%);
-
-  transform-origin:
-    50% 55%;
-
-  user-select: none;
-
-  -webkit-user-drag: none;
-
-  cursor: pointer;
-
-  filter:
-    drop-shadow(
-      0 12px 15px
-      rgba(103,63,114,.13)
+  const diff =
+    round1(
+      Math.abs(
+        target -
+        eaten
+      )
     );
 
-  will-change: transform;
-}
 
-
-.chicken-mascot {
-  width: 112px;
-  height: 155px;
-
-  right: 2px;
-}
-
-
-.avocado-mascot {
-  width: 108px;
-  height: 145px;
-
-  right: 4px;
-}
-
-
-.pasta-mascot {
-  width: 118px;
-  height: 135px;
-
-  right: 0;
-}
-
-
-/* =========================================================
-   ЖИМ-ЖИМ
-========================================================= */
-
-.macro-mascot:hover {
-  animation:
-    mascot-squish
-    .78s
-    ease-in-out
-    infinite;
-}
-
-
-.macro-mascot:active {
-  transform:
-    translateY(-50%)
-    scale(.88,1.08);
-}
-
-
-@keyframes mascot-squish {
-
-  0%,
-  100% {
-    transform:
-      translateY(-50%)
-      scale(1,1)
-      rotate(0deg);
-  }
-
-
-  14% {
-    transform:
-      translateY(-50%)
-      scale(1.08,.91)
-      rotate(-2deg);
-  }
-
-
-  29% {
-    transform:
-      translateY(-50%)
-      scale(.93,1.08)
-      rotate(2deg);
-  }
-
-
-  44% {
-    transform:
-      translateY(-50%)
-      scale(1.055,.95)
-      rotate(-1.5deg);
-  }
-
-
-  58% {
-    transform:
-      translateY(-50%)
-      scale(.97,1.045)
-      rotate(1.5deg);
-  }
-
-
-  72% {
-    transform:
-      translateY(-50%)
-      scale(1.035,.97)
-      rotate(-1deg);
-  }
-
-
-  86% {
-    transform:
-      translateY(-50%)
-      scale(.99,1.02)
-      rotate(.5deg);
-  }
-
-}
-
-
-/* =========================================================
-   СВЕЧЕНИЕ ЗА ПЕРСОНАЖАМИ
-========================================================= */
-
-.stats-grid
-.stat-card:nth-child(1)::before,
-
-.stats-grid
-.stat-card:nth-child(2)::before,
-
-.stats-grid
-.stat-card:nth-child(3)::before {
-  content: "";
-
-  position: absolute;
-
-  right: -10px;
-
-  top: 50%;
-
-  transform:
-    translateY(-50%);
-
-  width: 130px;
-  height: 150px;
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255,220,242,.45),
-      rgba(232,218,255,.20) 45%,
-      transparent 72%
+  const percent =
+    Math.max(
+      0,
+      Math.min(
+        (
+          eaten /
+          target
+        ) *
+        100,
+        100
+      )
     );
 
-  z-index: 0;
 
-  pointer-events: none;
-}
+  if (
+    eaten <= target
+  ) {
+
+    statusEl.textContent =
+      "осталось";
 
 
-/* =========================================================
-   ОБЛАЧКА ПЕРСОНАЖЕЙ
-========================================================= */
+    leftEl.textContent =
+      `${formatNumber(diff)} г`;
 
-/*
-  Теперь облачко находится непосредственно
-  над самим персонажем, а не выглядит так,
-  будто выходит из карточки.
+  }
 
-  Оно немного заходит в верхнюю область
-  персонажа, поэтому визуально кажется,
-  что говорит именно он.
-*/
 
-.mascot-bubble {
-  position: absolute;
+  else {
+
+    statusEl.textContent =
+      "превысила на";
+
+
+    leftEl.textContent =
+      `${formatNumber(diff)} г`;
+
+  }
+
+
+  progressEl.style.width =
+    `${percent}%`;
+
+
+  card.classList.remove(
+    "goal-near",
+    "goal-over"
+  );
+
+
+  if (
+    state.cardState ===
+    "near"
+  ) {
+
+    card.classList.add(
+      "goal-near"
+    );
+
+  }
+
+
+  if (
+    state.cardState ===
+    "over"
+  ) {
+
+    card.classList.add(
+      "goal-over"
+    );
+
+  }
+
+
+  mascotEl.src =
+    state.sad
+      ? sadImage
+      : normalImage;
+
 
   /*
-    Облачко расположено справа,
-    то есть именно над персонажем.
+    Теперь фраза есть во ВСЕХ состояниях:
+    - нет цели;
+    - недобор;
+    - всё хорошо;
+    - перебор.
   */
-  right: -5px;
+
+  bubbleEl.hidden =
+    false;
+
+
+  bubbleEl.textContent =
+    state.bubbleText;
+
+
+  bubbleEl.className =
+    `mascot-bubble ${state.bubbleType}`;
+
+}
+
+
+
+/* =========================================================
+   НАСТРОЕНИЕ ПЕРСОНАЖЕЙ
+========================================================= */
+
+function getMacroMood(
+  type,
+  eaten,
+  target
+) {
 
   /*
-    Нижняя часть облачка почти соприкасается
-    с верхней частью картинки персонажа.
+    ЦЕЛЬ НЕ ЗАДАНА.
   */
-  top: -20px;
 
-  width:
-    max-content;
+  if (
+    target <= 0
+  ) {
 
-  max-width:
-    170px;
+    if (
+      type ===
+      "protein"
+    ) {
 
-  min-height:
-    34px;
+      return {
 
-  padding:
-    8px 12px;
+        sad:
+          true,
 
-  border-radius:
-    18px 18px 18px 8px;
+        bubbleText:
+          "Задай цель по белкам ❤️",
 
-  background:
-    rgba(255,255,255,.98);
+        bubbleType:
+          "no-goal",
 
-  border:
-    1px solid
-    rgba(240,215,242,.96);
+        cardState:
+          ""
 
-  box-shadow:
-    0 8px 20px
-    rgba(93,58,112,.13);
+      };
 
-  color:
-    #76547d;
+    }
 
-  font-size:
-    12px;
 
-  font-weight:
-    750;
+    if (
+      type ===
+      "fat"
+    ) {
 
-  line-height:
-    1.15;
+      return {
 
-  text-align:
-    center;
+        sad:
+          true,
 
-  z-index:
-    10;
+        bubbleText:
+          "Задай цель по жирам ❤️",
 
-  pointer-events:
-    none;
+        bubbleType:
+          "no-goal",
+
+        cardState:
+          ""
+
+      };
+
+    }
+
+
+    if (
+      type ===
+      "carbs"
+    ) {
+
+      return {
+
+        sad:
+          true,
+
+        bubbleText:
+          "Задай цель по углеводам ❤️",
+
+        bubbleType:
+          "no-goal",
+
+        cardState:
+          ""
+
+      };
+
+    }
+
+  }
+
+
+  const ratio =
+    eaten /
+    target;
+
+
+  /* =======================================================
+     БЕЛКИ
+  ======================================================= */
+
+  if (
+    type ===
+    "protein"
+  ) {
+
+    /*
+      Меньше 95%:
+      грустная курочка.
+    */
+
+    if (
+      ratio <
+      0.95
+    ) {
+
+      return {
+
+        sad:
+          true,
+
+        bubbleText:
+          "Скушай белок ❤️",
+
+        bubbleType:
+          "sad-low",
+
+        cardState:
+          ""
+
+      };
+
+    }
+
+
+    /*
+      От 95% и выше:
+      курочка счастлива.
+
+      Даже при превышении белка
+      карточка остаётся зелёной.
+    */
+
+    return {
+
+      sad:
+        false,
+
+      bubbleText:
+        "Ты молодец! ❤️",
+
+      bubbleType:
+        "happy",
+
+      cardState:
+        "near"
+
+    };
+
+  }
+
+
+  /* =======================================================
+     ЖИРЫ
+  ======================================================= */
+
+  if (
+    type ===
+    "fat"
+  ) {
+
+    /*
+      Меньше 95%.
+    */
+
+    if (
+      ratio <
+      0.95
+    ) {
+
+      return {
+
+        sad:
+          true,
+
+        bubbleText:
+          "Скушай жиры ❤️",
+
+        bubbleType:
+          "sad-low",
+
+        cardState:
+          ""
+
+      };
+
+    }
+
+
+    /*
+      Больше 100%.
+    */
+
+    if (
+      ratio >
+      1
+    ) {
+
+      return {
+
+        sad:
+          true,
+
+        bubbleText:
+          "Слишком много жиров 💔",
+
+        bubbleType:
+          "sad-over",
+
+        cardState:
+          "over"
+
+      };
+
+    }
+
+
+    /*
+      95–100%.
+    */
+
+    return {
+
+      sad:
+        false,
+
+      bubbleText:
+        "Ты молодец! ❤️",
+
+      bubbleType:
+        "happy",
+
+      cardState:
+        "near"
+
+    };
+
+  }
+
+
+  /* =======================================================
+     УГЛЕВОДЫ
+  ======================================================= */
+
+  if (
+    type ===
+    "carbs"
+  ) {
+
+    /*
+      Меньше 95%.
+    */
+
+    if (
+      ratio <
+      0.95
+    ) {
+
+      return {
+
+        sad:
+          true,
+
+        bubbleText:
+          "Скушай углеводы ❤️",
+
+        bubbleType:
+          "sad-low",
+
+        cardState:
+          ""
+
+      };
+
+    }
+
+
+    /*
+      Больше 100%.
+    */
+
+    if (
+      ratio >
+      1
+    ) {
+
+      return {
+
+        sad:
+          true,
+
+        bubbleText:
+          "Слишком много углеводов 💔",
+
+        bubbleType:
+          "sad-over",
+
+        cardState:
+          "over"
+
+      };
+
+    }
+
+
+    /*
+      95–100%.
+    */
+
+    return {
+
+      sad:
+        false,
+
+      bubbleText:
+        "Ты молодец! ❤️",
+
+      bubbleType:
+        "happy",
+
+      cardState:
+        "near"
+
+    };
+
+  }
+
+
+  return {
+
+    sad:
+      false,
+
+    bubbleText:
+      "Ты молодец! ❤️",
+
+    bubbleType:
+      "happy",
+
+    cardState:
+      ""
+
+  };
+
 }
 
-
-/*
-  Хвостик направлен вниз
-  прямо к голове персонажа.
-*/
-
-.mascot-bubble::after {
-  content: "";
-
-  position: absolute;
-
-  right: 27px;
-
-  bottom: -10px;
-
-  width: 18px;
-  height: 18px;
-
-  background:
-    inherit;
-
-  border-right:
-    1px solid
-    rgba(240,215,242,.96);
-
-  border-bottom:
-    1px solid
-    rgba(240,215,242,.96);
-
-  transform:
-    rotate(45deg);
-
-  border-radius:
-    0 0 4px 0;
-}
-
-
-/*
-  Недобор.
-*/
-
-.mascot-bubble.sad-low {
-  background:
-    rgba(255,252,255,.99);
-
-  color:
-    #76547d;
-}
-
-
-/*
-  Довольный персонаж.
-*/
-
-.mascot-bubble.happy {
-  background:
-    rgba(244,255,246,.99);
-
-  color:
-    #5d8865;
-
-  border-color:
-    rgba(189,226,195,.96);
-}
-
-
-/*
-  Цель пока не задана.
-*/
-
-.mascot-bubble.no-goal {
-  background:
-    rgba(251,247,255,.99);
-
-  color:
-    #735b91;
-
-  border-color:
-    rgba(219,204,243,.96);
-}
-
-
-/*
-  Перебор жиров / углеводов.
-*/
-
-.mascot-bubble.sad-over {
-  background:
-    rgba(255,245,247,.99);
-
-  color:
-    #b25570;
-
-  border-color:
-    rgba(247,201,214,.95);
-}
 
 
 /* =========================================================
-   КНОПКИ
+   ЗАПИСИ
 ========================================================= */
 
-.section-heading {
-  display: flex;
+function renderEntries() {
 
-  justify-content: space-between;
-
-  gap: 12px;
-
-  align-items: center;
-
-  margin-bottom: 14px;
-}
-
-
-.actions-row {
-  display: flex;
-
-  gap: 10px;
-
-  margin-top: 12px;
-
-  flex-wrap: wrap;
-}
-
-
-.primary-btn,
-.secondary-btn,
-.ghost-btn,
-.voice-btn,
-.icon-btn {
-  border: 0;
-
-  border-radius: 14px;
-
-  padding:
-    11px 16px;
-
-  font-weight: 800;
-}
-
-
-.primary-btn {
-  background:
-    linear-gradient(
-      90deg,
-      var(--pink),
-      var(--purple)
+  const day =
+    getDay(
+      currentDay
     );
 
-  color: white;
-}
+
+  const entries =
+    day.entries ||
+    [];
 
 
-.secondary-btn {
-  background:
-    var(--purple-soft);
+  if (
+    !entries.length
+  ) {
 
-  color:
-    #6040a7;
-}
-
-
-.ghost-btn {
-  background:
-    white;
-
-  color:
-    var(--purple);
-
-  box-shadow:
-    var(--shadow);
-}
+    els.entriesList.innerHTML =
+      `
+        <div class="empty">
+          Пока нет записей за этот день ✨
+        </div>
+      `;
 
 
-.voice-btn {
-  background:
-    #ffe4f1;
+    return;
 
-  color:
-    #b43777;
-}
-
-
-.voice-btn.listening {
-  animation:
-    pulse 1s
-    infinite alternate;
-}
-
-
-.icon-btn {
-  background:
-    var(--purple-soft);
-
-  color:
-    var(--purple);
-
-  font-size: 22px;
-
-  min-width: 46px;
-}
-
-
-.full {
-  width: 100%;
-}
-
-
-.danger-link {
-  background:
-    transparent;
-
-  border: 0;
-
-  color:
-    #c64872;
-
-  font-weight: 800;
-}
-
-
-@keyframes pulse {
-
-  from {
-    transform:
-      scale(1);
   }
 
-  to {
-    transform:
-      scale(1.04);
-  }
+
+  els.entriesList.innerHTML =
+    entries
+      .map(
+        entry => {
+
+          return `
+
+            <article class="entry">
+
+              <div>
+
+                <div class="entry-title">
+                  ${escapeHtml(entry.name)}
+                </div>
+
+                <div class="entry-meta">
+                  ${formatNumber(entry.amount)} г
+                </div>
+
+                <div class="entry-macros">
+
+                  Белки ${formatNumber(entry.protein)} г /
+                  Жиры ${formatNumber(entry.fat)} г /
+                  Углеводы ${formatNumber(entry.carbs)} г
+
+                </div>
+
+                ${
+                  entry.countProtein ===
+                  false
+
+                    ? `
+                      <div class="entry-note">
+                        Белок этой записи не учитывается в дневной сумме
+                      </div>
+                    `
+
+                    : ""
+                }
+
+              </div>
+
+
+              <div class="entry-actions">
+
+                <button
+                  class="mini-btn edit-entry"
+                  type="button"
+                  data-id="${entry.id}"
+                >
+                  Редактировать
+                </button>
+
+
+                <button
+                  class="mini-btn delete-entry"
+                  type="button"
+                  data-id="${entry.id}"
+                >
+                  Удалить
+                </button>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }
+      )
+      .join("");
 
 }
 
-
-.voice-status {
-  padding:
-    10px 12px;
-
-  background:
-    #fff0f7;
-
-  color:
-    #a93973;
-
-  border-radius:
-    12px;
-
-  margin-bottom: 10px;
-}
-
-
-/* =========================================================
-   СПИСОК ЕДЫ
-========================================================= */
-
-.entries-list,
-.history-list {
-  display: grid;
-
-  gap: 10px;
-}
-
-
-.entry,
-.history-item {
-  display: grid;
-
-  grid-template-columns:
-    1fr auto;
-
-  gap: 14px;
-
-  align-items: center;
-
-  background: white;
-
-  border:
-    1px solid
-    var(--border);
-
-  border-radius:
-    16px;
-
-  padding: 14px;
-}
-
-
-.entry-title {
-  font-weight: 850;
-}
-
-
-.entry-meta,
-.entry-macros,
-.history-meta {
-  color: var(--muted);
-
-  font-size: 13px;
-
-  margin-top: 3px;
-}
-
-
-.entry-note {
-  color:
-    #b0597d;
-
-  font-size: 12px;
-
-  margin-top: 4px;
-
-  font-weight: 700;
-}
-
-
-.entry-actions {
-  display: flex;
-
-  gap: 8px;
-
-  flex-wrap: wrap;
-
-  justify-content:
-    flex-end;
-}
-
-
-.mini-btn {
-  border: 0;
-
-  border-radius:
-    10px;
-
-  padding:
-    8px 10px;
-
-  background:
-    #f6edf8;
-
-  color:
-    var(--text);
-
-  transition:
-    transform .15s ease,
-    box-shadow .15s ease,
-    background .15s ease;
-}
-
-
-.mini-btn:hover {
-  transform:
-    translateY(-1px);
-
-  background:
-    #f2e4f6;
-
-  box-shadow:
-    0 6px 18px
-    rgba(107,65,120,.12);
-}
-
-
-.edit-entry {
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,215,235,.9),
-      rgba(228,215,255,.95)
-    );
-
-  color:
-    #6d3c92;
-}
-
-
-.delete-entry {
-  background:
-    #ffe8ef;
-
-  color:
-    #b83964;
-}
-
-
-.empty {
-  text-align: center;
-
-  color:
-    var(--muted);
-
-  padding:
-    26px 8px;
-}
 
 
 /* =========================================================
    ИСТОРИЯ
 ========================================================= */
 
-.history-item {
-  cursor: pointer;
-}
+function renderHistory() {
+
+  const keys =
+    Object
+      .keys(days)
+      .sort(
+        (a, b) =>
+          b.localeCompare(a)
+      );
 
 
-.history-item:hover {
-  border-color:
-    #d9baf3;
-}
+  if (
+    !keys.length
+  ) {
+
+    els.historyList.innerHTML =
+      `
+        <div class="empty">
+          История пока пустая
+        </div>
+      `;
 
 
-.history-date {
-  font-weight: 850;
-}
+    return;
+
+  }
 
 
-/* =========================================================
-   МОДАЛЬНЫЕ ОКНА
-========================================================= */
+  els.historyList.innerHTML =
+    keys
+      .map(
+        key => {
 
-.modal {
-  border: 0;
+          const day =
+            getDay(
+              key
+            );
 
-  border-radius:
-    24px;
 
-  padding: 0;
+          const totals =
+            getTotals(
+              day
+            );
 
-  width:
-    min(
-      520px,
-      calc(100% - 24px)
+
+          const count =
+            day.entries.length;
+
+
+          return `
+
+            <article
+              class="history-item"
+              data-day="${key}"
+            >
+
+              <div>
+
+                <div class="history-date">
+                  ${formatDateRu(key)}
+                </div>
+
+                <div class="history-meta">
+
+                  ${count} записей ·
+                  Б ${formatNumber(totals.protein)} /
+                  Ж ${formatNumber(totals.fat)} /
+                  У ${formatNumber(totals.carbs)} ·
+                  ${formatNumber(totals.kcal)} ккал
+
+                </div>
+
+              </div>
+
+
+              <button
+                class="mini-btn"
+                type="button"
+                data-go-day="${key}"
+              >
+                Открыть
+              </button>
+
+            </article>
+
+          `;
+
+        }
+      )
+      .join("");
+
+
+  els.historyList
+    .querySelectorAll(
+      "[data-go-day]"
+    )
+    .forEach(
+      btn => {
+
+        btn.addEventListener(
+          "click",
+          () => {
+
+            currentDay =
+              btn.dataset.goDay;
+
+
+            ensureDay(
+              currentDay
+            );
+
+
+            renderAll();
+
+          }
+        );
+
+      }
     );
 
-  box-shadow:
-    0 30px 80px
-    rgba(57,20,60,.28);
 }
 
-
-.modal::backdrop,
-.entry-edit-dialog::backdrop {
-  background:
-    rgba(48,22,51,.35);
-
-  backdrop-filter:
-    blur(4px);
-
-  -webkit-backdrop-filter:
-    blur(4px);
-}
-
-
-.modal form {
-  padding: 22px;
-
-  display: grid;
-
-  gap: 14px;
-}
-
-
-.modal.wide {
-  width:
-    min(
-      1000px,
-      calc(100% - 24px)
-    );
-}
-
-
-.modal-head {
-  display: flex;
-
-  align-items:
-    flex-start;
-
-  justify-content:
-    space-between;
-
-  gap: 20px;
-}
-
-
-.modal-head p {
-  margin:
-    5px 0 0;
-
-  color:
-    var(--muted);
-}
-
-
-.close-btn {
-  border: 0;
-
-  background:
-    #f7edf7;
-
-  color:
-    var(--text);
-
-  width: 38px;
-  height: 38px;
-
-  border-radius: 50%;
-
-  font-size: 24px;
-
-  line-height: 1;
-
-  flex:
-    0 0 auto;
-}
 
 
 /* =========================================================
-   РЕДАКТОР ПРОДУКТОВ
+   PRODUCTS EDITOR
 ========================================================= */
 
-.product-editor {
-  display: grid;
+function renderProductsEditor() {
 
-  gap: 10px;
+  if (
+    !products.length
+  ) {
 
-  max-height: 58vh;
+    els.productEditor.innerHTML =
+      `
+        <div class="empty">
+          Пока нет продуктов
+        </div>
+      `;
 
-  overflow: auto;
 
-  padding-right: 3px;
+    return;
+
+  }
+
+
+  els.productEditor.innerHTML =
+    products
+      .map(
+        product => {
+
+          return `
+
+            <div
+              class="product-row"
+              data-id="${product.id}"
+            >
+
+              <label>
+
+                Продукт
+
+                <input
+                  class="product-name"
+                  type="text"
+                  value="${escapeAttr(product.name)}"
+                />
+
+              </label>
+
+
+              <label>
+
+                Белки
+
+                <input
+                  class="product-protein"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value="${valueOrZero(product.protein)}"
+                />
+
+              </label>
+
+
+              <label>
+
+                Жиры
+
+                <input
+                  class="product-fat"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value="${valueOrZero(product.fat)}"
+                />
+
+              </label>
+
+
+              <label>
+
+                Углеводы
+
+                <input
+                  class="product-carbs"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value="${valueOrZero(product.carbs)}"
+                />
+
+              </label>
+
+
+              <label class="product-protein-toggle">
+
+                <span>
+                  Считать белок
+                </span>
+
+                <input
+                  class="product-count-protein"
+                  type="checkbox"
+                  ${
+                    product.countProtein !==
+                    false
+                      ? "checked"
+                      : ""
+                  }
+                />
+
+              </label>
+
+
+              <button
+                class="remove-product"
+                type="button"
+                data-id="${product.id}"
+              >
+                Удалить
+              </button>
+
+            </div>
+
+          `;
+
+        }
+      )
+      .join("");
+
 }
 
 
-.product-row {
-  display: grid;
 
-  grid-template-columns:
-    minmax(170px,1.7fr)
-    repeat(3,minmax(82px,.7fr))
-    minmax(110px,.9fr)
-    auto;
+function saveProductsFromEditor() {
 
-  gap: 8px;
+  const rows =
+    [
+      ...els.productEditor
+        .querySelectorAll(
+          ".product-row"
+        )
+    ];
 
-  align-items: end;
 
-  background:
-    #fff9fd;
+  const updated =
+    rows
+      .map(
+        row => ({
 
-  padding: 10px;
+          id:
+            row.dataset.id ||
+            uid(),
 
-  border-radius: 16px;
+          name:
+            row
+              .querySelector(
+                ".product-name"
+              )
+              ?.value
+              .trim() ||
+            "",
 
-  border:
-    1px solid
-    var(--border);
+          protein:
+            toNumber(
+              row
+                .querySelector(
+                  ".product-protein"
+                )
+                ?.value
+            ),
+
+          fat:
+            toNumber(
+              row
+                .querySelector(
+                  ".product-fat"
+                )
+                ?.value
+            ),
+
+          carbs:
+            toNumber(
+              row
+                .querySelector(
+                  ".product-carbs"
+                )
+                ?.value
+            ),
+
+          countProtein:
+            !!row
+              .querySelector(
+                ".product-count-protein"
+              )
+              ?.checked
+
+        })
+      )
+      .filter(
+        p =>
+          p.name
+      );
+
+
+  products =
+    updated.length
+      ? updated
+      : structuredClone(
+          defaultProducts
+        );
+
+
+  saveProducts();
+
+  populateManualProducts();
+
+
+  els.settingsDialog
+    .close();
+
+
+  renderAll();
+
 }
 
-
-.product-row label {
-  font-size: 11px;
-
-  gap: 4px;
-}
-
-
-.product-row input:not([type="checkbox"]) {
-  padding: 9px;
-}
-
-
-.product-protein-toggle {
-  align-self: stretch;
-
-  display:
-    flex !important;
-
-  flex-direction:
-    column;
-
-  justify-content:
-    flex-end;
-
-  align-items:
-    center;
-
-  gap:
-    7px !important;
-
-  text-align:
-    center;
-}
-
-
-.product-protein-toggle span {
-  display: block;
-
-  font-size: 11px;
-
-  color:
-    var(--muted);
-
-  font-weight: 700;
-}
-
-
-.product-protein-toggle input[type="checkbox"],
-.protein-checkbox input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
-
-  margin: 0;
-
-  padding: 0;
-
-  accent-color:
-    var(--purple);
-
-  cursor: pointer;
-}
-
-
-.remove-product {
-  border: 0;
-
-  background:
-    #ffe2eb;
-
-  color:
-    #ba3d65;
-
-  border-radius:
-    10px;
-
-  padding:
-    10px 12px;
-}
-
-
-.modal-footer {
-  display: flex;
-
-  justify-content:
-    flex-end;
-}
 
 
 /* =========================================================
-   РЕДАКТИРОВАНИЕ ЗАПИСИ
+   MANUAL ADD
 ========================================================= */
 
-.entry-edit-dialog {
-  border: none;
+function populateManualProducts() {
 
-  padding: 26px;
+  els.manualProduct.innerHTML =
+    products
+      .slice()
+      .sort(
+        (a, b) =>
+          a.name.localeCompare(
+            b.name,
+            "ru"
+          )
+      )
+      .map(
+        product => {
 
-  background:
-    transparent;
+          return `
+            <option value="${product.id}">
+              ${escapeHtml(product.name)}
+            </option>
+          `;
 
-  overflow:
-    visible;
+        }
+      )
+      .join("");
 
-  width:
-    min(
-      620px,
-      calc(100% - 24px)
-    );
-
-  max-width: none;
 }
 
 
-.entry-edit-cloud {
-  position: relative;
 
-  z-index: 1;
+function addEntryFromProduct(
+  product,
+  amount
+) {
 
-  display: grid;
+  const factor =
+    amount /
+    100;
 
-  gap: 18px;
 
-  padding: 28px;
+  const entry = {
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,255,255,.98),
-      rgba(255,241,249,.98) 55%,
-      rgba(239,232,255,.98)
-    );
+    id:
+      uid(),
 
-  border:
-    1px solid
-    rgba(255,255,255,.95);
+    productId:
+      product.id,
 
-  border-radius:
-    44px 56px 46px 58px;
+    name:
+      product.name,
 
-  box-shadow:
-    0 30px 85px
-    rgba(86,45,99,.27),
-    0 12px 34px
-    rgba(143,92,255,.14);
+    amount:
+      round1(
+        amount
+      ),
+
+    protein:
+      round1(
+        product.protein *
+        factor
+      ),
+
+    fat:
+      round1(
+        product.fat *
+        factor
+      ),
+
+    carbs:
+      round1(
+        product.carbs *
+        factor
+      ),
+
+    countProtein:
+      product.countProtein !==
+      false
+
+  };
+
+
+  getDay(
+    currentDay
+  )
+  .entries
+  .unshift(
+    entry
+  );
+
+
+  saveDays();
+
+  renderAll();
+
 }
 
-
-.entry-edit-cloud::before,
-.entry-edit-cloud::after {
-  content: "";
-
-  position: absolute;
-
-  z-index: -1;
-
-  background:
-    rgba(255,247,252,.98);
-
-  border:
-    1px solid
-    rgba(255,255,255,.95);
-
-  border-radius:
-    50%;
-
-  box-shadow:
-    0 14px 34px
-    rgba(86,45,99,.12);
-}
-
-
-.entry-edit-cloud::before {
-  width: 76px;
-  height: 76px;
-
-  left: -18px;
-
-  bottom: 34px;
-}
-
-
-.entry-edit-cloud::after {
-  width: 48px;
-  height: 48px;
-
-  left: 18px;
-
-  bottom: -18px;
-}
-
-
-.entry-edit-head {
-  display: flex;
-
-  justify-content:
-    space-between;
-
-  align-items:
-    flex-start;
-
-  gap: 18px;
-}
-
-
-.edit-entry-subtitle {
-  margin:
-    7px 0 0;
-
-  color:
-    var(--muted);
-
-  font-size: 13px;
-}
-
-
-.entry-edit-grid {
-  display: grid;
-
-  grid-template-columns:
-    repeat(3,1fr);
-
-  gap: 12px;
-}
-
-
-.protein-checkbox {
-  display:
-    flex !important;
-
-  flex-direction:
-    row !important;
-
-  align-items:
-    center;
-
-  gap:
-    10px !important;
-
-  padding:
-    13px 15px;
-
-  border-radius:
-    16px;
-
-  background:
-    rgba(255,255,255,.76);
-
-  border:
-    1px solid
-    var(--border);
-
-  color:
-    var(--text) !important;
-}
-
-
-.protein-checkbox span {
-  font-weight:
-    750;
-
-  color:
-    var(--text);
-}
-
-
-.entry-edit-footer {
-  display: flex;
-
-  justify-content:
-    flex-end;
-}
 
 
 /* =========================================================
-   САЛАТ
+   ENTRY EDIT
 ========================================================= */
 
-.salad-background {
-  position: absolute;
+function openEditEntry(
+  entryId
+) {
 
-  z-index: 0;
-
-  right: -160px;
-
-  top: -120px;
-
-  width: 620px;
-
-  height: auto;
-
-  pointer-events: auto;
-
-  user-select: none;
-
-  -webkit-user-drag: none;
-
-  transform-origin:
-    50% 50%;
-
-  filter:
-    drop-shadow(
-      0 25px 35px
-      rgba(80,50,90,.16)
+  const day =
+    getDay(
+      currentDay
     );
 
-  opacity: .97;
 
-  will-change:
-    transform;
-}
-
-
-.salad-background:hover {
-  animation:
-    salad-rock
-    1.8s
-    ease-in-out
-    infinite;
-}
+  const entry =
+    day.entries.find(
+      item =>
+        item.id ===
+        entryId
+    );
 
 
-@keyframes salad-rock {
+  if (
+    !entry
+  ) {
 
-  0%,
-  100% {
-    transform:
-      rotate(0deg);
+    return;
+
   }
 
 
-  25% {
-    transform:
-      rotate(5deg);
-  }
+  editingEntryId =
+    entryId;
 
 
-  50% {
-    transform:
-      rotate(0deg);
-  }
+  els.editEntryName.textContent =
+    entry.name;
 
 
-  75% {
-    transform:
-      rotate(-5deg);
-  }
+  els.editEntryAmountLabel.textContent =
+    `Количество: ${formatNumber(entry.amount)} г`;
+
+
+  els.editEntryProtein.value =
+    valueOrZero(
+      entry.protein
+    );
+
+
+  els.editEntryFat.value =
+    valueOrZero(
+      entry.fat
+    );
+
+
+  els.editEntryCarbs.value =
+    valueOrZero(
+      entry.carbs
+    );
+
+
+  els.editEntryCountProtein.checked =
+    entry.countProtein !==
+    false;
+
+
+  els.entryEditDialog
+    .showModal();
 
 }
 
 
-.app-shell > *:not(.salad-background) {
-  position: relative;
 
-  z-index: 2;
+function saveEditedEntry() {
+
+  if (
+    !editingEntryId
+  ) {
+
+    return;
+
+  }
+
+
+  const day =
+    getDay(
+      currentDay
+    );
+
+
+  const entry =
+    day.entries.find(
+      item =>
+        item.id ===
+        editingEntryId
+    );
+
+
+  if (
+    !entry
+  ) {
+
+    return;
+
+  }
+
+
+  entry.protein =
+    round1(
+      toNumber(
+        els.editEntryProtein.value
+      )
+    );
+
+
+  entry.fat =
+    round1(
+      toNumber(
+        els.editEntryFat.value
+      )
+    );
+
+
+  entry.carbs =
+    round1(
+      toNumber(
+        els.editEntryCarbs.value
+      )
+    );
+
+
+  entry.countProtein =
+    !!els.editEntryCountProtein.checked;
+
+
+  saveDays();
+
+  renderAll();
+
+
+  els.entryEditDialog
+    .close();
+
+
+  editingEntryId =
+    null;
+
 }
+
+
+
+function deleteEntry(
+  entryId
+) {
+
+  const day =
+    getDay(
+      currentDay
+    );
+
+
+  day.entries =
+    day.entries.filter(
+      entry =>
+        entry.id !==
+        entryId
+    );
+
+
+  saveDays();
+
+  renderAll();
+
+}
+
 
 
 /* =========================================================
-   ПЛАНШЕТ
+   TARGETS
 ========================================================= */
 
-@media (max-width: 980px) {
+function saveTargetsFromInputs() {
 
-  .product-row {
-    grid-template-columns:
-      repeat(2,1fr);
-  }
-
-
-  .product-protein-toggle,
-  .remove-product {
-    min-height: 58px;
-  }
-
-}
+  const day =
+    getDay(
+      currentDay
+    );
 
 
-@media (max-width: 820px) {
-
-  .hero,
-  main {
-    width: 86%;
-  }
+  day.targets.protein =
+    toNumber(
+      els.targetProtein.value
+    );
 
 
-  .stats-grid {
-    grid-template-columns:
-      repeat(2,1fr);
-
-    /*
-      Между рядами оставляем место
-      для облачков, но существенно меньше,
-      чем раньше.
-    */
-    row-gap: 46px;
-
-    padding-top: 30px;
-  }
+  day.targets.fat =
+    toNumber(
+      els.targetFat.value
+    );
 
 
-  .title-heart-img {
-    width: 50px;
-    height: 50px;
-  }
+  day.targets.carbs =
+    toNumber(
+      els.targetCarbs.value
+    );
 
 
-  .salad-background {
-    width: 520px;
+  saveDays();
 
-    right: -170px;
+  renderStats();
 
-    top: -80px;
-  }
+  renderHistory();
 
 }
+
 
 
 /* =========================================================
-   ТЕЛЕФОН
+   TOTALS
 ========================================================= */
 
-@media (max-width: 620px) {
+function getTotals(
+  day
+) {
 
-  .app-shell {
-    width: 100%;
+  const totals = {
 
-    padding:
-      18px 0
-      40px;
-  }
+    protein:
+      0,
 
+    fat:
+      0,
 
-  .hero,
-  main {
-    width:
-      calc(100% - 36px);
-  }
+    carbs:
+      0,
 
+    kcal:
+      0
 
-  .hero {
-    flex-direction: column;
-  }
+  };
 
 
-  h1 {
-    gap: 6px;
-  }
+  day.entries.forEach(
+    entry => {
 
+      if (
+        entry.countProtein !==
+        false
+      ) {
 
-  .title-heart-img {
-    width: 40px;
-    height: 40px;
-  }
+        totals.protein +=
+          toNumber(
+            entry.protein
+          );
 
+      }
 
-  .targets-grid {
-    grid-template-columns:
-      1fr;
-  }
 
+      totals.fat +=
+        toNumber(
+          entry.fat
+        );
 
-  .stats-grid {
-    grid-template-columns:
-      1fr;
 
-    row-gap:
-      46px;
+      totals.carbs +=
+        toNumber(
+          entry.carbs
+        );
 
-    padding-top:
-      30px;
-  }
 
+      totals.kcal +=
 
-  .section-heading {
-    align-items:
-      flex-start;
+        toNumber(
+          entry.protein
+        ) *
+        4
 
-    flex-direction:
-      column;
-  }
+        +
 
+        toNumber(
+          entry.fat
+        ) *
+        9
 
-  .voice-btn {
-    width: 100%;
-  }
+        +
 
+        toNumber(
+          entry.carbs
+        ) *
+        4;
 
-  .entry {
-    grid-template-columns:
-      1fr;
-  }
+    }
+  );
 
 
-  .entry-actions {
-    justify-content:
-      flex-end;
-  }
+  totals.protein =
+    round1(
+      totals.protein
+    );
 
 
-  .stats-grid
-  .stat-card:nth-child(1),
+  totals.fat =
+    round1(
+      totals.fat
+    );
 
-  .stats-grid
-  .stat-card:nth-child(2),
 
-  .stats-grid
-  .stat-card:nth-child(3) {
-    padding-right: 135px;
+  totals.carbs =
+    round1(
+      totals.carbs
+    );
 
-    min-height: 215px;
-  }
 
+  totals.kcal =
+    Math.round(
+      totals.kcal
+    );
 
-  .stats-grid
-  .stat-card:nth-child(1) > small,
 
-  .stats-grid
-  .stat-card:nth-child(2) > small,
-
-  .stats-grid
-  .stat-card:nth-child(3) > small,
-
-  .stats-grid
-  .stat-card:nth-child(1) > .progress,
-
-  .stats-grid
-  .stat-card:nth-child(2) > .progress,
-
-  .stats-grid
-  .stat-card:nth-child(3) > .progress {
-    right: 135px;
-  }
-
-
-  .mascot-bubble {
-    right: 3px;
-
-    top: -18px;
-
-    max-width: 165px;
-
-    font-size: 11px;
-
-    padding:
-      8px 11px;
-  }
-
-
-  .mascot-bubble::after {
-    right: 30px;
-  }
-
-
-  .chicken-mascot {
-    width: 125px;
-    height: 160px;
-
-    right: 4px;
-  }
-
-
-  .avocado-mascot {
-    width: 118px;
-    height: 150px;
-
-    right: 7px;
-  }
-
-
-  .pasta-mascot {
-    width: 130px;
-    height: 145px;
-
-    right: 0;
-  }
-
-
-  .stats-grid
-  .stat-card:nth-child(1)::before,
-
-  .stats-grid
-  .stat-card:nth-child(2)::before,
-
-  .stats-grid
-  .stat-card:nth-child(3)::before {
-    width: 145px;
-    height: 165px;
-  }
-
-
-  .product-row {
-    grid-template-columns:
-      1fr;
-  }
-
-
-  .product-protein-toggle {
-    align-items:
-      flex-start;
-
-    flex-direction:
-      row !important;
-
-    justify-content:
-      flex-start;
-
-    padding:
-      8px 0;
-  }
-
-
-  .entry-edit-dialog {
-    padding: 18px;
-  }
-
-
-  .entry-edit-cloud {
-    padding: 22px;
-
-    border-radius:
-      34px 42px 36px 46px;
-  }
-
-
-  .entry-edit-grid {
-    grid-template-columns:
-      1fr;
-  }
-
-
-  .entry-edit-cloud::before {
-    width: 58px;
-    height: 58px;
-
-    left: -12px;
-  }
-
-
-  .entry-edit-cloud::after {
-    width: 38px;
-    height: 38px;
-
-    left: 14px;
-
-    bottom: -13px;
-  }
-
-
-  .entry-edit-footer
-  .primary-btn {
-    width: 100%;
-  }
-
-
-  .salad-background {
-    width: 420px;
-
-    right: -170px;
-
-    top: -65px;
-
-    opacity: .88;
-  }
+  return totals;
 
 }
 
 
+
 /* =========================================================
-   УМЕНЬШЕНИЕ АНИМАЦИЙ
+   QUICK PARSE
 ========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
+function parseQuickInput() {
 
-  .macro-mascot:hover {
-    animation: none;
+  const text =
+    els.quickInput.value
+      .trim();
 
-    transform:
-      translateY(-50%)
-      scale(1.03);
+
+  if (
+    !text
+  ) {
+
+    alert(
+      "Сначала введи текст с продуктами."
+    );
+
+    return;
+
   }
 
 
-  .salad-background:hover {
-    animation: none;
+  const normalized =
+    text
+      .replace(
+        /\n/g,
+        " "
+      )
+      .replace(
+        /\s+/g,
+        " "
+      )
+      .trim();
 
-    transform:
-      rotate(2deg);
+
+  const segments =
+    normalized
+      .split(
+        /\s*(?:,| и )\s*/i
+      )
+      .map(
+        part =>
+          part.trim()
+      )
+      .filter(
+        Boolean
+      );
+
+
+  let addedCount =
+    0;
+
+
+  segments.forEach(
+    segment => {
+
+      const lower =
+        segment.toLowerCase();
+
+
+      const product =
+        [...products]
+          .sort(
+            (a, b) =>
+              b.name.length -
+              a.name.length
+          )
+          .find(
+            p =>
+              lower.includes(
+                p.name.toLowerCase()
+              )
+          );
+
+
+      if (
+        !product
+      ) {
+
+        return;
+
+      }
+
+
+      const amountMatch =
+
+        lower.match(
+          /(\d+(?:[.,]\d+)?)\s*(?:грамм(?:а|ов)?|гр|г)\b/i
+        )
+
+        ||
+
+        lower.match(
+          /(\d+(?:[.,]\d+)?)/
+        );
+
+
+      const amount =
+        amountMatch
+          ? toNumber(
+              amountMatch[1]
+            )
+          : 100;
+
+
+      if (
+        amount >
+        0
+      ) {
+
+        addEntryFromProduct(
+          product,
+          amount
+        );
+
+
+        addedCount +=
+          1;
+
+      }
+
+    }
+  );
+
+
+  if (
+    !addedCount
+  ) {
+
+    alert(
+      "Не получилось распознать продукты. Попробуй написать, например: 100 грамм риса и 120 грамм тунца."
+    );
+
+    return;
+
   }
+
+
+  els.quickInput.value =
+    "";
+
+}
+
+
+
+/* =========================================================
+   VOICE
+========================================================= */
+
+function setupVoiceInput() {
+
+  const SpeechRecognition =
+
+    window.SpeechRecognition
+
+    ||
+
+    window.webkitSpeechRecognition;
+
+
+  if (
+    !SpeechRecognition
+  ) {
+
+    els.voiceBtn.disabled =
+      true;
+
+
+    els.voiceBtn.title =
+      "В этом браузере голосовой ввод не поддерживается";
+
+
+    return;
+
+  }
+
+
+  const recognition =
+    new SpeechRecognition();
+
+
+  recognition.lang =
+    "ru-RU";
+
+
+  recognition.interimResults =
+    false;
+
+
+  recognition.maxAlternatives =
+    1;
+
+
+  let listening =
+    false;
+
+
+  els.voiceBtn
+    .addEventListener(
+      "click",
+      () => {
+
+        if (
+          listening
+        ) {
+
+          recognition.stop();
+
+          return;
+
+        }
+
+
+        recognition.start();
+
+      }
+    );
+
+
+  recognition
+    .addEventListener(
+      "start",
+      () => {
+
+        listening =
+          true;
+
+
+        els.voiceBtn
+          .classList
+          .add(
+            "listening"
+          );
+
+
+        els.voiceStatus.hidden =
+          false;
+
+
+        els.voiceStatus.textContent =
+          "Слушаю...";
+
+      }
+    );
+
+
+  recognition
+    .addEventListener(
+      "result",
+      event => {
+
+        const transcript =
+          event
+            .results
+            ?.[0]
+            ?.[0]
+            ?.transcript
+            ?.trim()
+          ||
+          "";
+
+
+        if (
+          transcript
+        ) {
+
+          els.quickInput.value =
+            transcript;
+
+
+          els.voiceStatus.textContent =
+            `Распознано: ${transcript}`;
+
+        }
+
+      }
+    );
+
+
+  recognition
+    .addEventListener(
+      "end",
+      () => {
+
+        listening =
+          false;
+
+
+        els.voiceBtn
+          .classList
+          .remove(
+            "listening"
+          );
+
+      }
+    );
+
+
+  recognition
+    .addEventListener(
+      "error",
+      () => {
+
+        listening =
+          false;
+
+
+        els.voiceBtn
+          .classList
+          .remove(
+            "listening"
+          );
+
+
+        els.voiceStatus.hidden =
+          false;
+
+
+        els.voiceStatus.textContent =
+          "Не удалось распознать речь. Попробуй ещё раз.";
+
+      }
+    );
+
+}
+
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function uid() {
+
+  return Math
+    .random()
+    .toString(36)
+    .slice(
+      2,
+      11
+    );
+
+}
+
+
+
+function todayIso() {
+
+  const now =
+    new Date();
+
+
+  const y =
+    now.getFullYear();
+
+
+  const m =
+    String(
+      now.getMonth() +
+      1
+    )
+    .padStart(
+      2,
+      "0"
+    );
+
+
+  const d =
+    String(
+      now.getDate()
+    )
+    .padStart(
+      2,
+      "0"
+    );
+
+
+  return `${y}-${m}-${d}`;
+
+}
+
+
+
+function shiftDay(
+  iso,
+  amount
+) {
+
+  const [
+    y,
+    m,
+    d
+  ] =
+    iso
+      .split("-")
+      .map(
+        Number
+      );
+
+
+  const date =
+    new Date(
+      y,
+      m - 1,
+      d
+    );
+
+
+  date.setDate(
+    date.getDate() +
+    amount
+  );
+
+
+  const ny =
+    date.getFullYear();
+
+
+  const nm =
+    String(
+      date.getMonth() +
+      1
+    )
+    .padStart(
+      2,
+      "0"
+    );
+
+
+  const nd =
+    String(
+      date.getDate()
+    )
+    .padStart(
+      2,
+      "0"
+    );
+
+
+  return `${ny}-${nm}-${nd}`;
+
+}
+
+
+
+function formatDateRu(
+  iso
+) {
+
+  const [
+    y,
+    m,
+    d
+  ] =
+    iso.split("-");
+
+
+  return `${d}.${m}.${y}`;
+
+}
+
+
+
+function toNumber(
+  value
+) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+
+    return 0;
+
+  }
+
+
+  const normalized =
+    String(value)
+      .replace(
+        ",",
+        "."
+      )
+      .trim();
+
+
+  const num =
+    Number(
+      normalized
+    );
+
+
+  return Number.isFinite(
+    num
+  )
+    ? num
+    : 0;
+
+}
+
+
+
+function round1(
+  value
+) {
+
+  return (
+    Math.round(
+      (
+        toNumber(value) +
+        Number.EPSILON
+      ) *
+      10
+    )
+    /
+    10
+  );
+
+}
+
+
+
+function formatNumber(
+  value
+) {
+
+  const num =
+    round1(
+      value
+    );
+
+
+  return Number.isInteger(
+    num
+  )
+    ? String(num)
+    : num
+        .toFixed(1)
+        .replace(
+          ".",
+          ","
+        );
+
+}
+
+
+
+function valueOrEmpty(
+  value
+) {
+
+  return toNumber(
+    value
+  )
+    ? value
+    : "";
+
+}
+
+
+
+function valueOrZero(
+  value
+) {
+
+  return toNumber(
+    value
+  );
+
+}
+
+
+
+function escapeHtml(
+  str
+) {
+
+  return String(str)
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    );
+
+}
+
+
+
+function escapeAttr(
+  str
+) {
+
+  return escapeHtml(
+    str
+  );
 
 }
